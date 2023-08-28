@@ -145,10 +145,13 @@
     <ClInclude Include="imgui\imstb_rectpack.h" />
     <ClInclude Include="imgui\imstb_textedit.h" />
     <ClInclude Include="imgui\imstb_truetype.h" />
+    <ClInclude Include="mem.h" />
+    <ClInclude Include="MemoryMgr.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="resource1.h" />
     <ClInclude Include="sigscan.h" />
+    <ClInclude Include="Trampoline.h" />
     <ClInclude Include="utils\addr.h" />
     <ClInclude Include="utils\core.h" />
     <ClInclude Include="utils\IniReader.h" />
@@ -166,6 +169,7 @@
     <ClCompile Include="imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="imgui\imgui_tables.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
+    <ClCompile Include="mem.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="sigscan.cpp" />
     <ClCompile Include="utils\addr.cpp" />

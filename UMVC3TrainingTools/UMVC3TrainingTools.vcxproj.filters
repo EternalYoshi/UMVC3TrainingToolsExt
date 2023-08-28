@@ -42,9 +42,6 @@
     <ClInclude Include="code\gui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="utils\addr.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="utils\core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -73,6 +70,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sigscan.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Trampoline.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryMgr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\addr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -104,9 +113,6 @@
     <ClCompile Include="code\gui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="utils\addr.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="utils\IniReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -117,6 +123,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="sigscan.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\addr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
