@@ -1,0 +1,10 @@
+
+.vs/UMVC3TrainingTools/v17
+*.exe
+*.pdb
+UMVC3TrainingTools/x64/Release/
+UMVC3TrainingTools/Debug/
+.vs/UMVC3TrainingTools/FileContentIndex/
+UMVC3TrainingTools/x64/Debug/
+UMVC3TrainingTools/Release
+
