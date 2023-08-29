@@ -244,6 +244,14 @@ void gui::Endrender() noexcept
 
 }
 
+//My attempt to port hooking code starts here.
+void CastTheHook()
+{
+
+
+
+}
+
 //ImGui menu stuff begins here.
 static void gui::TheMenuBar()
 {
@@ -312,10 +320,15 @@ void gui::Render() noexcept
 	//The Menu Bar.
 	TheMenuBar();
 
+	//Tries to hook.
+	CastTheHook();
+
 	//Hides all the options if the game isn't open.
 	if(Hooked)
 	{
-		
+		ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255));
+		ImGui::Text("If you can read this then the tool recognizes Marvel 3 is open.");
+		ImGui::PopStyleColor();
 	}
 	else
 	{
