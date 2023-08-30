@@ -1,9 +1,20 @@
 #include "gui.h"
 #include <thread>
-//#include <stdafx.h>
+#include <iostream>
+#include <vector>
+#include "proc.h"
 
 bool DetectsUMVC3 = false;
-bool Hooked = false;
+//bool Hooked = false;
+
+/*
+void CastTheHookPart2()
+{
+	DWORD Proc = 0;
+	Proc = GetProcId(L"umvc3.exe");
+
+}
+*/
 
 int __stdcall wWinMain(HINSTANCE instance, HINSTANCE previousInstance, PWSTR arguments, int commandShow)
 {

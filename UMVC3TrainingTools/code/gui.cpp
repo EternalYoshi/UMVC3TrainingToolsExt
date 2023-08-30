@@ -3,6 +3,7 @@
 #include "../imgui/imgui.h"
 #include "../imgui/imgui_impl_dx9.h"
 #include "../imgui/imgui_impl_win32.h"
+#include "proc.h"
 #define IMGUI_ENABLE_FREETYPE
 
 #pragma region Take1
@@ -247,8 +248,21 @@ void gui::Endrender() noexcept
 //My attempt to port hooking code starts here.
 void CastTheHook()
 {
+	ProcID = GetProcId(L"umvc3.exe");
+	hProcess = OpenProcess(PROCESS_ALL_ACCESS, NULL, ProcID);
+	if (!hProcess)
+	{
+		DWORD ex = GetLastError();
+	}
 
-
+	if(ProcID != 0)
+	{
+		gui::Hooked = true;
+	}
+	else
+	{
+		gui::Hooked = false;
+	}
 
 }
 

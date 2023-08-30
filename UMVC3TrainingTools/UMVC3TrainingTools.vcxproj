@@ -136,6 +136,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="code\gui.h" />
+    <ClInclude Include="code\proc.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
@@ -169,6 +170,7 @@
   <ItemGroup>
     <ClCompile Include="code\gui.cpp" />
     <ClCompile Include="code\main.cpp" />
+    <ClCompile Include="code\proc.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />
