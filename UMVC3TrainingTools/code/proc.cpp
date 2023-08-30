@@ -5,10 +5,9 @@
 #include <TlHelp32.h>
 #include <Psapi.h>
 
-
+//Uses the Window Name to get the the Thread ID to get the Process ID.
 DWORD GetProcId(const wchar_t* procName)
 {
-	//Uses the Window Name to get the the Thread ID to get the Process ID.
 	DWORD PID = 0;
 	DWORD TID = 0;
 
@@ -18,67 +17,48 @@ DWORD GetProcId(const wchar_t* procName)
 		TID = GetWindowThreadProcessId(Test, &TID);
 	}
 
-	HANDLE hSnapshot = OpenThread(THREAD_ALL_ACCESS, FALSE, TID);
-	PID = GetProcessIdOfThread(hSnapshot);
-
+	HANDLE hThread = OpenThread(THREAD_ALL_ACCESS, FALSE, TID);
+	if (hThread != 0)
+	{
+		PID = GetProcessIdOfThread(hThread);
+	}
 	return PID;
 
 }
 
-uintptr_t GetModuleBaseAddress(DWORD procId, const wchar_t* modName)
+//Gets The Module Base Address, which for Marvel 3 SHOULD always equal 5368709120, AKA 0x140000000.
+uintptr_t GetModuleBaseAddress(DWORD procId)
 {
 
-	//DWORD_PTR   baseAddress = 0;
-	//HANDLE      processHandle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, procId);
-	//HMODULE* moduleArray;
-	//LPBYTE      moduleArrayBytes;
-	//DWORD       bytesRequired;
-	//if (processHandle)
-	//{
-	//	if (EnumProcessModules(processHandle, NULL, 0, &bytesRequired))
-	//	{
-	//		if (bytesRequired)
-	//		{
-	//			moduleArrayBytes = (LPBYTE)LocalAlloc(LPTR, bytesRequired);
-	//			if (moduleArrayBytes)
-	//			{
-	//				unsigned int moduleCount;
-	//				moduleCount = bytesRequired / sizeof(HMODULE);
-	//				moduleArray = (HMODULE*)moduleArrayBytes;
-	//				if (EnumProcessModules(processHandle, moduleArray, bytesRequired, &bytesRequired))
-	//				{
-	//					baseAddress = (DWORD_PTR)moduleArray[0];
-	//				}
-	//				LocalFree(moduleArrayBytes);
-	//			}
-	//		}
-	//	}
-	//	CloseHandle(processHandle);
-	//}
-	//return baseAddress;
-
-	
-	uintptr_t modBaseAddr = 0;
-	HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, procId);
-	if (hSnap != INVALID_HANDLE_VALUE)
+	DWORD_PTR   baseAddress = 0;
+	HANDLE      processHandle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, procId);
+	HMODULE* moduleArray;
+	LPBYTE      moduleArrayBytes;
+	DWORD       bytesRequired;
+	if (processHandle)
 	{
-		MODULEENTRY32 modEntry;
-		modEntry.dwSize = sizeof(modEntry);
-		if (Module32First(hSnap, &modEntry))
+		if (EnumProcessModules(processHandle, NULL, 0, &bytesRequired))
 		{
-			do
+			if (bytesRequired)
 			{
-				if (!_wcsicmp(L"modEntry.szModule", modName))
+				moduleArrayBytes = (LPBYTE)LocalAlloc(LPTR, bytesRequired);
+				if (moduleArrayBytes)
 				{
-					modBaseAddr = (uintptr_t)modEntry.modBaseAddr;
-					break;
+					unsigned int moduleCount;
+					moduleCount = bytesRequired / sizeof(HMODULE);
+					moduleArray = (HMODULE*)moduleArrayBytes;
+					if (EnumProcessModules(processHandle, moduleArray, bytesRequired, &bytesRequired))
+					{
+						baseAddress = (DWORD_PTR)moduleArray[0];
+					}
+					LocalFree(moduleArrayBytes);
 				}
-			} while (Module32Next(hSnap, &modEntry));
+			}
 		}
+		CloseHandle(processHandle);
 	}
-	CloseHandle(hSnap);
-	return modBaseAddr;
-	
+	return baseAddress;
+
 }
 
 DWORD GetPointerAddress(HANDLE hProc, DWORD ptr, std::vector<DWORD> offsets)

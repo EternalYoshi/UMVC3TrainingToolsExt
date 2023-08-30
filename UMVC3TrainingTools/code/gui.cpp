@@ -4,6 +4,8 @@
 #include "../imgui/imgui_impl_dx9.h"
 #include "../imgui/imgui_impl_win32.h"
 #include "proc.h"
+#include "umvc3utils.h"
+
 #define IMGUI_ENABLE_FREETYPE
 
 #pragma region Take1
@@ -257,6 +259,8 @@ void CastTheHook()
 
 	if(ProcID != 0)
 	{
+		ModuleBase = GetModuleBaseAddress(ProcID);
+		ValidVer = CheckGame();
 		gui::Hooked = true;
 	}
 	else

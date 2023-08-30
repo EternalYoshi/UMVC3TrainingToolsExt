@@ -137,6 +137,7 @@
   <ItemGroup>
     <ClInclude Include="code\gui.h" />
     <ClInclude Include="code\proc.h" />
+    <ClInclude Include="code\umvc3utils.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
@@ -171,6 +172,7 @@
     <ClCompile Include="code\gui.cpp" />
     <ClCompile Include="code\main.cpp" />
     <ClCompile Include="code\proc.cpp" />
+    <ClCompile Include="code\umvc3utils.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />
