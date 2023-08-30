@@ -45,6 +45,9 @@ namespace gui
 	static void TheMenuBar();
 	static bool ShowAboutWindow = false;
 	static void TheAboutWindow(bool*);
+	static void TheExtraOptionsTab();
+	static void TheStatusOptionsTab();
+	static void TheCharacterOptionsTab();
 	static bool Hooked = false;
 	static int GameModeRef = 0;
 
