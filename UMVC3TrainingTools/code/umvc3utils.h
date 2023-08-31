@@ -27,6 +27,7 @@ inline uintptr_t team2ptr;
 inline int TempA;
 inline int TempB;
 inline unsigned char val;
+#define undefined4 int
 
 //inline static int64 timer = GetTickCount64();
 
@@ -95,13 +96,94 @@ inline int P2C1MaxHP = 0;
 inline int P2C2MaxHP = 0;
 inline int P2C3MaxHP = 0;
 
-
 inline const char* EvidenceTypes[] = { "Nothing","Photo","Watch", "Vase","Folder","Phone","Knife","Sunglasses","Beer","Bonsai", "Doll","Figurine","Plunger","Chicken" };
 inline const char* EvidenceTypesTwo[] = { "Nothing","Photo","Watch", "Vase","Folder","Phone","Knife","Sunglasses","Beer","Bonsai", "Doll","Figurine","Plunger","Chicken" };
 inline const char* EvidenceTypesThree[] = { "Nothing","Photo","Watch", "Vase","Folder","Phone","Knife","Sunglasses","Beer","Bonsai", "Doll","Figurine","Plunger","Chicken" };
 inline static const char* selected_item = "Nothing";
 inline static const char* selected_itemTwo = "Nothing";
 inline static const char* selected_itemThree = "Nothing";
+
+#define longlong  long long
+#define ulonglong  unsigned long long
+#define undefined8  long long*
+#define undefined7  long long
+#define undefined2  int
+typedef int (*code)(longlong* param_1);
+typedef int (*codenoarg)();
+typedef void (*method)(void);
+#define undefined int
+#define undefined4 int
+#define CONCAT71(a, b) (a << 32 | b)
+#define backupsize 10000//100000
+#define prebackup 0 //100000
+inline constexpr int backupSize = 1000;
+inline constexpr int teamBackupSize = 0x960;
+inline uintptr_t inputRef;
+inline bool inputRefSet = false;
+inline bool recording = false;
+inline bool recordingP1 = false;
+inline bool recordingP2 = false;
+inline bool replaying = false;
+inline bool replayingP1 = false;
+inline bool replayingP2 = false;
+inline bool replayAvailable = false;
+inline bool replayAvailableP1 = false;
+inline bool replayAvailableP2 = false;
+inline bool replayAvailable2 = false;
+inline bool replayAvailable2P1 = false;
+inline bool replayAvailable2P2 = false;
+inline bool replayAvailable3 = false;
+inline bool replayAvailable3P1 = false;
+inline bool replayAvailable3P2 = false;
+inline bool replayAvailable4 = false;
+inline bool replayAvailable4P1 = false;
+inline bool replayAvailable4P2 = false;
+inline bool replayAvailable5 = false;
+inline bool replayAvailable5P1 = false;
+inline bool replayAvailable5P2 = false;
+inline int recordReplayIndex = 0;
+inline int recordReplayIndex2 = 0;
+inline int recordReplayIndex3 = 0;
+inline int recordReplayIndex4 = 0;
+inline int recordReplayIndex5 = 0;
+inline int recordReplayIndexP1 = 0;
+inline int recordReplayIndex2P1 = 0;
+inline int recordReplayIndex3P1 = 0;
+inline int recordReplayIndex4P1 = 0;
+inline int recordReplayIndex5P1 = 0;
+inline int recordReplayIndexP2 = 0;
+inline int recordReplayIndex2P2 = 0;
+inline int recordReplayIndex3P2 = 0;
+inline int recordReplayIndex4P2 = 0;
+inline int recordReplayIndex5P2 = 0;
+inline int recordedLength = 0;
+inline int recordedLengthP1 = 0;
+inline int recordedLengthP2 = 0;
+inline int recordedLength2 = 0;
+inline int recordedLength2P1 = 0;
+inline int recordedLength2P2 = 0;
+inline int recordedLength3 = 0;
+inline int recordedLength3P1 = 0;
+inline int recordedLength3P2 = 0;
+inline int recordedLength4 = 0;
+inline int recordedLength4P1 = 0;
+inline int recordedLength4P2 = 0;
+inline int recordedLength5 = 0;
+inline int recordedLength5P1 = 0;
+inline int recordedLength5P2 = 0;
+inline int RecordingSlot = 1;
+#define ReplayLength (60*120)
+#define ReplayBufferSize 550
+inline uint8_t replayBuffer[ReplayLength][ReplayBufferSize];
+inline uint8_t replayBuffer2[ReplayLength][ReplayBufferSize];
+inline uint8_t replayBuffer3[ReplayLength][ReplayBufferSize];
+inline uint8_t replayBuffer4[ReplayLength][ReplayBufferSize];
+inline uint8_t replayBuffer5[ReplayLength][ReplayBufferSize];
+inline uint8_t replayBuffer6[ReplayLength][ReplayBufferSize];
+inline uint8_t replayBuffer7[ReplayLength][ReplayBufferSize];
+inline uint8_t replayBuffer8[ReplayLength][ReplayBufferSize];
+inline uint8_t replayBuffer9[ReplayLength][ReplayBufferSize];
+inline uint8_t replayBuffer10[ReplayLength][ReplayBufferSize];
 
 bool CheckGame();
 
@@ -318,3 +400,5 @@ void SetDormSpellLevels();
 void EndlessInstallBoolUpdate();
 
 void SetDeadpoolTeleport();
+
+void FUN_1402b41b0(longlong param_1);

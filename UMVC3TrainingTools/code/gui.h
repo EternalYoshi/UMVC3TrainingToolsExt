@@ -48,6 +48,7 @@ namespace gui
 	static void TheExtraOptionsTab();
 	static void TheStatusOptionsTab();
 	static void TheCharacterOptionsTab();
+	static void TheRecordPlaybackTab();
 	static bool Hooked = false;
 	static int GameModeRef = 0;
 
