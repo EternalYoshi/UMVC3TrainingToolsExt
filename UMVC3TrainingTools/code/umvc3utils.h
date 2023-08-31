@@ -73,6 +73,12 @@ inline float P2Char2Health = 1.0;
 inline float P2Char2RedHealth = 1.0;
 inline float P2Char3Health = 1.0;
 inline float P2Char3RedHealth = 1.0;
+inline float P1Char1HealthNew = 1.0;
+inline float P1Char2HealthNew = 1.0;
+inline float P1Char3HealthNew = 1.0;
+inline float P2Char1HealthNew = 1.0;
+inline float P2Char2HealthNew = 1.0;
+inline float P2Char3HealthNew = 1.0;
 inline bool P1Char1Slow = false;
 inline bool P1Char2Slow = false;
 inline bool P1Char3Slow = false;
@@ -81,6 +87,14 @@ inline bool P2Char2Slow = false;
 inline bool P2Char3Slow = false;
 inline bool DarkPhoenix = false;
 inline bool Turnabout = false;
+inline bool LockMODOKLOU = false;
+inline int P1C1MaxHP = 0;
+inline int P1C2MaxHP = 0;
+inline int P1C3MaxHP = 0;
+inline int P2C1MaxHP = 0;
+inline int P2C2MaxHP = 0;
+inline int P2C3MaxHP = 0;
+
 
 inline const char* EvidenceTypes[] = { "Nothing","Photo","Watch", "Vase","Folder","Phone","Knife","Sunglasses","Beer","Bonsai", "Doll","Figurine","Plunger","Chicken" };
 inline const char* EvidenceTypesTwo[] = { "Nothing","Photo","Watch", "Vase","Folder","Phone","Knife","Sunglasses","Beer","Bonsai", "Doll","Figurine","Plunger","Chicken" };
@@ -90,6 +104,176 @@ inline static const char* selected_itemTwo = "Nothing";
 inline static const char* selected_itemThree = "Nothing";
 
 bool CheckGame();
+
+enum WrightEvidence
+{
+	Nothing = -1,
+	Photo = 0,
+	Watch = 1,
+	Vase = 2,
+	Folder = 3,
+	Phone = 4,
+	Knife = 5,
+	Sunglasses = 6,
+	Beer = 7,
+	Bonsai = 8,
+	Doll = 9,
+	Figurine = 10,
+	Plunger = 11,
+	Chicken = 12,
+};
+
+struct Recording {
+
+	int FrameCount;
+	char* InputBinary[3844];
+
+};
+
+struct FighterInstall
+{
+	int IdentifyingHashA;
+	int IdentifyingHashB;
+	int InstallID;
+	int mType;
+	float Duration;
+	int PossibleRelatedAnmchrEntry;
+	int mAblF;
+	int mAb2F;
+	float mLifeAdd;
+	float RedHealthRegen;//Either Converts Yellow Health to Red Health or heals current Red Health.
+	float MeterRegen;//Meter Regen.
+	float YellowHealthRegen;//Gained Yellow Health becomes Red Health. Can lose total HP with this and be set to 1HP.
+	float mRLifeAdd;
+	float MeterGain;
+	float mRLifeAddRate;
+	float DamageMultiplier;
+	float DefenseMultiplier;//Incoming Damage Multiplier.
+	float SpeedMultiplier;
+	float mSpArmorDmgRate;
+	int mSpArmorShield;
+	int UnknowmSpArmorShieldAddChr;
+	int mUserI;
+	int Unknown58;
+	int Unknown5C;
+	int Unknown60;
+	int mUserF;
+	int Unknown68;
+	int Unknown6C;
+	int Unknown70;
+	int Unknown74;
+	int Unknown78;
+	int Unknown7C;
+
+};
+
+inline FighterInstall EmptyInstall =
+{
+	1084673544,//IdentifyingHashA
+	1,//IdentifyingHashA
+	0,//InstallID
+	0,//mType
+	0.0,//Duration
+	0,//PossibleRelatedAnmchrEntry
+	0,
+	0,
+	0,//mLifeAdd
+	0,
+	0,
+	0,
+	1.0,
+	1.0,
+	1.0,
+	1.0,
+	1.0,
+	1.0,
+	-1.0,
+	-1,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	-1,
+	-0
+};
+
+inline FighterInstall DarkPhoenixInstall =
+{
+	1084673544,//IdentifyingHashA
+	1,//IdentifyingHashA
+	32784,//InstallID
+	18,//mType
+	0.0,//Duration
+	224,//PossibleRelatedAnmchrEntry
+	0,
+	0,
+	-2.34,//mLifeAdd
+	0,
+	0,
+	0,
+	1.0,
+	1.0,
+	1.0,
+	1.0,
+	1.0,
+	1.0,
+	-1.0,
+	-1,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	-1,
+	-0
+};
+
+inline FighterInstall TurnaboutMode =
+{
+	1084673544,//IdentifyingHashA
+	1,//IdentifyingHashA
+	17,//InstallID
+	10,//mType
+	999999.0,//Duration
+	188,//PossibleRelatedAnmchrEntry
+	0,
+	0,
+	0,//mLifeAdd
+	0,
+	0,
+	0,
+	1.0,
+	1.0,
+	1.0,
+	1.0,
+	1.0,
+	1.2,
+	-1.0,
+	-1,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	-1,
+	-0
+};
 
 DWORD SingleWrite(DWORD64 AddressToWrite, int length, HANDLE hProcess, BYTE ByteToWrite, DWORD errorMessageID, LPSTR messageBuffer);
 
@@ -113,4 +297,24 @@ void RestartWithChanges();
 
 void TickUpdates();
 
+void SetIndividualCharacterHealth();
+
 void ChangeFrankLevel(int FrankLevel);
+
+void ChangeWrightEvidence();
+
+int EvidenceNameToID(const char* name);
+
+void Objection();
+
+void PopTheBird();
+
+void ChangeMODOKUnderstanding(int MODOKLOU);
+
+//Sets Dormammu Spell Charges.
+void SetDormSpellLevels();
+
+//Sets Infnite Install Time for Several Characters.
+void EndlessInstallBoolUpdate();
+
+void SetDeadpoolTeleport();

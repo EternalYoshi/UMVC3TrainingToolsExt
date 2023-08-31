@@ -324,6 +324,48 @@ static void gui::TheCharacterOptionsTab()
 	if (ImGui::BeginTabItem("Character Settings"))
 	{
 
+		if (DormSpellSet == true)
+		{
+			if (CheckTheMode() == true)
+			{
+				SetDormSpellLevels();
+			}
+		}
+
+		if (EndlessInstalls == true)
+		{
+			if (CheckTheMode() == true)
+			{
+				EndlessInstallBoolUpdate();
+			}
+		}
+
+		if (FreezeDeadpoolTPCounter == true)
+		{
+			if (CheckTheMode() == true)
+			{
+				SetDeadpoolTeleport();
+			}
+		}
+
+		if (EndlessXFactor == true)
+		{
+			if (CheckTheMode() == true)
+			{
+				EndlessXFactorUpdate();
+			}
+		}
+
+		if (DarkPhoenix == true)
+		{
+			PopTheBird();
+		}
+
+		if (Turnabout == true)
+		{
+			Objection();
+		}
+
 		ImGui::Text("Remember! These Parameters will only take\neffect in training mode.");
 
 		ImGui::SeparatorText("Frank West");
@@ -339,6 +381,92 @@ static void gui::TheCharacterOptionsTab()
 
 		ImGui::Separator();
 
+		ImGui::SeparatorText("Phoenix Wright");
+
+		ImGui::Text("Mr. Wright's Evidence");
+		if (WrightEvidenceA || WrightEvidenceB || WrightEvidenceC)
+		{
+			ImGui::Text("Evidence Slot 1");
+
+			if (ImGui::BeginCombo("##WrightEvidencecombo", selected_item))
+			{
+				if (CheckTheMode() == true)
+				{
+					for (int n = 0; n < IM_ARRAYSIZE(EvidenceTypes); n++)
+					{
+						bool is_selected = (selected_item == EvidenceTypes[n]);
+						if (ImGui::Selectable(EvidenceTypes[n], is_selected))
+						{
+							selected_item = EvidenceTypes[n];
+							WrightEvidenceA = EvidenceNameToID(selected_item);
+							ChangeWrightEvidence();
+
+						}
+						if (is_selected)
+							ImGui::SetItemDefaultFocus();
+					}
+				}
+				ImGui::EndCombo();
+			}
+
+			ImGui::Text("Evidence Slot 2");
+
+			if (ImGui::BeginCombo("##WrightEvidencecombo2", selected_itemTwo))
+			{
+				if (CheckTheMode() == true)
+				{
+					for (int n = 0; n < IM_ARRAYSIZE(EvidenceTypesTwo); n++)
+					{
+						bool is_selected = (selected_itemTwo == EvidenceTypesTwo[n]);
+						if (ImGui::Selectable(EvidenceTypesTwo[n], is_selected))
+						{
+							selected_itemTwo = EvidenceTypesTwo[n];
+							WrightEvidenceB = EvidenceNameToID(selected_itemTwo);
+							ChangeWrightEvidence();
+
+						}
+						if (is_selected)
+							ImGui::SetItemDefaultFocus();
+					}
+				}
+				ImGui::EndCombo();
+			}
+
+			ImGui::Text("Evidence Slot 3");
+
+			if (ImGui::BeginCombo("##WrightEvidencecombo3", selected_itemThree))
+			{
+				if (CheckTheMode() == true)
+				{
+					for (int n = 0; n < IM_ARRAYSIZE(EvidenceTypesThree); n++)
+					{
+						bool is_selected = (selected_itemThree == EvidenceTypesThree[n]);
+						if (ImGui::Selectable(EvidenceTypesThree[n], is_selected))
+						{
+							selected_itemThree = EvidenceTypesThree[n];
+							WrightEvidenceC = EvidenceNameToID(selected_itemThree);
+							ChangeWrightEvidence();
+
+						}
+						if (is_selected)
+							ImGui::SetItemDefaultFocus();
+					}
+				}
+				ImGui::EndCombo();
+			}
+
+		}
+
+		ImGui::Text("Turnabout Toggle");
+		if (ImGui::Checkbox("TurnaboutToggle", &Turnabout))
+		{
+			if (CheckTheMode() == true)
+			{
+				Objection();
+			}
+		}
+
+
 		ImGui::Text("Gotta port the rest if the above works.");
 
 		ImGui::EndTabItem();
@@ -351,8 +479,6 @@ static void gui::TheExtraOptionsTab()
 {
 	if (ImGui::BeginTabItem("Extra Settings"))
 	{
-		ImGui::Text("Remember! These Parameters will only take\neffect when this window is open.");
-
 		ImGui::Separator();
 
 		if (ImGui::Button("Restart Training Mode"))
@@ -453,12 +579,115 @@ static void gui::TheExtraOptionsTab()
 		{
 
 		}
+		ImGui::Separator();
+
+		ImGui::SeparatorText("Incomplete Stuff");
 
 		ImGui::Separator();
 
 		ImGui::Text("More features coming soon!");
 
 		ImGui::EndTabItem();
+	}
+}
+
+static void gui::TheStatusOptionsTab()
+{
+	//Player and Status Related  Settings such as Health.
+	if (ImGui::BeginTabItem("Status Options"))
+	{
+		ImGui::SeparatorText("Character HP");
+
+		//Toggle for using individual character health.
+		if (ImGui::Checkbox("Set Individual Character Health(Applies during restarts).", &SetIndividualHP))
+		{
+
+		}
+
+		//Toggle for Applying Health Settings to Red Health.
+		if (ImGui::Checkbox("Also Apply To Red Health", &AlsoSetRedHealth))
+		{
+
+		}
+
+		if (P1Char1Health)
+		{
+			ImGui::Text("Player 1 Character 1 Health");
+			if (ImGui::SliderFloat("P1C1 HP %", &P1Char1Health, 0.01f, 1.0f))
+			{
+				if (CheckTheMode() == true)
+				{
+
+				}
+			}
+		}
+
+		if (P1Char2Health)
+		{
+			ImGui::Text("Player 1 Character 2 Health");
+			if (ImGui::SliderFloat("P1C2 HP %", &P1Char2Health, 0.01f, 1.0f))
+			{
+				if (CheckTheMode() == true)
+				{
+
+				}
+			}
+		}
+
+		if (P1Char3Health)
+		{
+			ImGui::Text("Player 1 Character 3 Health");
+			if (ImGui::SliderFloat("P1C3 HP %", &P1Char3Health, 0.01f, 1.0f))
+			{
+				if (CheckTheMode() == true)
+				{
+
+				}
+			}
+		}
+
+		if (P2Char1Health)
+		{
+			ImGui::Text("Player 2 Character 1 Health");
+			if (ImGui::SliderFloat("P2C1 HP %", &P2Char1Health, 0.01f, 1.0f))
+			{
+				if (CheckTheMode() == true)
+				{
+
+				}
+			}
+		}
+
+		if (P2Char2Health)
+		{
+			ImGui::Text("Player 2 Character 2 Health");
+			if (ImGui::SliderFloat("P2C2 HP %", &P2Char2Health, 0.01f, 1.0f))
+			{
+				if (CheckTheMode() == true)
+				{
+
+				}
+			}
+		}
+
+		if (P2Char3Health)
+		{
+			ImGui::Text("Player 2 Character 3 Health");
+			if (ImGui::SliderFloat("P2C3 HP %", &P2Char3Health, 0.01f, 1.0f))
+			{
+				if (CheckTheMode() == true)
+				{
+
+				}
+			}
+		}
+
+		ImGui::Separator();
+
+		ImGui::Text("More stuff coming soon!");
+
+		ImGui::EndTabItem();
+
 	}
 }
 
@@ -545,7 +774,7 @@ void gui::Render() noexcept
 							}
 						}
 						restarted = false;
-						//SetIndividualCharacterHealth();
+						SetIndividualCharacterHealth();
 
 					}
 
@@ -554,6 +783,7 @@ void gui::Render() noexcept
 				
 				TickUpdates();
 				TheExtraOptionsTab();
+				TheStatusOptionsTab();
 				TheCharacterOptionsTab();
 			
 				ImGui::EndTabBar();
