@@ -184,7 +184,7 @@ inline uint8_t replayBuffer7[ReplayLength][ReplayBufferSize];
 inline uint8_t replayBuffer8[ReplayLength][ReplayBufferSize];
 inline uint8_t replayBuffer9[ReplayLength][ReplayBufferSize];
 inline uint8_t replayBuffer10[ReplayLength][ReplayBufferSize];
-
+inline FILE* pRec;
 bool CheckGame();
 
 enum WrightEvidence

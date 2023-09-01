@@ -184,6 +184,7 @@
     <Font Include="Resources\fonts\FOT-NewRodinPro-B.otf">
       <Filter>Resource Files</Filter>
     </Font>
+    <Font Include="Resources\fonts\FOT-NewRodinProN-DB.otf" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="imgui\LICENSE.txt">

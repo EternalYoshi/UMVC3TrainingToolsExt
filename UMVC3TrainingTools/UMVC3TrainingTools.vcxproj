@@ -194,6 +194,7 @@
   </ItemGroup>
   <ItemGroup>
     <Font Include="Resources\fonts\FOT-NewRodinPro-B.otf" />
+    <Font Include="Resources\fonts\FOT-NewRodinProN-DB.otf" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="imgui\LICENSE.txt" />

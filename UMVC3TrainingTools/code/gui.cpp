@@ -1,6 +1,6 @@
+#define _CRT_SECURE_NO_DEPRECATE
 #include "gui.h"
-
-#include "../imgui/imgui.h"
+//#include "../imgui/imgui.h"
 #include "../imgui/imgui_impl_dx9.h"
 #include "../imgui/imgui_impl_win32.h"
 #include "proc.h"
@@ -12,6 +12,10 @@
 #include <fstream>
 #include <iomanip>
 #include <ctime>
+#include "..\utils\Trampoline.h"
+#include "..\utils\addr.h"
+#include "..\utils\MemoryMgr.h"
+#include "..\MemoryMgr.h"
 
 #define IMGUI_ENABLE_FREETYPE
 
@@ -200,11 +204,12 @@ void gui::CreateImGui() noexcept
 	ImGui_ImplWin32_Init(window);
 	ImGui_ImplDX9_Init(device);
 
-	/*
+	
 	io.Fonts->AddFontDefault();
-	ImFont* mainfont = io.Fonts->AddFontFromFileTTF("E:\\DLs\\Fontworks\\Japanese\\Gothic (Black)\\FOT-NewRodinPro-B.otf",18.5f, NULL, io.Fonts->GetGlyphRangesJapanese());
+	mainfont = io.Fonts->AddFontFromFileTTF("Resources\\fonts\\FOT-NewRodinPro-DB.otf",11.5f, NULL, io.Fonts->GetGlyphRangesJapanese());
 	IM_ASSERT(mainfont != NULL);
-	*/
+	//ImFont* secfont = io.Fonts->AddFontFromFileTTF("E:\\DLs\\Fontworks\\Japanese\\Gothic (Black)\\FOT-NewRodinPro-B.otf", 18.5f, NULL, io.Fonts->GetGlyphRangesJapanese());
+	//IM_ASSERT(secfont != NULL);
 
 }
 
@@ -317,7 +322,7 @@ void gui::TheAboutWindow(bool* p_open)
 	}
 	ImGui::Text("2023 By Eternal Yoshi");
 	ImGui::Separator();
-	ImGui::Text("Thanks To SanHKHaan & Sheep for finding the pointers\nand memeory offsets that made this possible,\nand Ermmaccer for the original UMVC3Hook this\nversion is based on.");
+	ImGui::Text("Thanks To SanHKHaan & Sheep for finding the\npointers and memeory offsets that made this possible,\nand Ermmaccer for the original UMVC3Hook this\nversion is based on.");
 	ImGui::Separator();
 	ImGui::Text("In case it isn't obvious, this tool is NOT designed to\nenable cheating in netplay and\nis intended to only function in training mode.");
 	
@@ -465,8 +470,8 @@ static void gui::TheCharacterOptionsTab()
 		ImGui::SeparatorText("Dormammu");
 		ImGui::Text("Dormammu's Spell Charges");
 
-		//ImGui::Text("Power Of The Destructor/Red");
-		if (ImGui::SliderInt("Power Of The Destructor/Red", &DormRed, 0, 3))
+		ImGui::Text("Power Of The Destructor");
+		if (ImGui::SliderInt("Red", &DormRed, 0, 3))
 		{
 			if (CheckTheMode() == true)
 			{
@@ -475,8 +480,8 @@ static void gui::TheCharacterOptionsTab()
 			}
 		}
 
-		//ImGui::Text("Power Of The Creator/Blue");
-		if (ImGui::SliderInt("Power Of The Creator/Blue", &DormBlue, 0, 3))
+		ImGui::Text("Power Of The Creator");
+		if (ImGui::SliderInt("Blue", &DormBlue, 0, 3))
 		{
 			if (CheckTheMode() == true)
 			{
@@ -741,7 +746,6 @@ static void gui::TheRecordPlaybackTab()
 	//For Recording And Playback Stuff.
 	if (ImGui::BeginTabItem("Record & Playback"))
 	{
-		FILE* pRec;
 
 		ImGui::Text("Remember! These Parameters will only take\neffect when this window is open.");
 
@@ -2489,6 +2493,8 @@ void gui::Render() noexcept
 		ImGuiWindowFlags_NoMove
 	);
 
+	ImGui::PushFont(mainfont);
+
 	//The Menu Bar.
 	TheMenuBar();
 
@@ -2563,11 +2569,16 @@ void gui::Render() noexcept
 
 				}
 				
+				Trampoline* tramp = Trampoline::MakeTrampoline(GetModuleHandle(nullptr));
+				Memory::InjectHook(_addr(0x140289c5a), tramp->Jump(FUN_1402b41b0), PATCH_CALL);
+
 				TickUpdates();
 				TheExtraOptionsTab();
 				TheStatusOptionsTab();
 				TheCharacterOptionsTab();
-			
+				TheRecordPlaybackTab();
+
+
 				ImGui::EndTabBar();
 
 			}
@@ -2590,6 +2601,7 @@ void gui::Render() noexcept
 
 	}
 
+	ImGui::PopFont();
 
 	ImGui::End();
 

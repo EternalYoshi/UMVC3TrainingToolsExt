@@ -2,6 +2,7 @@
 
 
 #include <d3d9.h>
+#include "../imgui/imgui.h"
 
 #pragma region Take1
 namespace gui
@@ -51,7 +52,7 @@ namespace gui
 	static void TheRecordPlaybackTab();
 	static bool Hooked = false;
 	static int GameModeRef = 0;
-
+	inline ImFont* mainfont;
 }
 
 #pragma endregion
