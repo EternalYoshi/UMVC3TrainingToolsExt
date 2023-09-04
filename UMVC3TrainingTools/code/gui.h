@@ -53,6 +53,7 @@ namespace gui
 	static bool Hooked = false;
 	static int GameModeRef = 0;
 	inline ImFont* mainfont;
+
 }
 
 #pragma endregion

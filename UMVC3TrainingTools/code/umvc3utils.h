@@ -95,6 +95,7 @@ inline int P1C3MaxHP = 0;
 inline int P2C1MaxHP = 0;
 inline int P2C2MaxHP = 0;
 inline int P2C3MaxHP = 0;
+inline float GameSpeed = 1.0;
 
 inline const char* EvidenceTypes[] = { "Nothing","Photo","Watch", "Vase","Folder","Phone","Knife","Sunglasses","Beer","Bonsai", "Doll","Figurine","Plunger","Chicken" };
 inline const char* EvidenceTypesTwo[] = { "Nothing","Photo","Watch", "Vase","Folder","Phone","Knife","Sunglasses","Beer","Bonsai", "Doll","Figurine","Plunger","Chicken" };

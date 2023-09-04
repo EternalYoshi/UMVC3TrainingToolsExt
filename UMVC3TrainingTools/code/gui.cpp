@@ -16,6 +16,7 @@
 #include "..\utils\addr.h"
 #include "..\utils\MemoryMgr.h"
 #include "..\MemoryMgr.h"
+#include "..\minhook\include\MinHook.h"
 
 #define IMGUI_ENABLE_FREETYPE
 
@@ -632,6 +633,14 @@ static void gui::TheExtraOptionsTab()
 		ImGui::Separator();
 
 		ImGui::SeparatorText("Incomplete Stuff");
+
+		/*
+		//ImGui::Text("Game Speed");
+		if (ImGui::SliderFloat("Game Speed", &GameSpeed, 0.01666667f, 1.0f))
+		{
+
+		}
+		*/
 
 		ImGui::Separator();
 
@@ -2570,7 +2579,8 @@ void gui::Render() noexcept
 				}
 				
 				Trampoline* tramp = Trampoline::MakeTrampoline(GetModuleHandle(nullptr));
-				Memory::InjectHook(_addr(0x140289c5a), tramp->Jump(FUN_1402b41b0), PATCH_CALL);
+				//Memory::InjectHook(_addr(0x140289c5a), tramp->Jump(FUN_1402b41b0), PATCH_CALL);
+				
 
 				TickUpdates();
 				TheExtraOptionsTab();

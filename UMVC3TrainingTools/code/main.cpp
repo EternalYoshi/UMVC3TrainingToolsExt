@@ -3,6 +3,8 @@
 #include <iostream>
 #include <vector>
 #include "proc.h"
+#include "..\minhook\include\MinHook.h"
+
 
 bool DetectsUMVC3 = false;
 //bool Hooked = false;
@@ -18,6 +20,7 @@ void CastTheHookPart2()
 
 int __stdcall wWinMain(HINSTANCE instance, HINSTANCE previousInstance, PWSTR arguments, int commandShow)
 {
+	MH_STATUS WINAPI MH_Initialize(VOID);
 
 	//Creates the GUI.
 	gui::CreateHWindow("UMVC3 Training Tools Port Attempt", "Take 1. Does this appear?");
@@ -39,6 +42,7 @@ int __stdcall wWinMain(HINSTANCE instance, HINSTANCE previousInstance, PWSTR arg
 	gui::DestroyImgui();
 	gui::DestoryDevice();
 	gui::DestroyHWindow();
+	MH_STATUS WINAPI MH_Uninitialize(VOID);
 
 	return EXIT_SUCCESS;
 }
