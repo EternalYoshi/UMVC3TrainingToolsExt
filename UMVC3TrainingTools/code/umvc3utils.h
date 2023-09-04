@@ -9,6 +9,10 @@ inline uintptr_t StrangeTable;
 inline uintptr_t mysterytable;
 inline uintptr_t block2;
 inline uintptr_t ptable;
+inline uintptr_t TysonTable;
+inline uintptr_t Player1TeamTable;
+inline uintptr_t Player2TeamTable;
+
 inline DWORD errorMessageID;
 inline int P1Character1ID;
 inline int P1Character2ID;
@@ -401,5 +405,7 @@ void SetDormSpellLevels();
 void EndlessInstallBoolUpdate();
 
 void SetDeadpoolTeleport();
+
+void ErrorOccured(DWORD errorMessageID);
 
 void FUN_1402b41b0(longlong param_1);

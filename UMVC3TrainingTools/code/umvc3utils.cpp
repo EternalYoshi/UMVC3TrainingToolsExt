@@ -187,6 +187,13 @@ void GetMainPointers()
 		team1ptr = block2 + 0x350;
 		team2ptr = block2 + 0x610;
 
+		//Gets better Pointers.
+		ReadProcessMemory(hProcess, (LPVOID*)0x140D44A70, &TysonTable, sizeof(uintptr_t), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(TysonTable + 0x58), &Player1TeamTable, sizeof(uintptr_t), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(TysonTable + 0x328), &Player2TeamTable, sizeof(uintptr_t), 0);
+
+
+
 	}
 }
 
@@ -195,12 +202,14 @@ void GetCharacterIDs()
 {
 	if (GameMode == 5)
 	{
+		
 		ReadProcessMemory(hProcess, (LPVOID*)(ptable + 0x44), &P1Character1ID, sizeof(int), 0);
 		ReadProcessMemory(hProcess, (LPVOID*)(ptable + 0x44 + 0x58), &P1Character2ID, sizeof(int), 0);
 		ReadProcessMemory(hProcess, (LPVOID*)(ptable + 0x44 + 0x58 + 0x58), &P1Character3ID, sizeof(int), 0);
 		ReadProcessMemory(hProcess, (LPVOID*)(ptable + 0x44 + 0x58 + 0x58 + 0x58), &P2Character1ID, sizeof(int), 0);
 		ReadProcessMemory(hProcess, (LPVOID*)(ptable + 0x44 + 0x58 + 0x58 + 0x58 + 0x58), &P2Character2ID, sizeof(int), 0);
 		ReadProcessMemory(hProcess, (LPVOID*)(ptable + 0x44 + 0x58 + 0x58 + 0x58 + 0x58 + 0x58), &P2Character3ID, sizeof(int), 0);
+		
 	}
 }
 
@@ -209,12 +218,26 @@ void GetPlayerData()
 {
 	if (GameMode == 5)
 	{
+		/*
+		//Older Method. Here for Archival purposes and Checking accuracy of new method.
 		ReadProcessMemory(hProcess, (LPVOID*)(mysterytable + 0xAA0), &P1Character1Data, sizeof(uintptr_t), 0);
 		ReadProcessMemory(hProcess, (LPVOID*)(mysterytable + 0xAA0 + (0x438)), &P1Character2Data, sizeof(uintptr_t), 0);
 		ReadProcessMemory(hProcess, (LPVOID*)(mysterytable + 0xAA0 + (0x438 * 2)), &P1Character3Data, sizeof(uintptr_t), 0);
 		ReadProcessMemory(hProcess, (LPVOID*)(mysterytable + 0xAA0 + (0x438 * 3)), &P2Character1Data, sizeof(uintptr_t), 0);
 		ReadProcessMemory(hProcess, (LPVOID*)(mysterytable + 0xAA0 + (0x438 * 4)), &P2Character2Data, sizeof(uintptr_t), 0);
 		ReadProcessMemory(hProcess, (LPVOID*)(mysterytable + 0xAA0 + (0x438 * 5)), &P2Character3Data, sizeof(uintptr_t), 0);
+		*/
+		uintptr_t TempA = 0;
+		uintptr_t TempB = 0;
+		ReadProcessMemory(hProcess, (LPVOID*)(Player1TeamTable + 0x10), &TempA, sizeof(uintptr_t), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(Player2TeamTable + 0x10), &TempB, sizeof(uintptr_t), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(Player1TeamTable + 0x8), &P1Character1Data, sizeof(int), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(TempA + 0x8), &P1Character2Data, sizeof(int), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x18), &P1Character3Data, sizeof(int), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(Player2TeamTable + 0x8), &P2Character1Data, sizeof(int), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(TempB + 0x8), &P2Character2Data, sizeof(int), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x18), &P2Character3Data, sizeof(int), 0);
+
 	}
 }
 
@@ -477,77 +500,84 @@ void ChangeFrankLevel(int FrankLevel)
 
 	}
 
-	if (P1Character1ID == 9)
+	if (P1Character1ID != 0)
 	{
-		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x69C4), &FrankLevel, sizeof(FrankLevel), NULL))
+		if (P1Character1ID == 9)
 		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x69C4), &FrankLevel, sizeof(FrankLevel), NULL))
+			{
 
+			}
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x69DC), &PrestigePoints, sizeof(PrestigePoints), NULL))
+			{
+
+			}
 		}
-		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x69DC), &PrestigePoints, sizeof(PrestigePoints), NULL))
-		{
 
+		if (P1Character2ID == 9)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x69C4), &FrankLevel, sizeof(FrankLevel), NULL))
+			{
+				MessageBox(NULL, "An error has occurred!\n", "Title!", MB_ICONERROR | MB_OK);
+			}
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x69DC), &PrestigePoints, sizeof(PrestigePoints), NULL))
+			{
+				MessageBox(NULL, "An error has occurred!\n", "Title!", MB_ICONERROR | MB_OK);
+			}
+		}
+
+		if (P1Character3ID == 9)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x69C4), &FrankLevel, sizeof(FrankLevel), NULL))
+			{
+				MessageBox(NULL, "An error has occurred!\n", "Title!", MB_ICONERROR | MB_OK);
+			}
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x69DC), &PrestigePoints, sizeof(PrestigePoints), NULL))
+			{
+				MessageBox(NULL, "An error has occurred!\n", "Title!", MB_ICONERROR | MB_OK);
+			}
+		}
+
+		if (P2Character1ID == 9)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x69C4), &FrankLevel, sizeof(FrankLevel), NULL))
+			{
+
+			}
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x69DC), &PrestigePoints, sizeof(PrestigePoints), NULL))
+			{
+
+			}
+		}
+
+		if (P2Character2ID == 9)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x69C4), &FrankLevel, sizeof(FrankLevel), NULL))
+			{
+
+			}
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x69DC), &PrestigePoints, sizeof(PrestigePoints), NULL))
+			{
+
+			}
+		}
+
+		if (P2Character3ID == 9)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x69C4), &FrankLevel, sizeof(FrankLevel), NULL))
+			{
+
+			}
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x69DC), &PrestigePoints, sizeof(PrestigePoints), NULL))
+			{
+
+			}
 		}
 	}
 
-	if (P1Character2ID == 9)
-	{
-		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x69C4), &FrankLevel, sizeof(FrankLevel), NULL))
-		{
-			MessageBox(NULL, "An error has occurred!\n", "Title!", MB_ICONERROR | MB_OK);
-		}
-		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x69DC), &PrestigePoints, sizeof(PrestigePoints), NULL))
-		{
-			MessageBox(NULL, "An error has occurred!\n", "Title!", MB_ICONERROR | MB_OK);
-		}
-	}
 
-	if (P1Character3ID == 9)
-	{
-		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x69C4), &FrankLevel, sizeof(FrankLevel), NULL))
-		{
-			MessageBox(NULL, "An error has occurred!\n", "Title!", MB_ICONERROR | MB_OK);
-		}
-		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x69DC), &PrestigePoints, sizeof(PrestigePoints), NULL))
-		{
-			MessageBox(NULL, "An error has occurred!\n", "Title!", MB_ICONERROR | MB_OK);
-		}
-	}
 
-	if (P2Character1ID == 9)
-	{
-		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x69C4), &FrankLevel, sizeof(FrankLevel), NULL))
-		{
 
-		}
-		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x69DC), &PrestigePoints, sizeof(PrestigePoints), NULL))
-		{
-
-		}
-	}
-
-	if (P2Character2ID == 9)
-	{
-		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x69C4), &FrankLevel, sizeof(FrankLevel), NULL))
-		{
-
-		}
-		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x69DC), &PrestigePoints, sizeof(PrestigePoints), NULL))
-		{
-
-		}
-	}
-
-	if (P2Character3ID == 9)
-	{
-		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x69C4), &FrankLevel, sizeof(FrankLevel), NULL))
-		{
-
-		}
-		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x69DC), &PrestigePoints, sizeof(PrestigePoints), NULL))
-		{
-
-		}
-	}
 }
 
 //Sets Evidence based on selection.
@@ -733,10 +763,10 @@ void Objection()
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1548), &TBOn, sizeof(TBOn), NULL))
 			{
 
-			}		
+			}
 		}
 		else
-		{			
+		{
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x15F0), &EmptyInstall, sizeof(FighterInstall), NULL))
 			{
 
@@ -1461,6 +1491,11 @@ void SetDeadpoolTeleport()
 	}
 
 
+}
+
+void ErrorOccured(DWORD errorMessageID)
+{
+	
 }
 
 void FUN_1402b41b0(longlong param_1)
