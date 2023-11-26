@@ -99,6 +99,24 @@ namespace Memory
 		InjectHook(address, hook);
 	}
 
+	template<typename AT, typename Func>
+	inline void		InjectHookEx(AT address, Func hook, unsigned int nType, HANDLE hProcess)
+	{
+		char TempByte = 0;
+		ReadProcessMemory(hProcess, (LPVOID*)(address), &TempByte, sizeof(TempByte), 0);
+
+		if(TempByte == 0xE9)
+		{
+		}
+		else if(TempByte == 0xE8)
+		{
+		
+}
+		
+		//*(uint8_t*)address = nType == PATCH_JUMP ? 0xE9 : 0xE8;
+		//InjectHook(address, hook);
+	}
+
 	template<typename Func, typename AT>
 	inline void		ReadCall(AT address, Func& func)
 	{

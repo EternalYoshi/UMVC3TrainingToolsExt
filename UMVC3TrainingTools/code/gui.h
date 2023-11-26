@@ -50,6 +50,7 @@ namespace gui
 	static void TheStatusOptionsTab();
 	static void TheCharacterOptionsTab();
 	static void TheRecordPlaybackTab();
+	static void TheDebugStuffTab();
 	static bool Hooked = false;
 	static int GameModeRef = 0;
 	inline ImFont* mainfont;

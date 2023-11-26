@@ -25,6 +25,8 @@ bool CheckGame()
 }
 */
 
+
+
 bool CheckGame()
 {
 	char gameName[5] = { 0 };
@@ -41,7 +43,8 @@ bool CheckGame()
 	}
 	else
 	{
-		MessageBoxA(0, "Invalid game version!\nUMVC3Hook only supports latest (or it needs to be updated) Steam executable.", 0, MB_ICONINFORMATION);
+		MessageBoxA(0, "Bad News.\nThis tool only supports latest (or at least the version from 2017) Steam executable\nof Ultimate Marvel vs Capcom 3.", 0, MB_ICONINFORMATION);
+		exit(1);
 		return false;
 	}
 
@@ -202,14 +205,14 @@ void GetCharacterIDs()
 {
 	if (GameMode == 5)
 	{
-		
+
 		ReadProcessMemory(hProcess, (LPVOID*)(ptable + 0x44), &P1Character1ID, sizeof(int), 0);
 		ReadProcessMemory(hProcess, (LPVOID*)(ptable + 0x44 + 0x58), &P1Character2ID, sizeof(int), 0);
 		ReadProcessMemory(hProcess, (LPVOID*)(ptable + 0x44 + 0x58 + 0x58), &P1Character3ID, sizeof(int), 0);
 		ReadProcessMemory(hProcess, (LPVOID*)(ptable + 0x44 + 0x58 + 0x58 + 0x58), &P2Character1ID, sizeof(int), 0);
 		ReadProcessMemory(hProcess, (LPVOID*)(ptable + 0x44 + 0x58 + 0x58 + 0x58 + 0x58), &P2Character2ID, sizeof(int), 0);
 		ReadProcessMemory(hProcess, (LPVOID*)(ptable + 0x44 + 0x58 + 0x58 + 0x58 + 0x58 + 0x58), &P2Character3ID, sizeof(int), 0);
-		
+
 	}
 }
 
@@ -218,15 +221,7 @@ void GetPlayerData()
 {
 	if (GameMode == 5)
 	{
-		/*
-		//Older Method. Here for Archival purposes and Checking accuracy of new method.
-		ReadProcessMemory(hProcess, (LPVOID*)(mysterytable + 0xAA0), &P1Character1Data, sizeof(uintptr_t), 0);
-		ReadProcessMemory(hProcess, (LPVOID*)(mysterytable + 0xAA0 + (0x438)), &P1Character2Data, sizeof(uintptr_t), 0);
-		ReadProcessMemory(hProcess, (LPVOID*)(mysterytable + 0xAA0 + (0x438 * 2)), &P1Character3Data, sizeof(uintptr_t), 0);
-		ReadProcessMemory(hProcess, (LPVOID*)(mysterytable + 0xAA0 + (0x438 * 3)), &P2Character1Data, sizeof(uintptr_t), 0);
-		ReadProcessMemory(hProcess, (LPVOID*)(mysterytable + 0xAA0 + (0x438 * 4)), &P2Character2Data, sizeof(uintptr_t), 0);
-		ReadProcessMemory(hProcess, (LPVOID*)(mysterytable + 0xAA0 + (0x438 * 5)), &P2Character3Data, sizeof(uintptr_t), 0);
-		*/
+
 		uintptr_t TempA = 0;
 		uintptr_t TempB = 0;
 		ReadProcessMemory(hProcess, (LPVOID*)(Player1TeamTable + 0x10), &TempA, sizeof(uintptr_t), 0);
@@ -237,6 +232,41 @@ void GetPlayerData()
 		ReadProcessMemory(hProcess, (LPVOID*)(Player2TeamTable + 0x8), &P2Character1Data, sizeof(int), 0);
 		ReadProcessMemory(hProcess, (LPVOID*)(TempB + 0x8), &P2Character2Data, sizeof(int), 0);
 		ReadProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x18), &P2Character3Data, sizeof(int), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(P1Character1Data), scriptableFighters[0].fighter, sizeof(Fighter), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(P1Character2Data), scriptableFighters[1].fighter, sizeof(Fighter), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(P1Character3Data), scriptableFighters[2].fighter, sizeof(Fighter), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(P2Character1Data), scriptableFighters[3].fighter, sizeof(Fighter), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(P2Character2Data), scriptableFighters[4].fighter, sizeof(Fighter), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(P2Character3Data), scriptableFighters[5].fighter, sizeof(Fighter), 0);
+
+		const char* name = nullptr;
+		/*
+		if (scriptableFighters[0].name == nullptr) {
+			scriptableFighters[0].name = new char[strlen(name) + 1] {0};
+			memcpy(scriptableFighters[0].name, name, strlen(name));
+		}
+		if (scriptableFighters[1].name == nullptr) {
+			scriptableFighters[1].name = new char[strlen(name) + 1] {0};
+			memcpy(scriptableFighters[1].name, name, strlen(name));
+		}
+		if (scriptableFighters[2].name == nullptr) {
+			scriptableFighters[2].name = new char[strlen(name) + 1] {0};
+			memcpy(scriptableFighters[2].name, name, strlen(name));
+		}
+		if (scriptableFighters[3].name == nullptr) {
+			scriptableFighters[3].name = new char[strlen(name) + 1] {0};
+			memcpy(scriptableFighters[3].name, name, strlen(name));
+		}
+		if (scriptableFighters[4].name == nullptr) {
+			scriptableFighters[4].name = new char[strlen(name) + 1] {0};
+			memcpy(scriptableFighters[4].name, name, strlen(name));
+		}
+		if (scriptableFighters[5].name == nullptr) {
+			scriptableFighters[5].name = new char[strlen(name) + 1] {0};
+			memcpy(scriptableFighters[5].name, name, strlen(name));
+		}
+		*/
+
 
 	}
 }
@@ -329,6 +359,10 @@ void TickUpdates()
 		ChangeMODOKUnderstanding(MODOKLOU);
 	}
 
+	if(P1C1Jammed == true || P1C2Jammed == true || P1C3Jammed == true || P2C1Jammed == true || P2C2Jammed == true || P2C3Jammed == true)
+	{
+		JammingToggle();
+	}
 }
 
 //Sets Individual Character HP on Training Mode restarts.
@@ -1495,7 +1529,9 @@ void SetDeadpoolTeleport()
 
 void ErrorOccured(DWORD errorMessageID)
 {
-	
+	//MessageBox(hWnd, errorMessageID, "An Error Occured", MB_OK | MB_ICONERROR);
+
+
 }
 
 void FUN_1402b41b0(longlong param_1)
@@ -1944,5 +1980,642 @@ void FUN_1402b41b0(longlong param_1)
 
 }
 
+//Sets whether or not the specified characters are hit by Jamming Bomb.
+void JammingToggle()
+{
+
+	if (P1C1Jammed == true)
+	{
+	
+		if(P1C1Slot2Free == true)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x15F0), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (P1C1Slot3Free == true)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1670), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (P1C1Slot4Free == true)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x16F0), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (P1C1Slot5Free == true)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1770), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			else
+			{
+				return;
+			}
+		}
+
+	}
+
+	if (P1C2Jammed == true)
+	{
+
+		if (P1C2Slot2Free == true)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x15F0), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (P1C2Slot3Free == true)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x1670), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (P1C2Slot4Free == true)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x16F0), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (P1C2Slot5Free == true)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x1770), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			else
+			{
+				return;
+			}
+		}
+
+	}
+
+	if (P1C3Jammed == true)
+	{
+
+		if (P1C3Slot2Free == true)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x15F0), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (P1C3Slot3Free == true)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x1670), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (P1C3Slot4Free == true)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x16F0), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (P1C3Slot5Free == true)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x1770), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			else
+			{
+				return;
+			}
+		}
+
+	}
+
+	if (P2C1Jammed == true)
+	{
+
+		if (P2C1Slot2Free == true)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x15F0), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (P2C1Slot3Free == true)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1670), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (P2C1Slot4Free == true)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x16F0), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (P2C1Slot5Free == true)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1770), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			else
+			{
+				return;
+			}
+		}
+
+	}
+
+	if (P2C2Jammed == true)
+	{
+
+		if (P2C2Slot2Free == true)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x15F0), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (P2C2Slot3Free == true)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x1670), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (P2C2Slot4Free == true)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x16F0), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (P2C2Slot5Free == true)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x1770), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			else
+			{
+				return;
+			}
+		}
+
+	}
+
+	if (P2C3Jammed == true)
+	{
+
+		if (P2C3Slot2Free == true)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x15F0), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (P2C3Slot3Free == true)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x1670), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (P2C3Slot4Free == true)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x16F0), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			else
+			{
+				return;
+			}
+		}
+		else if (P2C3Slot5Free == true)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x1770), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			else
+			{
+				return;
+			}
+		}
+
+	}
+
+
+
+
+
+}
+
+void SetGlobalPlayerSpeed(float GlobalSpeed)
+{
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x15B4), &GlobalSpeed, sizeof(GlobalSpeed), NULL))
+	{
+
+	}
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x15B4), &GlobalSpeed, sizeof(GlobalSpeed), NULL))
+	{
+
+	}
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x15B4), &GlobalSpeed, sizeof(GlobalSpeed), NULL))
+	{
+
+	}
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x15B4), &GlobalSpeed, sizeof(GlobalSpeed), NULL))
+	{
+
+	}
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x15B4), &GlobalSpeed, sizeof(GlobalSpeed), NULL))
+	{
+
+	}
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x15B4), &GlobalSpeed, sizeof(GlobalSpeed), NULL))
+	{
+
+	}
+
+}
+
+void GetActiveInstallData()
+{
+
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1578), &P1C1InstallID1, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x15F8), &P1C1InstallID2, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1678), &P1C1InstallID3, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x16F8), &P1C1InstallID4, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1778), &P1C1InstallID5, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x157C), &P1C1InstallType1, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x15FC), &P1C1InstallType2, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x167C), &P1C1InstallType3, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x16FC), &P1C1InstallType4, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x177C), &P1C1InstallType5, sizeof(int), 0);
+
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x1578), &P1C2InstallID1, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x15F8), &P1C2InstallID2, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x1678), &P1C2InstallID3, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x16F8), &P1C2InstallID4, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x1778), &P1C2InstallID5, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x157C), &P1C2InstallType1, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x15FC), &P1C2InstallType2, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x167C), &P1C2InstallType3, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x16FC), &P1C2InstallType4, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x177C), &P1C2InstallType5, sizeof(int), 0);
+
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x1578), &P1C3InstallID1, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x15F8), &P1C3InstallID2, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x1678), &P1C3InstallID3, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x16F8), &P1C3InstallID4, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x1778), &P1C3InstallID5, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x157C), &P1C3InstallType1, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x15FC), &P1C3InstallType2, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x167C), &P1C3InstallType3, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x16FC), &P1C3InstallType4, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x177C), &P1C3InstallType5, sizeof(int), 0);
+
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1578), &P2C1InstallID1, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x15F8), &P2C1InstallID2, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1678), &P2C1InstallID3, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x16F8), &P2C1InstallID4, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1778), &P2C1InstallID5, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x157C), &P2C1InstallType1, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x15FC), &P2C1InstallType2, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x167C), &P2C1InstallType3, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x16FC), &P2C1InstallType4, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x177C), &P2C1InstallType5, sizeof(int), 0);
+
+
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x1578), &P2C2InstallID1, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x15F8), &P2C2InstallID2, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x1678), &P2C2InstallID3, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x16F8), &P2C2InstallID4, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x1778), &P2C2InstallID5, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x157C), &P2C2InstallType1, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x15FC), &P2C2InstallType2, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x167C), &P2C2InstallType3, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x16FC), &P2C2InstallType4, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x177C), &P2C2InstallType5, sizeof(int), 0);
+
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x1578), &P2C3InstallID1, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x15F8), &P2C3InstallID2, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x1678), &P2C3InstallID3, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x16F8), &P2C3InstallID4, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x1778), &P2C3InstallID5, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x157C), &P2C3InstallType1, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x15FC), &P2C3InstallType2, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x167C), &P2C3InstallType3, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x16FC), &P2C3InstallType4, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x177C), &P2C3InstallType5, sizeof(int), 0);
+
+	if (P1C1InstallID2 == 0 && P1C1InstallType2 == 0)
+	{
+		P1C1Slot2Free = true;
+	}
+	else
+	{
+		P1C1Slot2Free = false;
+	}
+
+	if (P1C1InstallID3 == 0 && P1C1InstallType3 == 0)
+	{
+		P1C1Slot3Free = true;
+	}
+	else
+	{
+		P1C1Slot3Free = false;
+	}
+
+	if (P1C1InstallID4 == 0 && P1C1InstallType4 == 0)
+	{
+		P1C1Slot4Free = true;
+	}
+	else
+	{
+		P1C1Slot4Free = false;
+	}
+
+	if (P1C1InstallID5 == 0 && P1C1InstallType5 == 0)
+	{
+		P1C1Slot5Free = true;
+	}
+	else
+	{
+		P1C1Slot5Free = false;
+	}
+
+	if (P1C2InstallID2 == 0 && P1C2InstallType2 == 0)
+	{
+		P1C2Slot2Free = true;
+	}
+	else
+	{
+		P1C2Slot2Free = false;
+	}
+
+	if (P1C2InstallID3 == 0 && P1C2InstallType3 == 0)
+	{
+		P1C2Slot3Free = true;
+	}
+	else
+	{
+		P1C2Slot3Free = false;
+	}
+
+	if (P1C2InstallID4 == 0 && P1C2InstallType4 == 0)
+	{
+		P1C2Slot4Free = true;
+	}
+	else
+	{
+		P1C2Slot4Free = false;
+	}
+
+	if (P1C2InstallID5 == 0 && P1C2InstallType5 == 0)
+	{
+		P1C2Slot5Free = true;
+	}
+	else
+	{
+		P1C2Slot5Free = false;
+	}
+
+	if (P1C3InstallID2 == 0 && P1C3InstallType2 == 0)
+	{
+		P1C3Slot2Free = true;
+	}
+	else
+	{
+		P1C3Slot2Free = false;
+	}
+
+	if (P1C3InstallID3 == 0 && P1C3InstallType3 == 0)
+	{
+		P1C3Slot3Free = true;
+	}
+	else
+	{
+		P1C3Slot3Free = false;
+	}
+
+	if (P1C3InstallID4 == 0 && P1C3InstallType4 == 0)
+	{
+		P1C3Slot4Free = true;
+	}
+	else
+	{
+		P1C3Slot4Free = false;
+	}
+
+	if (P1C3InstallID5 == 0 && P1C3InstallType5 == 0)
+	{
+		P1C3Slot5Free = true;
+	}
+	else
+	{
+		P1C3Slot5Free = false;
+	}
+
+	if (P2C1InstallID2 == 0 && P2C1InstallType2 == 0)
+	{
+		P2C1Slot2Free = true;
+	}
+	else
+	{
+		P2C1Slot2Free = false;
+	}
+
+	if (P2C1InstallID3 == 0 && P2C1InstallType3 == 0)
+	{
+		P2C1Slot3Free = true;
+	}
+	else
+	{
+		P2C1Slot3Free = false;
+	}
+
+	if (P2C1InstallID4 == 0 && P2C1InstallType4 == 0)
+	{
+		P2C1Slot4Free = true;
+	}
+	else
+	{
+		P2C1Slot4Free = false;
+	}
+
+	if (P2C1InstallID5 == 0 && P2C1InstallType5 == 0)
+	{
+		P2C1Slot5Free = true;
+	}
+	else
+	{
+		P2C1Slot5Free = false;
+	}
+
+	if (P2C2InstallID2 == 0 && P2C2InstallType2 == 0)
+	{
+		P2C2Slot2Free = true;
+	}
+	else
+	{
+		P2C2Slot2Free = false;
+	}
+
+	if (P2C2InstallID3 == 0 && P2C2InstallType3 == 0)
+	{
+		P2C2Slot3Free = true;
+	}
+	else
+	{
+		P2C2Slot3Free = false;
+	}
+
+	if (P2C2InstallID4 == 0 && P2C2InstallType4 == 0)
+	{
+		P2C2Slot4Free = true;
+	}
+	else
+	{
+		P2C2Slot4Free = false;
+	}
+
+	if (P2C2InstallID5 == 0 && P2C2InstallType5 == 0)
+	{
+		P2C2Slot5Free = true;
+	}
+	else
+	{
+		P2C2Slot5Free = false;
+	}
+
+	if (P2C3InstallID2 == 0 && P2C3InstallType2 == 0)
+	{
+		P2C3Slot2Free = true;
+	}
+	else
+	{
+		P2C3Slot2Free = false;
+	}
+
+	if (P2C3InstallID3 == 0 && P2C3InstallType3 == 0)
+	{
+		P2C3Slot3Free = true;
+	}
+	else
+	{
+		P2C3Slot3Free = false;
+	}
+
+	if (P2C3InstallID4 == 0 && P2C3InstallType4 == 0)
+	{
+		P2C3Slot4Free = true;
+	}
+	else
+	{
+		P2C3Slot4Free = false;
+	}
+
+	if (P2C3InstallID5 == 0 && P2C3InstallType5 == 0)
+	{
+		P2C3Slot5Free = true;
+	}
+	else
+	{
+		P2C3Slot5Free = false;
+	}
+
+
+
+
+}
+
+void GetDebugData()
+{
+
+	//Attempts to get Player 1 Character 1's hurtbox/hurtsphere coordinates.
+
+
+}
 
 

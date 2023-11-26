@@ -72,9 +72,6 @@
     <ClInclude Include="sigscan.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Trampoline.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MemoryMgr.h">
       <Filter>Header Files</Filter>
     </ClInclude>

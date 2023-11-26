@@ -2,7 +2,10 @@
 #include <Windows.h>
 #include <TlHelp32.h>
 #include <vector>
+#include <list>
+//#include "proc.h"
 
+inline HANDLE HProc = 0;
 inline bool ValidVer;
 inline int GameMode;
 inline uintptr_t StrangeTable;
@@ -12,6 +15,7 @@ inline uintptr_t ptable;
 inline uintptr_t TysonTable;
 inline uintptr_t Player1TeamTable;
 inline uintptr_t Player2TeamTable;
+inline uintptr_t BaseFighterUpdateMethod = 0x14004bd30;
 
 inline DWORD errorMessageID;
 inline int P1Character1ID;
@@ -39,7 +43,6 @@ inline float p1Pos = -125.0f;
 inline float p2Pos = 125.0f;
 inline bool restarted = false;
 inline int restartTimer = 0;
-
 inline int MODOKLOU = 1;
 inline int FrankLevel = 1;
 inline float PrestigePoints = 0.0;
@@ -192,29 +195,236 @@ inline uint8_t replayBuffer10[ReplayLength][ReplayBufferSize];
 inline FILE* pRec;
 bool CheckGame();
 
-enum WrightEvidence
-{
-	Nothing = -1,
-	Photo = 0,
-	Watch = 1,
-	Vase = 2,
-	Folder = 3,
-	Phone = 4,
-	Knife = 5,
-	Sunglasses = 6,
-	Beer = 7,
-	Bonsai = 8,
-	Doll = 9,
-	Figurine = 10,
-	Plunger = 11,
-	Chicken = 12,
+inline int P1C1InstallID1 = 0;
+inline int P1C1InstallID2 = 0;
+inline int P1C1InstallID3 = 0;
+inline int P1C1InstallID4 = 0;
+inline int P1C1InstallID5 = 0;
+
+inline int P1C1InstallType1 = 0;
+inline int P1C1InstallType2 = 0;
+inline int P1C1InstallType3 = 0;
+inline int P1C1InstallType4 = 0;
+inline int P1C1InstallType5 = 0;
+
+inline int P1C2InstallID1 = 0;
+inline int P1C2InstallID2 = 0;
+inline int P1C2InstallID3 = 0;
+inline int P1C2InstallID4 = 0;
+inline int P1C2InstallID5 = 0;
+
+inline int P1C2InstallType1 = 0;
+inline int P1C2InstallType2 = 0;
+inline int P1C2InstallType3 = 0;
+inline int P1C2InstallType4 = 0;
+inline int P1C2InstallType5 = 0;
+
+inline int P1C3InstallID1 = 0;
+inline int P1C3InstallID2 = 0;
+inline int P1C3InstallID3 = 0;
+inline int P1C3InstallID4 = 0;
+inline int P1C3InstallID5 = 0;
+
+inline int P1C3InstallType1 = 0;
+inline int P1C3InstallType2 = 0;
+inline int P1C3InstallType3 = 0;
+inline int P1C3InstallType4 = 0;
+inline int P1C3InstallType5 = 0;
+
+inline int P2C1InstallID1 = 0;
+inline int P2C1InstallID2 = 0;
+inline int P2C1InstallID3 = 0;
+inline int P2C1InstallID4 = 0;
+inline int P2C1InstallID5 = 0;
+
+inline int P2C1InstallType1 = 0;
+inline int P2C1InstallType2 = 0;
+inline int P2C1InstallType3 = 0;
+inline int P2C1InstallType4 = 0;
+inline int P2C1InstallType5 = 0;
+
+inline int P2C2InstallID1 = 0;
+inline int P2C2InstallID2 = 0;
+inline int P2C2InstallID3 = 0;
+inline int P2C2InstallID4 = 0;
+inline int P2C2InstallID5 = 0;
+
+inline int P2C2InstallType1 = 0;
+inline int P2C2InstallType2 = 0;
+inline int P2C2InstallType3 = 0;
+inline int P2C2InstallType4 = 0;
+inline int P2C2InstallType5 = 0;
+
+inline int P2C3InstallID1 = 0;
+inline int P2C3InstallID2 = 0;
+inline int P2C3InstallID3 = 0;
+inline int P2C3InstallID4 = 0;
+inline int P2C3InstallID5 = 0;
+
+inline int P2C3InstallType1 = 0;
+inline int P2C3InstallType2 = 0;
+inline int P2C3InstallType3 = 0;
+inline int P2C3InstallType4 = 0;
+inline int P2C3InstallType5 = 0;
+
+inline bool P1C1Slot2Free = false;
+inline bool P1C1Slot3Free = false;
+inline bool P1C1Slot4Free = false;
+inline bool P1C1Slot5Free = false;
+
+inline bool P1C2Slot2Free = false;
+inline bool P1C2Slot3Free = false;
+inline bool P1C2Slot4Free = false;
+inline bool P1C2Slot5Free = false;
+
+inline bool P1C3Slot2Free = false;
+inline bool P1C3Slot3Free = false;
+inline bool P1C3Slot4Free = false;
+inline bool P1C3Slot5Free = false;
+
+inline bool P2C1Slot2Free = false;
+inline bool P2C1Slot3Free = false;
+inline bool P2C1Slot4Free = false;
+inline bool P2C1Slot5Free = false;
+
+inline bool P2C2Slot2Free = false;
+inline bool P2C2Slot3Free = false;
+inline bool P2C2Slot4Free = false;
+inline bool P2C2Slot5Free = false;
+
+inline bool P2C3Slot2Free = false;
+inline bool P2C3Slot3Free = false;
+inline bool P2C3Slot4Free = false;
+inline bool P2C3Slot5Free = false;
+
+inline bool P1C1Jammed = false;
+inline bool P1C2Jammed = false;
+inline bool P1C3Jammed = false;
+inline bool P2C1Jammed = false;
+inline bool P2C2Jammed = false;
+inline bool P2C3Jammed = false;
+
+
+struct vector {
+	float X;
+	float Y;
+	float Z;
 };
 
-struct Recording {
+struct vector4 {
+	float X;
+	float Y;
+	float Z;
+	float W;
+};
 
-	int FrameCount;
-	char* InputBinary[3844];
+struct cHitPrimSphere {
+	long PointerIdentifier;
+	int mType;
+	int Unknown0C;
+	int mMargin;
+	int Unknown14;
+	int Unknown18;
+	int Unknown1C;
+	vector Coordinates;
+	float Radius;
+	int Flag;
+	int Unknown34;
+	long ParentPointer;
+	int Unknown3C;
+	int BoneIndex;
+	float SizeRateX;
+	float SizeRateY;
+	float SizeRateZ;
+	int mOfs50;
+	int mOfs54;
+	int mOfs58;
+	int mOfs5C;
+	int mOfs60;
+	int mOfs64;
+	int mOfs68;
+	int mOfs6C;
+};
 
+struct cHitPrimCapsule {
+	long PointerIdentifier;
+	int mType;
+	int Unknown0C;
+	int mMargin;
+	int Unknown14;
+	int Unknown18;
+	int Unknown1C;
+
+	vector4 Point1;
+
+	vector4 Point2;
+
+	float Radius;
+	int Unknown44;
+	int Unknown48;
+	int Unknown4C;
+
+	int Flag;
+	int Uknown54;
+	long mpParent0;
+
+	long mpParent1;
+	int mParentNo0;
+	int mParentNo1;
+
+	float SizeRateX;
+	float SizeRateY;
+	float SizeRateZ;
+	int Unknown7C;
+
+	float Unknown80;
+	float Unknown84;
+	float Unknown88;
+	float Unknown8C;
+
+	float Unknown90;
+	float Unknown94;
+	float Unknown98;
+	float Unknown9C;
+
+	int mOfsA0;
+	int mOfsA4;
+	int mOfsA8;
+	int mOfsAC;
+
+
+};
+
+struct MarvelVector {
+	float x;
+	float y;
+	float xVelocity;
+};
+
+enum EGroundedState :uint8_t {
+	NoGround = 0,
+	Grounded = 0xF4,
+	InAir = 0xF2,
+};
+
+enum ETagState :uint8_t {
+	NoTag = 0,
+	Active = 0x0D,
+	Inactive = 0x09,
+	Active2 = 0x68,
+	TagginOut = 0xB4,
+	TagginIn = 0x6c
+};
+
+struct mShotGroupAnmSerial{
+	uint8_t ParamA;
+	uint8_t ParamB;
+	uint8_t ParamC;
+	uint8_t ParamD;
+};
+
+struct mbShotGroupHit {
+	bool Hit;
 };
 
 struct FighterInstall
@@ -253,6 +463,114 @@ struct FighterInstall
 	int Unknown7C;
 
 };
+
+struct Fighter { // TODO map this out
+	char offset[0x14];//0x14
+	ETagState tagState;//0x15
+	char offset2[0x3B];//0x50
+	MarvelVector vector;//0x5C
+	char offset3[0x10];//0x6C
+	EGroundedState  groundedState;//0x6D
+	char offset4[0x12A3];//0x1310
+	int AnimIDA;//0x1314
+	int AnimIDOld;//0x1318
+	char offset5[0x10];//0x1328
+	float CurrentFrameA;//0x132C
+	float CurrentFrameB;//0x1330
+	//....
+	FighterInstall Installs[5] = { 0 };//0x1570
+	//.....
+	char offset6[0x50D0];//0x6400
+	float ArmorTimer;//0x6404
+	float ArmorDamageMultiplier;//0x6408
+	int ArmorShield;//I think this means the hit threshold??//0x640C
+	char offset7[0x24];//0x6430
+	int CurrentShotGroup;//0x6434
+	mShotGroupAnmSerial ShotGroupSerials[8];//0x6454
+	mbShotGroupHit ShotGroupHits[8];//0x645C
+	//Commented Out because I don't quite understand it and need to set it aside for further testing and mapping out.
+	//char offset4[0xc7];//0x134
+	//uint16_t specialState;//specialstate? 0x136??
+	//char offset5[0x528];
+	//uint32_t anim; // anim??
+};
+
+struct ScriptableFighter {
+	Fighter* fighter = 0;
+	intptr_t fighterController = 0; // TODO find better name for this
+	char* name = nullptr;
+
+	uintptr_t tickPtr = 0x14004bd30;
+	void Tick() {
+		//((void(__fastcall*)(longlong*))_addr(tickPtr))((longlong*)fighter);
+		if (HProc) {
+			ReadProcessMemory(HProc, (LPVOID*)(0x14004bd30), &fighter, sizeof(longlong), 0);
+		}
+	};
+
+	const char* GetGroundedState() {
+		switch (fighter->groundedState)
+		{
+		case Grounded:
+			return "Grounded";
+		case InAir:
+			return "InAir";
+		default:
+			return "Unkown";
+			break;
+		}
+	}
+	const char* GetTagState() {
+		switch (fighter->tagState)
+		{
+		case Active:
+		case Active2:
+			return "Active";
+		case Inactive:
+			return "Inactive";
+		case TagginOut:
+			return "TagginOut";
+		case TagginIn:
+			return "TagginIn";
+		default:
+			return "Unkown";
+			break;
+		}
+	}
+	int CollisionCount;
+	std::list<cHitPrimSphere> HurtSpheres;
+	std::list<cHitPrimCapsule> HurtCapsules;
+};
+
+inline ScriptableFighter scriptableFighters[6] = { 0 };
+
+
+
+enum WrightEvidence
+{
+	Nothing = -1,
+	Photo = 0,
+	Watch = 1,
+	Vase = 2,
+	Folder = 3,
+	Phone = 4,
+	Knife = 5,
+	Sunglasses = 6,
+	Beer = 7,
+	Bonsai = 8,
+	Doll = 9,
+	Figurine = 10,
+	Plunger = 11,
+	Chicken = 12,
+};
+
+struct Recording {
+
+	int FrameCount;
+	char* InputBinary[3844];
+
+};
+
 
 inline FighterInstall EmptyInstall =
 {
@@ -362,6 +680,42 @@ inline FighterInstall TurnaboutMode =
 	-0
 };
 
+inline FighterInstall Jammed =
+{
+	1084673544,//IdentifyingHashA
+	1,//IdentifyingHashA
+	16,//InstallID
+	23,//mType
+	999999.0,//Duration
+	305,//PossibleRelatedAnmchrEntry
+	0,
+	64,
+	0,//mLifeAdd
+	0,
+	0,
+	0,
+	1.0,
+	1.0,
+	1.0,
+	1.0,
+	1.0,
+	1.0,
+	-1.0,
+	-1,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	-1,
+	-0
+};
+
 DWORD SingleWrite(DWORD64 AddressToWrite, int length, HANDLE hProcess, BYTE ByteToWrite, DWORD errorMessageID, LPSTR messageBuffer);
 
 DWORD MultiWrite(DWORD64 AddressToWrite, int length, HANDLE hProcess, BYTE ByteToWrite[], DWORD errorMessageID, LPSTR messageBuffer);
@@ -409,3 +763,12 @@ void SetDeadpoolTeleport();
 void ErrorOccured(DWORD errorMessageID);
 
 void FUN_1402b41b0(longlong param_1);
+
+void SetGlobalPlayerSpeed(float PlayerSpeed);
+
+void JammingToggle();
+
+void GetActiveInstallData();
+
+//Gets Debug Data for future use.
+void GetDebugData();

@@ -161,7 +161,6 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="resource1.h" />
     <ClInclude Include="sigscan.h" />
-    <ClInclude Include="Trampoline.h" />
     <ClInclude Include="utils\addr.h" />
     <ClInclude Include="utils\core.h" />
     <ClInclude Include="utils\IniReader.h" />

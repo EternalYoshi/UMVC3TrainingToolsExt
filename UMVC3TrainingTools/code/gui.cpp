@@ -1,6 +1,6 @@
 #define _CRT_SECURE_NO_DEPRECATE
 #include "gui.h"
-//#include "../imgui/imgui.h"
+#include "../imgui/imgui.h"
 #include "../imgui/imgui_impl_dx9.h"
 #include "../imgui/imgui_impl_win32.h"
 #include "proc.h"
@@ -20,7 +20,7 @@
 
 #define IMGUI_ENABLE_FREETYPE
 
-#pragma region Take1
+
 
 //Window Process handler.
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler
@@ -280,9 +280,15 @@ void CastTheHook()
 	{
 		gui::Hooked = false;
 	}
+	HProc = hProcess;
+}
+
+void TrampHookPart2(HANDLE hProcess, LPVOID TargetAddress, Trampoline* tramp, unsigned int nType)
+{
 
 }
 
+#pragma region MenuTabs
 //ImGui menu stuff begins here.
 static void gui::TheMenuBar()
 {
@@ -323,7 +329,7 @@ void gui::TheAboutWindow(bool* p_open)
 	}
 	ImGui::Text("2023 By Eternal Yoshi");
 	ImGui::Separator();
-	ImGui::Text("Thanks To SanHKHaan & Sheep for finding the\npointers and memeory offsets that made this possible,\nand Ermmaccer for the original UMVC3Hook this\nversion is based on.");
+	ImGui::Text("Thanks To SanHKHaan, Sheep, & Gneiss for finding\nthe pointers and memeory offsets that made this \npossible,and Ermmaccer for the original UMVC3Hook\nthis version is based on.");
 	ImGui::Separator();
 	ImGui::Text("In case it isn't obvious, this tool is NOT designed to\nenable cheating in netplay and\nis intended to only function in training mode.");
 	
@@ -631,19 +637,18 @@ static void gui::TheExtraOptionsTab()
 
 		}
 		ImGui::Separator();
-
-		ImGui::SeparatorText("Incomplete Stuff");
-
-		/*
-		//ImGui::Text("Game Speed");
-		if (ImGui::SliderFloat("Game Speed", &GameSpeed, 0.01666667f, 1.0f))
-		{
-
-		}
-		*/
+		
+		ImGui::SeparatorText("Incomplete/Experimental Stuff");
 
 		ImGui::Separator();
 
+		//ImGui::Text("Game Speed");
+		if (ImGui::SliderFloat("Character Speed", &GameSpeed, 0.01666667f, 2.0f))
+		{
+			SetGlobalPlayerSpeed(GameSpeed);
+
+		}
+		
 		ImGui::Text("More features coming soon!");
 
 		ImGui::EndTabItem();
@@ -741,6 +746,55 @@ static void gui::TheStatusOptionsTab()
 			}
 		}
 
+		ImGui::SeparatorText("Jamming Bomb/Reversed Controls");
+
+		if (ImGui::Checkbox("Player 1 Character 1", &P1C1Jammed))
+		{
+			if (CheckTheMode() == true)
+			{
+				JammingToggle();
+			}
+		}
+
+		if (ImGui::Checkbox("Player 1 Character 2", &P1C2Jammed))
+		{
+			if (CheckTheMode() == true)
+			{
+				JammingToggle();
+			}
+		}
+
+		if (ImGui::Checkbox("Player 1 Character 3", &P1C3Jammed))
+		{
+			if (CheckTheMode() == true)
+			{
+				JammingToggle();
+			}
+		}
+
+		if (ImGui::Checkbox("Player 2 Character 1", &P2C1Jammed))
+		{
+			if (CheckTheMode() == true)
+			{
+				JammingToggle();
+			}
+		}
+
+		if (ImGui::Checkbox("Player 2 Character 2", &P2C2Jammed))
+		{
+			if (CheckTheMode() == true)
+			{
+				JammingToggle();
+			}
+		}
+
+		if (ImGui::Checkbox("Player 2 Character 3", &P2C3Jammed))
+		{
+			if (CheckTheMode() == true)
+			{
+				JammingToggle();
+			}
+		}
 		ImGui::Separator();
 
 		ImGui::Text("More stuff coming soon!");
@@ -2486,6 +2540,384 @@ static void gui::TheRecordPlaybackTab()
 
 }
 
+static void gui::TheDebugStuffTab()
+{
+	//For Debug Stuff and keeping records.
+	if (ImGui::BeginTabItem("Debug Stuff"))
+	{
+		GetPlayerData();
+		ImGui::Text("Remember! These Parameters will only take\neffect when this window is open.");
+
+#pragma region GetInstallID
+
+		GetActiveInstallData();
+
+		//Gets install IDs and Stuff.
+		ImGui::SeparatorText("Character Install State IDs");
+
+		ImGui::Text("Player 1 Character 1:");
+		ImGui::SameLine();
+		ImGui::Text("%i", P1Character1ID);
+
+		ImGui::Text("Slot 1 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C1InstallID1);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C1InstallType1);
+
+		ImGui::Text("Slot 2 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C1InstallID2);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C1InstallType2);
+
+		ImGui::Text("Slot 3 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C1InstallID3);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C1InstallType3);
+
+		ImGui::Text("Slot 4 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C1InstallID4);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C1InstallType4);
+
+		ImGui::Text("Slot 5 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C1InstallID5);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C1InstallType5);
+
+		ImGui::Text("Player 1 Character 2:");
+		ImGui::SameLine();
+		ImGui::Text("%i", P1Character2ID);
+
+		ImGui::Text("Slot 1 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C2InstallID1);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C2InstallType1);
+
+		ImGui::Text("Slot 2 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C2InstallID2);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C2InstallType2);
+
+		ImGui::Text("Slot 3 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C2InstallID3);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C2InstallType3);
+
+		ImGui::Text("Slot 4 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C2InstallID4);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C2InstallType4);
+
+		ImGui::Text("Slot 5 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C2InstallID5);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C2InstallType5);
+
+		ImGui::Text("Player 1 Character 3:");
+		ImGui::SameLine();
+		ImGui::Text("%i", P1Character3ID);
+
+		ImGui::Text("Slot 1 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C3InstallID1);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C3InstallType1);
+
+		ImGui::Text("Slot 2 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C3InstallID2);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C3InstallType2);
+
+		ImGui::Text("Slot 3 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C3InstallID3);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C3InstallType3);
+
+		ImGui::Text("Slot 4 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C3InstallID4);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C3InstallType4);
+
+		ImGui::Text("Slot 5 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C3InstallID5);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P1C3InstallType5);
+
+		ImGui::Text("Player 2 Character 1:");
+		ImGui::SameLine();
+		ImGui::Text("%i", P2Character1ID);
+
+		ImGui::Text("Slot 1 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C1InstallID1);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C1InstallType1);
+
+		ImGui::Text("Slot 2 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C1InstallID2);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C1InstallType2);
+
+		ImGui::Text("Slot 3 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C1InstallID3);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C1InstallType3);
+
+		ImGui::Text("Slot 4 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C1InstallID4);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C1InstallType4);
+
+		ImGui::Text("Slot 5 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C1InstallID5);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C1InstallType5);
+
+		ImGui::Text("Player 2 Character 2:");
+		ImGui::SameLine();
+		ImGui::Text("%i", P2Character2ID);
+
+		ImGui::Text("Slot 1 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C2InstallID1);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C2InstallType1);
+
+		ImGui::Text("Slot 2 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C2InstallID2);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C2InstallType2);
+
+		ImGui::Text("Slot 3 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C2InstallID3);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C2InstallType3);
+
+		ImGui::Text("Slot 4 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C2InstallID4);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C2InstallType4);
+
+		ImGui::Text("Slot 5 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C2InstallID5);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C2InstallType5);
+
+		ImGui::Text("Player 1 Character 3:");
+		ImGui::SameLine();
+		ImGui::Text("%i", P2Character3ID);
+
+		ImGui::Text("Slot 1 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C3InstallID1);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C3InstallType1);
+
+		ImGui::Text("Slot 2 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C3InstallID2);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C3InstallType2);
+
+		ImGui::Text("Slot 3 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C3InstallID3);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C3InstallType3);
+
+		ImGui::Text("Slot 4 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C3InstallID4);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C3InstallType4);
+
+		ImGui::Text("Slot 5 - ");
+		ImGui::SameLine();
+		ImGui::Text("Install ID: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C3InstallID5);
+		ImGui::SameLine();
+		ImGui::Text(" Type: ");
+		ImGui::SameLine();
+		ImGui::Text("%x", P2C3InstallType5);
+
+
+#pragma endregion
+
+		/*
+		for (size_t i = 0; i < 6; i++)
+		{
+			if (scriptableFighters[i].name == nullptr) {
+				//ImGui::Text("p%d:%llx", i, scriptableFighters[i].fighter);
+				//ImGui::Text("p%d:%llx",i, scriptableFighters[i].fighter);
+			}
+			else {
+				//ImGui::Text("p%d:%llx", i, scriptableFighters[i].fighter);
+				//ImGui::Text("p%d:%llx %llx %s", i, scriptableFighters[i].fighter, scriptableFighters[i].tickPtr, scriptableFighters[i].name);
+			}
+			
+			
+			if (scriptableFighters[i].fighter->tagState == ETagState::Active || scriptableFighters[i].fighter->tagState == ETagState::Active2)
+			{
+				//ImGui::Text("  X:%d", (int)scriptableFighters[i].fighter->vector.x);
+				//ImGui::SameLine();
+				//ImGui::Text("- Y:%d", (int)scriptableFighters[i].fighter->vector.y);
+				//ImGui::SameLine();
+				//ImGui::Text("- Vel:%d", (int)scriptableFighters[i].fighter->vector.xVelocity);
+
+				//ImGui::Text("  Anim:%x", scriptableFighters[i].fighter->anim);
+				//ImGui::Text("  Special:%x", scriptableFighters[i].fighter->specialState);
+
+				//ImGui::Text("  Grounded:%s", scriptableFighters[i].GetGroundedState());
+				//ImGui::Text("  TagState:%s", scriptableFighters[i].GetTagState());
+			}
+			
+
+		}
+		*/
+		ImGui::EndTabItem();
+	}
+
+}
+
 void gui::Render() noexcept
 {
 	ImGui::SetWindowPos({ 0,0 });
@@ -2522,6 +2954,8 @@ void gui::Render() noexcept
 		{
 			GetMainPointers();
 			TickUpdates();
+			GetActiveInstallData();
+
 			if (ImGui::BeginTabBar("##tabs"))
 			{
 				ReadProcessMemory(hProcess, (LPVOID*)(block2 + 0x118), &val, sizeof(val), 0);
@@ -2579,15 +3013,19 @@ void gui::Render() noexcept
 				}
 				
 				Trampoline* tramp = Trampoline::MakeTrampoline(GetModuleHandle(nullptr));
-				//Memory::InjectHook(_addr(0x140289c5a), tramp->Jump(FUN_1402b41b0), PATCH_CALL);
-				
+
+				char TempByte = 0;
+				//ReadProcessMemory(hProcess, (LPVOID*)(0x140289c5a), &TempByte, sizeof(TempByte), 0);
+
+				//Memory::InjectHookEx(_addr(0x140289c5a), tramp->Jump(FUN_1402b41b0), PATCH_CALL, hProcess);
+				TrampHookPart2( hProcess,(LPVOID*)0x140289c5a,tramp, PATCH_CALL);
 
 				TickUpdates();
 				TheExtraOptionsTab();
 				TheStatusOptionsTab();
 				TheCharacterOptionsTab();
 				TheRecordPlaybackTab();
-
+				TheDebugStuffTab();
 
 				ImGui::EndTabBar();
 
