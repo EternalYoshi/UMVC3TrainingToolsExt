@@ -538,17 +538,52 @@ static void gui::TheExtraOptionsTab()
 	{
 		ImGui::Separator();
 
-		if (ImGui::Button("Restart Training Mode"))
+		if (ImGui::Button("Restart To Intros"))
 		{
 			if (CheckTheMode() == true)
 			{
 				//*(unsigned char*)(block2 + 0x118) = 3;
-				int RestartValue = 3;
+				int RestartValue = 1;
 				if (!WriteProcessMemory(hProcess, (LPVOID*)(block2 + 0x118), &RestartValue, sizeof(int), NULL))
 				{
 
 				}
 				else 
+				{
+					val = 3;
+				}
+			}
+		}
+
+		ImGui::Text("Note: Pressing the above button multiple times will result\n in the intro replaying after FIGHT!!!");
+
+		if (ImGui::Button("Restart To Ready"))
+		{
+			if (CheckTheMode() == true)
+			{
+				//*(unsigned char*)(block2 + 0x118) = 3;
+				int RestartValue = 2;
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(block2 + 0x118), &RestartValue, sizeof(int), NULL))
+				{
+
+				}
+				else
+				{
+					val = 3;
+				}
+			}
+		}
+
+		if (ImGui::Button("Restart Training Mode"))
+		{
+			if (CheckTheMode() == true)
+			{
+				int RestartValue = 3;
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(block2 + 0x118), &RestartValue, sizeof(int), NULL))
+				{
+
+				}
+				else
 				{
 					val = 3;
 				}
@@ -745,6 +780,33 @@ static void gui::TheStatusOptionsTab()
 				}
 			}
 		}
+
+		ImGui::SeparatorText("Hyper Meter");
+
+		if (P1Meter)
+		{
+			ImGui::Text("Player 1 Meter");
+			if (ImGui::SliderInt("P1 Meter", &P1Meter, 1, 50000))
+			{
+				if (CheckTheMode() == true)
+				{
+					SetMeters();
+				}
+			}
+		}
+
+		if (P2Meter)
+		{
+			ImGui::Text("Player 2 Meter");
+			if (ImGui::SliderInt("P2 Meter", &P2Meter, 1, 50000))
+			{
+				if (CheckTheMode() == true)
+				{
+					SetMeters();
+				}
+			}
+		}
+
 
 		ImGui::SeparatorText("Jamming Bomb/Reversed Controls");
 
@@ -3006,7 +3068,8 @@ void gui::Render() noexcept
 						}
 						restarted = false;
 						SetIndividualCharacterHealth();
-
+						SetMeters();
+						GetDebugData();
 					}
 
 
@@ -3015,10 +3078,10 @@ void gui::Render() noexcept
 				Trampoline* tramp = Trampoline::MakeTrampoline(GetModuleHandle(nullptr));
 
 				char TempByte = 0;
-				//ReadProcessMemory(hProcess, (LPVOID*)(0x140289c5a), &TempByte, sizeof(TempByte), 0);
+				ReadProcessMemory(hProcess, (LPVOID*)(0x140289c5a), &TempByte, sizeof(TempByte), 0);
 
 				//Memory::InjectHookEx(_addr(0x140289c5a), tramp->Jump(FUN_1402b41b0), PATCH_CALL, hProcess);
-				TrampHookPart2( hProcess,(LPVOID*)0x140289c5a,tramp, PATCH_CALL);
+				//TrampHookPart2( hProcess,(LPVOID*)0x140289c5a,tramp, PATCH_CALL);
 
 				TickUpdates();
 				TheExtraOptionsTab();

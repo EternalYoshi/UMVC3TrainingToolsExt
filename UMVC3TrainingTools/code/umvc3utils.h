@@ -304,6 +304,8 @@ inline bool P2C1Jammed = false;
 inline bool P2C2Jammed = false;
 inline bool P2C3Jammed = false;
 
+inline int P1Meter = 10000;
+inline int P2Meter = 10000;
 
 struct vector {
 	float X;
@@ -544,8 +546,6 @@ struct ScriptableFighter {
 
 inline ScriptableFighter scriptableFighters[6] = { 0 };
 
-
-
 enum WrightEvidence
 {
 	Nothing = -1,
@@ -769,6 +769,8 @@ void SetGlobalPlayerSpeed(float PlayerSpeed);
 void JammingToggle();
 
 void GetActiveInstallData();
+
+void SetMeters();
 
 //Gets Debug Data for future use.
 void GetDebugData();

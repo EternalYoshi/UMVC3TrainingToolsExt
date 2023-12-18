@@ -74,7 +74,20 @@ namespace Memory
 		intptr_t dstAddr = (intptr_t)address;
 		intptr_t srcAddr;
 		memcpy( &srcAddr, std::addressof(var), sizeof(srcAddr) );
-		*(int32_t*)dstAddr = static_cast<int32_t>(srcAddr - dstAddr - (4 + extraBytesAfterOffset));
+		//*(int32_t*)dstAddr = static_cast<int32_t>(srcAddr - dstAddr - (4 + extraBytesAfterOffset));
+		int32_t TempX = srcAddr - dstAddr - (4 + extraBytesAfterOffset);
+
+		DWORD		dwProtect;
+		//VirtualProtect((void*)dstAddr, sizeof(TempX), PAGE_EXECUTE_READWRITE, &dwProtect);
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(dstAddr), &TempX, sizeof(TempX), NULL))
+		{
+			MessageBoxA(0, "A tragic Error occured.", 0, MB_ICONINFORMATION);
+
+		}
+		//VirtualProtect((void*)dstAddr, sizeof(TempX), dwProtect, &dwProtect);
+
+
+
 	}
 
 	template<ptrdiff_t extraBytesAfterOffset = 0, typename Var, typename AT>
@@ -104,17 +117,18 @@ namespace Memory
 	{
 		char TempByte = 0;
 		ReadProcessMemory(hProcess, (LPVOID*)(address), &TempByte, sizeof(TempByte), 0);
-
+		
 		if(TempByte == 0xE9)
 		{
+
 		}
 		else if(TempByte == 0xE8)
 		{
 		
-}
+		}
 		
 		//*(uint8_t*)address = nType == PATCH_JUMP ? 0xE9 : 0xE8;
-		//InjectHook(address, hook);
+		InjectHook(address, hook);
 	}
 
 	template<typename Func, typename AT>

@@ -196,7 +196,6 @@ void GetMainPointers()
 		ReadProcessMemory(hProcess, (LPVOID*)(TysonTable + 0x328), &Player2TeamTable, sizeof(uintptr_t), 0);
 
 
-
 	}
 }
 
@@ -2609,6 +2608,24 @@ void GetActiveInstallData()
 
 
 }
+
+void SetMeters()
+{
+	float P1MeterToFloat = P1Meter;
+	float P2MeterToFloat = P2Meter;
+
+
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(team1ptr + 0x78), &P1MeterToFloat, sizeof(P1MeterToFloat), NULL))
+	{
+
+	}
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(team2ptr + 0x78), &P2MeterToFloat, sizeof(P2MeterToFloat), NULL))
+	{
+
+	}
+
+}
+
 
 void GetDebugData()
 {
