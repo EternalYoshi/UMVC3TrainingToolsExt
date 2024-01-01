@@ -5,6 +5,7 @@
 #include "../imgui/imgui_impl_win32.h"
 #include "proc.h"
 #include "umvc3utils.h"
+#include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <commdlg.h>
@@ -2609,6 +2610,9 @@ static void gui::TheDebugStuffTab()
 	{
 		GetPlayerData();
 		ImGui::Text("Remember! These Parameters will only take\neffect when this window is open.");
+		ImGui::Separator();
+		ImGui::Text(CheckConnection());
+		ImGui::Separator();
 
 #pragma region GetInstallID
 

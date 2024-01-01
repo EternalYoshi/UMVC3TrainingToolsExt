@@ -5,7 +5,7 @@ VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UMVC3TrainingTools", "UMVC3TrainingTools\UMVC3TrainingTools.vcxproj", "{5308B35A-3342-4DC9-B686-B3391BF7564D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UMVC3Hook", "UMVC3Hook\UMVC3Hook.vcxproj", "{8539F2F2-70DC-453A-9A80-1D41AE524A59}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ThreeHook", "ThreeHook\ThreeHook.vcxproj", "{8539F2F2-70DC-453A-9A80-1D41AE524A59}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
