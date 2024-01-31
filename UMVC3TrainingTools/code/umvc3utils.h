@@ -307,6 +307,21 @@ inline bool P2C3Jammed = false;
 inline int P1Meter = 10000;
 inline int P2Meter = 10000;
 
+inline int P1C1HurtboxCount;
+inline int P1C2HurtboxCount;
+inline int P1C3HurtboxCount;
+inline int P2C1HurtboxCount;
+inline int P2C2HurtboxCount;
+inline int P2C3HurtboxCount;
+
+inline std::vector<uintptr_t> P1C1HurtboxPointers;
+inline std::vector<uintptr_t> P1C2HurtboxPointers;
+inline std::vector<uintptr_t> P1C3HurtboxPointers;
+inline std::vector<uintptr_t> P2C1HurtboxPointers;
+inline std::vector<uintptr_t> P2C2HurtboxPointers;
+inline std::vector<uintptr_t> P2C3HurtboxPointers;
+
+
 struct vector {
 	float X;
 	float Y;
@@ -346,6 +361,25 @@ struct cHitPrimSphere {
 	int mOfs64;
 	int mOfs68;
 	int mOfs6C;
+};
+
+struct Hurtbox 
+{
+	long PointerIdentifier;
+	int mType;
+	int Unknown0C;
+	long PointerToMoreData;
+	cHitPrimSphere CollData;
+	int Unknown18;
+	int Unknown1C;
+	float GlobalX;
+	float GlobalY;
+	float GlobalZ;
+	int Unknown2C;
+	float SecondaryX;
+	float SecondaryY;
+	float SecondaryZ;
+	int Unknown3C;
 };
 
 struct cHitPrimCapsule {
@@ -716,6 +750,13 @@ inline FighterInstall Jammed =
 	-0
 };
 
+inline std::vector<Hurtbox> P1C1Hurtboxes;
+inline std::vector<Hurtbox> P1C2Hurtboxes;
+inline std::vector<Hurtbox> P1C3Hurtboxes;
+inline std::vector<Hurtbox> P2C1Hurtboxes;
+inline std::vector<Hurtbox> P2C2Hurtboxes;
+inline std::vector<Hurtbox> P2C3Hurtboxes;
+
 DWORD SingleWrite(DWORD64 AddressToWrite, int length, HANDLE hProcess, BYTE ByteToWrite, DWORD errorMessageID, LPSTR messageBuffer);
 
 DWORD MultiWrite(DWORD64 AddressToWrite, int length, HANDLE hProcess, BYTE ByteToWrite[], DWORD errorMessageID, LPSTR messageBuffer);
@@ -771,6 +812,8 @@ void JammingToggle();
 void GetActiveInstallData();
 
 void SetMeters();
+
+void GetHurtboxData();
 
 //Gets Debug Data for future use.
 void GetDebugData();

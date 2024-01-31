@@ -2626,7 +2626,6 @@ void SetMeters()
 
 }
 
-
 void GetDebugData()
 {
 
@@ -2635,4 +2634,369 @@ void GetDebugData()
 
 }
 
+void GetHurtboxData() 
+{
+	//The Hurtboxes aren't really stored in the same way as the character data stuff I'm used to working with normally.
+	//Have to use this funky looking method to get the characters' hurtboxes during runtime.
+	uintptr_t t;
+	uintptr_t tt;
+	uintptr_t ttt;
+	uintptr_t tttt;
+	uintptr_t v;
+	P1C1HurtboxCount = 0;
+	P1C2HurtboxCount = 0;
+	P1C3HurtboxCount = 0;
+	P2C1HurtboxCount = 0;
+	P2C2HurtboxCount = 0;
+	P2C3HurtboxCount = 0;
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x4E10), &t, sizeof(uintptr_t), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(t + 0x30), &tt, sizeof(uintptr_t), 0);
+	tttt = tt;
 
+#pragma region Player 1 Character 1
+
+	//This is for getting the hurtbox count.
+	for (size_t i = 0; i < 100; i++)
+	{
+		ReadProcessMemory(hProcess, (LPVOID*)(tt), &ttt, sizeof(uintptr_t), 0);;
+		if (ttt == 0) {
+			break;
+		}
+		//tt++;;
+		tt = tt + 8;
+		P1C1HurtboxCount++;
+	}
+
+	P1C1Hurtboxes.clear();
+	P1C1Hurtboxes.resize(P1C1HurtboxCount);
+
+	uintptr_t* HurtboxPointers = new uintptr_t[P1C1HurtboxCount];
+	tt = tttt;
+
+	//Once More, but this time for the Hurtbox pointers.
+	for (int j = 0; j < P1C1HurtboxCount; j++)
+	{
+
+		ReadProcessMemory(hProcess, (LPVOID*)(tt), &v, sizeof(uintptr_t), 0);;
+		HurtboxPointers[j] = v;
+		//Stuff to get the relevant data.
+		//P1C1Hurtboxes[j]->CollData;
+		ReadProcessMemory(hProcess, (LPVOID*)(v), &P1C1Hurtboxes[j].PointerIdentifier, sizeof(long), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(v + 0x10), &P1C1Hurtboxes[j].PointerToMoreData, sizeof(long), 0);
+
+		ReadProcessMemory(hProcess, (LPVOID*)(v + 0x20), &P1C1Hurtboxes[j].SecondaryX, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(v + 0x24), &P1C1Hurtboxes[j].SecondaryY, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(v + 0x28), &P1C1Hurtboxes[j].SecondaryZ, sizeof(float), 0);
+
+		ReadProcessMemory(hProcess, (LPVOID*)((P1C1Hurtboxes[j].PointerToMoreData + 0x20)),
+			&P1C1Hurtboxes[j].CollData.Coordinates.X, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)((P1C1Hurtboxes[j].PointerToMoreData + 0x24)),
+			&P1C1Hurtboxes[j].CollData.Coordinates.Y, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)((P1C1Hurtboxes[j].PointerToMoreData + 0x28)),
+			&P1C1Hurtboxes[j].CollData.Coordinates.Z, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)((P1C1Hurtboxes[j].PointerToMoreData + 0x2C)), 
+			&P1C1Hurtboxes[j].CollData.Radius, sizeof(float), 0);
+
+
+
+
+
+		tt = tt + 8;
+
+	}
+	
+#pragma endregion
+
+#pragma region Player 1 Character 2
+
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x4E10), &t, sizeof(uintptr_t), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(t + 0x30), &tt, sizeof(uintptr_t), 0);
+	tttt = tt;
+
+	//This is for getting the hurtbox count.
+	for (size_t i = 0; i < 100; i++)
+	{
+		ReadProcessMemory(hProcess, (LPVOID*)(tt), &ttt, sizeof(uintptr_t), 0);;
+		if (ttt == 0) {
+			break;
+		}
+		//tt++;;
+		tt = tt + 8;
+		P1C2HurtboxCount++;
+	}
+
+	P1C2Hurtboxes.clear();
+	P1C2Hurtboxes.resize(P1C2HurtboxCount);
+
+	uintptr_t* HurtboxPointers2 = new uintptr_t[P1C2HurtboxCount];
+	tt = tttt;
+
+	//Once More, but this time for the Hurtbox pointers.
+	for (int j = 0; j < P1C2HurtboxCount; j++)
+	{
+
+		ReadProcessMemory(hProcess, (LPVOID*)(tt), &v, sizeof(uintptr_t), 0);;
+		HurtboxPointers2[j] = v;
+		//Stuff to get the relevant data.
+		//P1C2Hurtboxes[j]->CollData;
+		ReadProcessMemory(hProcess, (LPVOID*)(v), &P1C2Hurtboxes[j].PointerIdentifier, sizeof(long), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(v + 0x10), &P1C2Hurtboxes[j].PointerToMoreData, sizeof(long), 0);
+
+		ReadProcessMemory(hProcess, (LPVOID*)(v + 0x20), &P1C2Hurtboxes[j].SecondaryX, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(v + 0x24), &P1C2Hurtboxes[j].SecondaryY, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(v + 0x28), &P1C2Hurtboxes[j].SecondaryZ, sizeof(float), 0);
+
+		ReadProcessMemory(hProcess, (LPVOID*)((P1C2Hurtboxes[j].PointerToMoreData + 0x20)),
+			&P1C2Hurtboxes[j].CollData.Coordinates.X, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)((P1C2Hurtboxes[j].PointerToMoreData + 0x24)),
+			&P1C2Hurtboxes[j].CollData.Coordinates.Y, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)((P1C2Hurtboxes[j].PointerToMoreData + 0x28)),
+			&P1C2Hurtboxes[j].CollData.Coordinates.Z, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)((P1C2Hurtboxes[j].PointerToMoreData + 0x2C)),
+			&P1C2Hurtboxes[j].CollData.Radius, sizeof(float), 0);
+
+
+
+
+
+		tt = tt + 8;
+
+	}
+
+#pragma endregion
+
+#pragma region Player 1 Character 3
+
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x4E10), &t, sizeof(uintptr_t), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(t + 0x30), &tt, sizeof(uintptr_t), 0);
+	tttt = tt;
+
+	//This is for getting the hurtbox count.
+	for (size_t i = 0; i < 100; i++)
+	{
+		ReadProcessMemory(hProcess, (LPVOID*)(tt), &ttt, sizeof(uintptr_t), 0);;
+		if (ttt == 0) {
+			break;
+		}
+		//tt++;;
+		tt = tt + 8;
+		P1C3HurtboxCount++;
+	}
+
+	P1C3Hurtboxes.clear();
+	P1C3Hurtboxes.resize(P1C3HurtboxCount);
+
+	uintptr_t* HurtboxPointers3 = new uintptr_t[P1C3HurtboxCount];
+	tt = tttt;
+
+	//Once More, but this time for the Hurtbox pointers.
+	for (int j = 0; j < P1C3HurtboxCount; j++)
+	{
+
+		ReadProcessMemory(hProcess, (LPVOID*)(tt), &v, sizeof(uintptr_t), 0);;
+		HurtboxPointers3[j] = v;
+		//Stuff to get the relevant data.
+		//P1C3Hurtboxes[j]->CollData;
+		ReadProcessMemory(hProcess, (LPVOID*)(v), &P1C3Hurtboxes[j].PointerIdentifier, sizeof(long), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(v + 0x10), &P1C3Hurtboxes[j].PointerToMoreData, sizeof(long), 0);
+
+		ReadProcessMemory(hProcess, (LPVOID*)(v + 0x20), &P1C3Hurtboxes[j].SecondaryX, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(v + 0x24), &P1C3Hurtboxes[j].SecondaryY, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(v + 0x28), &P1C3Hurtboxes[j].SecondaryZ, sizeof(float), 0);
+
+		ReadProcessMemory(hProcess, (LPVOID*)((P1C3Hurtboxes[j].PointerToMoreData + 0x20)),
+			&P1C3Hurtboxes[j].CollData.Coordinates.X, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)((P1C3Hurtboxes[j].PointerToMoreData + 0x24)),
+			&P1C3Hurtboxes[j].CollData.Coordinates.Y, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)((P1C3Hurtboxes[j].PointerToMoreData + 0x28)),
+			&P1C3Hurtboxes[j].CollData.Coordinates.Z, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)((P1C3Hurtboxes[j].PointerToMoreData + 0x2C)),
+			&P1C3Hurtboxes[j].CollData.Radius, sizeof(float), 0);
+
+
+
+
+
+		tt = tt + 8;
+
+	}
+
+#pragma endregion
+
+#pragma region Player 2 Character 1
+
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x4E10), &t, sizeof(uintptr_t), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(t + 0x30), &tt, sizeof(uintptr_t), 0);
+	tttt = tt;
+
+	//This is for getting the hurtbox count.
+	for (size_t i = 0; i < 100; i++)
+	{
+		ReadProcessMemory(hProcess, (LPVOID*)(tt), &ttt, sizeof(uintptr_t), 0);;
+		if (ttt == 0) {
+			break;
+		}
+		//tt++;;
+		tt = tt + 8;
+		P2C1HurtboxCount++;
+	}
+
+	P2C1Hurtboxes.clear();
+	P2C1Hurtboxes.resize(P2C1HurtboxCount);
+
+	uintptr_t* HurtboxPointers4 = new uintptr_t[P2C1HurtboxCount];
+	tt = tttt;
+
+	//Once More, but this time for the Hurtbox pointers.
+	for (int j = 0; j < P2C1HurtboxCount; j++)
+	{
+
+		ReadProcessMemory(hProcess, (LPVOID*)(tt), &v, sizeof(uintptr_t), 0);;
+		HurtboxPointers4[j] = v;
+		//Stuff to get the relevant data.
+		//P2C1Hurtboxes[j]->CollData;
+		ReadProcessMemory(hProcess, (LPVOID*)(v), &P2C1Hurtboxes[j].PointerIdentifier, sizeof(long), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(v + 0x10), &P2C1Hurtboxes[j].PointerToMoreData, sizeof(long), 0);
+
+		ReadProcessMemory(hProcess, (LPVOID*)(v + 0x20), &P2C1Hurtboxes[j].SecondaryX, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(v + 0x24), &P2C1Hurtboxes[j].SecondaryY, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(v + 0x28), &P2C1Hurtboxes[j].SecondaryZ, sizeof(float), 0);
+
+		ReadProcessMemory(hProcess, (LPVOID*)((P2C1Hurtboxes[j].PointerToMoreData + 0x20)),
+			&P2C1Hurtboxes[j].CollData.Coordinates.X, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)((P2C1Hurtboxes[j].PointerToMoreData + 0x24)),
+			&P2C1Hurtboxes[j].CollData.Coordinates.Y, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)((P2C1Hurtboxes[j].PointerToMoreData + 0x28)),
+			&P2C1Hurtboxes[j].CollData.Coordinates.Z, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)((P2C1Hurtboxes[j].PointerToMoreData + 0x2C)),
+			&P2C1Hurtboxes[j].CollData.Radius, sizeof(float), 0);
+
+
+
+
+
+		tt = tt + 8;
+
+	}
+
+#pragma endregion
+
+#pragma region Player 2 Character 2
+
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x4E10), &t, sizeof(uintptr_t), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(t + 0x30), &tt, sizeof(uintptr_t), 0);
+	tttt = tt;
+
+	//This is for getting the hurtbox count.
+	for (size_t i = 0; i < 100; i++)
+	{
+		ReadProcessMemory(hProcess, (LPVOID*)(tt), &ttt, sizeof(uintptr_t), 0);;
+		if (ttt == 0) {
+			break;
+		}
+		//tt++;;
+		tt = tt + 8;
+		P2C2HurtboxCount++;
+	}
+
+	P2C2Hurtboxes.clear();
+	P2C2Hurtboxes.resize(P2C2HurtboxCount);
+
+	uintptr_t* HurtboxPointers5 = new uintptr_t[P2C2HurtboxCount];
+	tt = tttt;
+
+	//Once More, but this time for the Hurtbox pointers.
+	for (int j = 0; j < P2C2HurtboxCount; j++)
+	{
+
+		ReadProcessMemory(hProcess, (LPVOID*)(tt), &v, sizeof(uintptr_t), 0);;
+		HurtboxPointers5[j] = v;
+		//Stuff to get the relevant data.
+		//P2C2Hurtboxes[j]->CollData;
+		ReadProcessMemory(hProcess, (LPVOID*)(v), &P2C2Hurtboxes[j].PointerIdentifier, sizeof(long), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(v + 0x10), &P2C2Hurtboxes[j].PointerToMoreData, sizeof(long), 0);
+
+		ReadProcessMemory(hProcess, (LPVOID*)(v + 0x20), &P2C2Hurtboxes[j].SecondaryX, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(v + 0x24), &P2C2Hurtboxes[j].SecondaryY, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(v + 0x28), &P2C2Hurtboxes[j].SecondaryZ, sizeof(float), 0);
+
+		ReadProcessMemory(hProcess, (LPVOID*)((P2C2Hurtboxes[j].PointerToMoreData + 0x20)),
+			&P2C2Hurtboxes[j].CollData.Coordinates.X, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)((P2C2Hurtboxes[j].PointerToMoreData + 0x24)),
+			&P2C2Hurtboxes[j].CollData.Coordinates.Y, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)((P2C2Hurtboxes[j].PointerToMoreData + 0x28)),
+			&P2C2Hurtboxes[j].CollData.Coordinates.Z, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)((P2C2Hurtboxes[j].PointerToMoreData + 0x2C)),
+			&P2C2Hurtboxes[j].CollData.Radius, sizeof(float), 0);
+
+
+
+
+
+		tt = tt + 8;
+
+	}
+
+#pragma endregion
+
+#pragma region Player 2 Character 3
+
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x4E10), &t, sizeof(uintptr_t), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(t + 0x30), &tt, sizeof(uintptr_t), 0);
+	tttt = tt;
+
+	//This is for getting the hurtbox count.
+	for (size_t i = 0; i < 100; i++)
+	{
+		ReadProcessMemory(hProcess, (LPVOID*)(tt), &ttt, sizeof(uintptr_t), 0);;
+		if (ttt == 0) {
+			break;
+		}
+		//tt++;;
+		tt = tt + 8;
+		P2C3HurtboxCount++;
+	}
+
+	P2C3Hurtboxes.clear();
+	P2C3Hurtboxes.resize(P2C3HurtboxCount);
+
+	uintptr_t* HurtboxPointers6 = new uintptr_t[P2C3HurtboxCount];
+	tt = tttt;
+
+	//Once More, but this time for the Hurtbox pointers.
+	for (int j = 0; j < P2C3HurtboxCount; j++)
+	{
+
+		ReadProcessMemory(hProcess, (LPVOID*)(tt), &v, sizeof(uintptr_t), 0);;
+		HurtboxPointers6[j] = v;
+		//Stuff to get the relevant data.
+		//P2C3Hurtboxes[j]->CollData;
+		ReadProcessMemory(hProcess, (LPVOID*)(v), &P2C3Hurtboxes[j].PointerIdentifier, sizeof(long), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(v + 0x10), &P2C3Hurtboxes[j].PointerToMoreData, sizeof(long), 0);
+
+		ReadProcessMemory(hProcess, (LPVOID*)(v + 0x20), &P2C3Hurtboxes[j].SecondaryX, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(v + 0x24), &P2C3Hurtboxes[j].SecondaryY, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(v + 0x28), &P2C3Hurtboxes[j].SecondaryZ, sizeof(float), 0);
+
+		ReadProcessMemory(hProcess, (LPVOID*)((P2C3Hurtboxes[j].PointerToMoreData + 0x20)),
+			&P2C3Hurtboxes[j].CollData.Coordinates.X, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)((P2C3Hurtboxes[j].PointerToMoreData + 0x24)),
+			&P2C3Hurtboxes[j].CollData.Coordinates.Y, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)((P2C3Hurtboxes[j].PointerToMoreData + 0x28)),
+			&P2C3Hurtboxes[j].CollData.Coordinates.Z, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)((P2C3Hurtboxes[j].PointerToMoreData + 0x2C)),
+			&P2C3Hurtboxes[j].CollData.Radius, sizeof(float), 0);
+
+
+
+
+
+		tt = tt + 8;
+
+	}
+
+#pragma endregion
+
+
+
+}

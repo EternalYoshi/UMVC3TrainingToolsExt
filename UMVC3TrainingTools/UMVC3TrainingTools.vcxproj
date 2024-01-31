@@ -199,6 +199,11 @@
   <ItemGroup>
     <Text Include="imgui\LICENSE.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ThreeHook\ThreeHook.vcxproj">
+      <Project>{8539f2f2-70dc-453a-9a80-1d41ae524a59}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

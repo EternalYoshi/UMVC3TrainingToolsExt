@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <commdlg.h>
+#include <list>
+
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -18,6 +20,7 @@
 #include "..\utils\MemoryMgr.h"
 #include "..\MemoryMgr.h"
 #include "..\minhook\include\MinHook.h"
+
 
 #define IMGUI_ENABLE_FREETYPE
 
@@ -2609,10 +2612,194 @@ static void gui::TheDebugStuffTab()
 	if (ImGui::BeginTabItem("Debug Stuff"))
 	{
 		GetPlayerData();
+		GetHurtboxData();
 		ImGui::Text("Remember! These Parameters will only take\neffect when this window is open.");
 		ImGui::Separator();
-		ImGui::Text(CheckConnection());
+		std::string Sentence = "";
+		DWORD Thing = 0;
+		typedef std::string(*LPCheckConnection)(std::string Sentence);
+		auto ccheck = LoadLibrary("E:\\ULTIMATE MARVEL VS. CAPCOM 3\\Scripts\\ThreeHook.asi");
+		LPCheckConnection lpcc;
+		if (ccheck != NULL) 
+		{
+			lpcc = (LPCheckConnection)GetProcAddress((HMODULE)ccheck, "CheckConnection");
+			//ImGui::Text(lpcc);
+			ImGui::Text("%i", lpcc);
+		}
+		else
+		{
+			SetLastError(Thing);
+			ImGui::Text("Nothing Doing!");
+		}
 		ImGui::Separator();
+
+#pragma region Hurtbox Data and Coordinates
+
+		ImGui::SeparatorText("Collision Stuff");
+
+		//The Hurtboxes aren't really stored in the same way as the character data stuff I'm used to working with normally.
+		//Have to use this funky looking method to get the characters' hurtboxes during runtime.
+		uintptr_t t;
+		uintptr_t tt;
+		uintptr_t ttt;
+		uintptr_t tttt;
+		uintptr_t v;
+		//std::list<uintptr_t>HurtboxPointers;
+		int HurtboxCount = 0;
+
+#pragma region P1C1
+
+		ImGui::SeparatorText("Player 1 Character 1");
+		ReadProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x4E10), &t, sizeof(uintptr_t), 0);
+		//ImGui::Text("%x", t);
+		ReadProcessMemory(hProcess, (LPVOID*)(t + 0x30), &tt, sizeof(uintptr_t), 0);
+		//ImGui::Text("%x", tt);
+		ImGui::Text("Hurtboxes");
+		tttt = tt;
+
+		for (int i = 0; i < P1C1HurtboxCount; i++)
+		{
+			
+			ImGui::Text("X: %f", P1C1Hurtboxes[i].CollData.Coordinates.X);
+			ImGui::SameLine();
+			ImGui::Text("Y: %f", P1C1Hurtboxes[i].CollData.Coordinates.Y);
+			ImGui::SameLine();
+			ImGui::Text("Z: %f", P1C1Hurtboxes[i].CollData.Coordinates.Z);
+			ImGui::SameLine();
+			ImGui::Text("Size: %f", P1C1Hurtboxes[i].CollData.Radius);
+
+		}
+
+#pragma endregion
+
+#pragma region P1C2
+
+		ImGui::SeparatorText("Player 1 Character 2");
+		ReadProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x4E10), &t, sizeof(uintptr_t), 0);
+		//ImGui::Text("%x", t);
+		ReadProcessMemory(hProcess, (LPVOID*)(t + 0x30), &tt, sizeof(uintptr_t), 0);
+		//ImGui::Text("%x", tt);
+		ImGui::Text("Hurtboxes");
+		tttt = tt;
+
+		for (int i = 0; i < P1C2HurtboxCount; i++)
+		{
+
+			ImGui::Text("X: %f", P1C2Hurtboxes[i].CollData.Coordinates.X);
+			ImGui::SameLine();
+			ImGui::Text("Y: %f", P1C2Hurtboxes[i].CollData.Coordinates.Y);
+			ImGui::SameLine();
+			ImGui::Text("Z: %f", P1C2Hurtboxes[i].CollData.Coordinates.Z);
+			ImGui::SameLine();
+			ImGui::Text("Size: %f", P1C2Hurtboxes[i].CollData.Radius);
+
+		}
+
+#pragma endregion
+
+#pragma region P1C3
+
+		ImGui::SeparatorText("Player 1 Character 3");
+		ReadProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x4E10), &t, sizeof(uintptr_t), 0);
+		//ImGui::Text("%x", t);
+		ReadProcessMemory(hProcess, (LPVOID*)(t + 0x30), &tt, sizeof(uintptr_t), 0);
+		//ImGui::Text("%x", tt);
+		ImGui::Text("Hurtboxes");
+		tttt = tt;
+
+		for (int i = 0; i < P1C3HurtboxCount; i++)
+		{
+
+			ImGui::Text("X: %f", P1C3Hurtboxes[i].CollData.Coordinates.X);
+			ImGui::SameLine();
+			ImGui::Text("Y: %f", P1C3Hurtboxes[i].CollData.Coordinates.Y);
+			ImGui::SameLine();
+			ImGui::Text("Z: %f", P1C3Hurtboxes[i].CollData.Coordinates.Z);
+			ImGui::SameLine();
+			ImGui::Text("Size: %f", P1C3Hurtboxes[i].CollData.Radius);
+
+		}
+
+#pragma endregion
+
+#pragma region P2C1
+
+		ImGui::SeparatorText("Player 2 Character 1");
+		ReadProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x4E10), &t, sizeof(uintptr_t), 0);
+		//ImGui::Text("%x", t);
+		ReadProcessMemory(hProcess, (LPVOID*)(t + 0x30), &tt, sizeof(uintptr_t), 0);
+		//ImGui::Text("%x", tt);
+		ImGui::Text("Hurtboxes");
+		tttt = tt;
+
+		for (int i = 0; i < P2C1HurtboxCount; i++)
+		{
+
+			ImGui::Text("X: %f", P2C1Hurtboxes[i].CollData.Coordinates.X);
+			ImGui::SameLine();
+			ImGui::Text("Y: %f", P2C1Hurtboxes[i].CollData.Coordinates.Y);
+			ImGui::SameLine();
+			ImGui::Text("Z: %f", P2C1Hurtboxes[i].CollData.Coordinates.Z);
+			ImGui::SameLine();
+			ImGui::Text("Size: %f", P2C1Hurtboxes[i].CollData.Radius);
+
+		}
+
+#pragma endregion
+
+#pragma region P2C2
+
+		ImGui::SeparatorText("Player 2 Character 2");
+		ReadProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x4E10), &t, sizeof(uintptr_t), 0);
+		//ImGui::Text("%x", t);
+		ReadProcessMemory(hProcess, (LPVOID*)(t + 0x30), &tt, sizeof(uintptr_t), 0);
+		//ImGui::Text("%x", tt);
+		ImGui::Text("Hurtboxes");
+		tttt = tt;
+
+		for (int i = 0; i < P2C2HurtboxCount; i++)
+		{
+
+			ImGui::Text("X: %f", P2C2Hurtboxes[i].CollData.Coordinates.X);
+			ImGui::SameLine();
+			ImGui::Text("Y: %f", P2C2Hurtboxes[i].CollData.Coordinates.Y);
+			ImGui::SameLine();
+			ImGui::Text("Z: %f", P2C2Hurtboxes[i].CollData.Coordinates.Z);
+			ImGui::SameLine();
+			ImGui::Text("Size: %f", P2C2Hurtboxes[i].CollData.Radius);
+
+		}
+
+#pragma endregion
+
+#pragma region P2C3
+
+		ImGui::SeparatorText("Player 2 Character 3");
+		ReadProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x4E10), &t, sizeof(uintptr_t), 0);
+		//ImGui::Text("%x", t);
+		ReadProcessMemory(hProcess, (LPVOID*)(t + 0x30), &tt, sizeof(uintptr_t), 0);
+		//ImGui::Text("%x", tt);
+		ImGui::Text("Hurtboxes");
+		tttt = tt;
+
+		for (int i = 0; i < P2C3HurtboxCount; i++)
+		{
+
+			ImGui::Text("X: %f", P2C3Hurtboxes[i].CollData.Coordinates.X);
+			ImGui::SameLine();
+			ImGui::Text("Y: %f", P2C3Hurtboxes[i].CollData.Coordinates.Y);
+			ImGui::SameLine();
+			ImGui::Text("Z: %f", P2C3Hurtboxes[i].CollData.Coordinates.Z);
+			ImGui::SameLine();
+			ImGui::Text("Size: %f", P2C3Hurtboxes[i].CollData.Radius);
+
+		}
+
+#pragma endregion
+
+#pragma endregion
+
+
 
 #pragma region GetInstallID
 

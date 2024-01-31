@@ -38,14 +38,14 @@ void OnInitializeHook()
 	//InjectHook(_addr(0x14001A490), tramp->Jump(UMVC3Hooks::HookCamera), PATCH_JUMP);
 
 	// change dinput coop level
-	Patch<char>(_addr(0x1406A9864) + 2, 0x14);
+	//Patch<char>(_addr(0x1406A9864) + 2, 0x14);
 
-	CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(PluginProcess), 0, NULL, 0);
-	HANDLE h = 0;
+	//CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(PluginProcess), 0, NULL, 0);
+	//HANDLE h = 0;
 
-	h = CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(DX9Hook_Thread), 0, NULL, 0);
+	//h = CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(DX9Hook_Thread), 0, NULL, 0);
 
-	if (!(h == nullptr)) CloseHandle(h);
+	//if (!(h == nullptr)) CloseHandle(h);
 
 }
 

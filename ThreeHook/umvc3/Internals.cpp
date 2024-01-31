@@ -568,7 +568,12 @@ void FUN_1402b41b0(longlong param_1)
 
 }
 
-char* CheckConnection()
+std::string CheckConnection()
 {
 	return "This is from the dll. If you can read this you got it.";
+}
+
+int CheckConnectionTwo()
+{
+	return 75;
 }
