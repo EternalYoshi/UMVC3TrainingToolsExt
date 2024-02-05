@@ -55,6 +55,8 @@ namespace gui
 	static int GameModeRef = 0;
 	inline ImFont* mainfont;
 
+	//__declspec(dllimport) int CheckConnectionTwo();
+
 }
 
 #pragma endregion

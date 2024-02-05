@@ -102,8 +102,10 @@ inline int P1C3MaxHP = 0;
 inline int P2C1MaxHP = 0;
 inline int P2C2MaxHP = 0;
 inline int P2C3MaxHP = 0;
+inline float CharacterSpeed = 1.0;
+inline bool ModifyGameSpeed = false;
 inline float GameSpeed = 1.0;
-
+inline int QuickRestartType = 3;
 inline const char* EvidenceTypes[] = { "Nothing","Photo","Watch", "Vase","Folder","Phone","Knife","Sunglasses","Beer","Bonsai", "Doll","Figurine","Plunger","Chicken" };
 inline const char* EvidenceTypesTwo[] = { "Nothing","Photo","Watch", "Vase","Folder","Phone","Knife","Sunglasses","Beer","Bonsai", "Doll","Figurine","Plunger","Chicken" };
 inline const char* EvidenceTypesThree[] = { "Nothing","Photo","Watch", "Vase","Folder","Phone","Knife","Sunglasses","Beer","Bonsai", "Doll","Figurine","Plunger","Chicken" };
@@ -314,6 +316,13 @@ inline int P2C1HurtboxCount;
 inline int P2C2HurtboxCount;
 inline int P2C3HurtboxCount;
 
+inline int P1C1HitboxCount;
+inline int P1C2HitboxCount;
+inline int P1C3HitboxCount;
+inline int P2C1HitboxCount;
+inline int P2C2HitboxCount;
+inline int P2C3HitboxCount;
+
 inline std::vector<uintptr_t> P1C1HurtboxPointers;
 inline std::vector<uintptr_t> P1C2HurtboxPointers;
 inline std::vector<uintptr_t> P1C3HurtboxPointers;
@@ -363,7 +372,7 @@ struct cHitPrimSphere {
 	int mOfs6C;
 };
 
-struct Hurtbox 
+struct Hurtbox
 {
 	long PointerIdentifier;
 	int mType;
@@ -379,6 +388,25 @@ struct Hurtbox
 	float SecondaryX;
 	float SecondaryY;
 	float SecondaryZ;
+	int Unknown3C;
+};
+
+struct Hitbox
+{
+	long PointerIdentifier;
+	int mType;
+	int Unknown0C;
+	long PointerToOtherData;
+	cHitPrimSphere CollData;
+	int Unknown18;
+	int Unknown1C;
+	float GlobalX;
+	float GlobalY;
+	float GlobalZ;
+	int Unknown2C;
+	float SecondaryX;
+	float SecondaryY;
+	float Radius;
 	int Unknown3C;
 };
 
@@ -452,7 +480,7 @@ enum ETagState :uint8_t {
 	TagginIn = 0x6c
 };
 
-struct mShotGroupAnmSerial{
+struct mShotGroupAnmSerial {
 	uint8_t ParamA;
 	uint8_t ParamB;
 	uint8_t ParamC;
@@ -757,6 +785,13 @@ inline std::vector<Hurtbox> P2C1Hurtboxes;
 inline std::vector<Hurtbox> P2C2Hurtboxes;
 inline std::vector<Hurtbox> P2C3Hurtboxes;
 
+inline std::vector<Hitbox> P1C1Hitboxes;
+inline std::vector<Hitbox> P1C2Hitboxes;
+inline std::vector<Hitbox> P1C3Hitboxes;
+inline std::vector<Hitbox> P2C1Hitboxes;
+inline std::vector<Hitbox> P2C2Hitboxes;
+inline std::vector<Hitbox> P2C3Hitboxes;
+
 DWORD SingleWrite(DWORD64 AddressToWrite, int length, HANDLE hProcess, BYTE ByteToWrite, DWORD errorMessageID, LPSTR messageBuffer);
 
 DWORD MultiWrite(DWORD64 AddressToWrite, int length, HANDLE hProcess, BYTE ByteToWrite[], DWORD errorMessageID, LPSTR messageBuffer);
@@ -807,6 +842,10 @@ void FUN_1402b41b0(longlong param_1);
 
 void SetGlobalPlayerSpeed(float PlayerSpeed);
 
+void SetGameSpeed(float GameSpeed);
+
+void ResetGameSpeed();
+
 void JammingToggle();
 
 void GetActiveInstallData();
@@ -814,6 +853,8 @@ void GetActiveInstallData();
 void SetMeters();
 
 void GetHurtboxData();
+
+void GetHitboxDataPart1();
 
 //Gets Debug Data for future use.
 void GetDebugData();

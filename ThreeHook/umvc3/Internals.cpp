@@ -573,7 +573,7 @@ std::string CheckConnection()
 	return "This is from the dll. If you can read this you got it.";
 }
 
-int CheckConnectionTwo()
+extern "C" __declspec(dllexport) int CheckConnectionTwo()
 {
 	return 75;
 }

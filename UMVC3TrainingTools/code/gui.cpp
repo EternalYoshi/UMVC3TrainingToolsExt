@@ -24,8 +24,6 @@
 
 #define IMGUI_ENABLE_FREETYPE
 
-
-
 //Window Process handler.
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler
 (
@@ -682,12 +680,31 @@ static void gui::TheExtraOptionsTab()
 		ImGui::Separator();
 
 		//ImGui::Text("Game Speed");
-		if (ImGui::SliderFloat("Character Speed", &GameSpeed, 0.01666667f, 2.0f))
+		if (ImGui::SliderFloat("Character Speed", &CharacterSpeed, 0.01666667f, 2.0f))
 		{
-			SetGlobalPlayerSpeed(GameSpeed);
+			SetGlobalPlayerSpeed(CharacterSpeed);
 
 		}
 		
+		if (ImGui::Checkbox("Enable Game Speed Change(Use at own risk!)", &ModifyGameSpeed))
+		{
+
+		}
+
+
+		if(ModifyGameSpeed)
+		{
+			if (ImGui::SliderFloat("Game Speed", &GameSpeed, 0.01666667f, 5.0f))
+			{
+				SetGameSpeed(GameSpeed);
+
+			}
+		}
+		else
+		{
+			ResetGameSpeed();
+		}
+
 		ImGui::Text("More features coming soon!");
 
 		ImGui::EndTabItem();
@@ -2613,26 +2630,56 @@ static void gui::TheDebugStuffTab()
 	{
 		GetPlayerData();
 		GetHurtboxData();
+		GetHitboxDataPart1();
 		ImGui::Text("Remember! These Parameters will only take\neffect when this window is open.");
 		ImGui::Separator();
+		
 		std::string Sentence = "";
+		int TestEx = 0;
 		DWORD Thing = 0;
-		typedef std::string(*LPCheckConnection)(std::string Sentence);
+		typedef int(*CheckConnectionTwo)();
+
 		auto ccheck = LoadLibrary("E:\\ULTIMATE MARVEL VS. CAPCOM 3\\Scripts\\ThreeHook.asi");
-		LPCheckConnection lpcc;
+
+		if (!ccheck) 
+		{
+			std::cout << "could not load the dynamic library" << std::endl;
+		}
+
+		//typedef int(__stdcall* CheckCon)();
+
+		//TestEx = 
+		/*
+		// resolve function address here
+		CheckCon funci = (CheckCon)GetProcAddress(ccheck, "CheckConnectionTwo");
+		if (!funci) {
+			std::cout << "could not locate the function" << std::endl;
+		}
+		else
+		{
+			ImGui::Text("%i", TestEx);
+		}
+		*/
+
 		if (ccheck != NULL) 
 		{
-			lpcc = (LPCheckConnection)GetProcAddress((HMODULE)ccheck, "CheckConnection");
+			CheckConnectionTwo lpcc = (CheckConnectionTwo)GetProcAddress((HMODULE)ccheck, "CheckConnectionTwo");
 			//ImGui::Text(lpcc);
-			ImGui::Text("%i", lpcc);
+			if(!lpcc)
+			{
+				std::cout << "could not locate the function" << std::endl;
+			}
+			TestEx = lpcc();
+			ImGui::Text("%i", TestEx);
 		}
 		else
 		{
 			SetLastError(Thing);
 			ImGui::Text("Nothing Doing!");
 		}
+		
 		ImGui::Separator();
-
+		
 #pragma region Hurtbox Data and Coordinates
 
 		ImGui::SeparatorText("Collision Stuff");
@@ -2670,6 +2717,21 @@ static void gui::TheDebugStuffTab()
 
 		}
 
+		ImGui::Text("Hitboxes");
+
+		for (int i = 0; i < P1C1HitboxCount; i++)
+		{
+
+			ImGui::Text("X: %f", P1C1Hitboxes[i].GlobalX);
+			ImGui::SameLine();
+			ImGui::Text("Y: %f", P1C1Hitboxes[i].GlobalY);
+			ImGui::SameLine();
+			//ImGui::Text("Z: %f", P1C1Hitboxes[i].GlobalZ);
+			//ImGui::SameLine();
+			ImGui::Text("Size: %f", P1C1Hitboxes[i].Radius);
+
+		}
+
 #pragma endregion
 
 #pragma region P1C2
@@ -2692,6 +2754,21 @@ static void gui::TheDebugStuffTab()
 			ImGui::Text("Z: %f", P1C2Hurtboxes[i].CollData.Coordinates.Z);
 			ImGui::SameLine();
 			ImGui::Text("Size: %f", P1C2Hurtboxes[i].CollData.Radius);
+
+		}
+
+		ImGui::Text("Hitboxes");
+
+		for (int i = 0; i < P1C2HitboxCount; i++)
+		{
+
+			ImGui::Text("X: %f", P1C2Hitboxes[i].GlobalX);
+			ImGui::SameLine();
+			ImGui::Text("Y: %f", P1C2Hitboxes[i].GlobalY);
+			ImGui::SameLine();
+			//ImGui::Text("Z: %f", P1C2Hitboxes[i].GlobalZ);
+			//ImGui::SameLine();
+			ImGui::Text("Size: %f", P1C2Hitboxes[i].Radius);
 
 		}
 
@@ -2720,6 +2797,21 @@ static void gui::TheDebugStuffTab()
 
 		}
 
+		ImGui::Text("Hitboxes");
+
+		for (int i = 0; i < P1C3HitboxCount; i++)
+		{
+
+			ImGui::Text("X: %f", P1C3Hitboxes[i].GlobalX);
+			ImGui::SameLine();
+			ImGui::Text("Y: %f", P1C3Hitboxes[i].GlobalY);
+			ImGui::SameLine();
+			//ImGui::Text("Z: %f", P1C3Hitboxes[i].GlobalZ);
+			//ImGui::SameLine();
+			ImGui::Text("Size: %f", P1C3Hitboxes[i].Radius);
+
+		}
+
 #pragma endregion
 
 #pragma region P2C1
@@ -2742,6 +2834,21 @@ static void gui::TheDebugStuffTab()
 			ImGui::Text("Z: %f", P2C1Hurtboxes[i].CollData.Coordinates.Z);
 			ImGui::SameLine();
 			ImGui::Text("Size: %f", P2C1Hurtboxes[i].CollData.Radius);
+
+		}
+
+		ImGui::Text("Hitboxes");
+
+		for (int i = 0; i < P2C1HitboxCount; i++)
+		{
+
+			ImGui::Text("X: %f", P2C1Hitboxes[i].GlobalX);
+			ImGui::SameLine();
+			ImGui::Text("Y: %f", P2C1Hitboxes[i].GlobalY);
+			ImGui::SameLine();
+			//ImGui::Text("Z: %f", P2C1Hitboxes[i].GlobalZ);
+			//ImGui::SameLine();
+			ImGui::Text("Size: %f", P2C1Hitboxes[i].Radius);
 
 		}
 
@@ -2770,6 +2877,21 @@ static void gui::TheDebugStuffTab()
 
 		}
 
+		ImGui::Text("Hitboxes");
+
+		for (int i = 0; i < P2C2HitboxCount; i++)
+		{
+
+			ImGui::Text("X: %f", P2C2Hitboxes[i].GlobalX);
+			ImGui::SameLine();
+			ImGui::Text("Y: %f", P2C2Hitboxes[i].GlobalY);
+			ImGui::SameLine();
+			//ImGui::Text("Z: %f", P2C2Hitboxes[i].GlobalZ);
+			//ImGui::SameLine();
+			ImGui::Text("Size: %f", P2C2Hitboxes[i].Radius);
+
+		}
+
 #pragma endregion
 
 #pragma region P2C3
@@ -2792,6 +2914,21 @@ static void gui::TheDebugStuffTab()
 			ImGui::Text("Z: %f", P2C3Hurtboxes[i].CollData.Coordinates.Z);
 			ImGui::SameLine();
 			ImGui::Text("Size: %f", P2C3Hurtboxes[i].CollData.Radius);
+
+		}
+
+		ImGui::Text("Hitboxes");
+
+		for (int i = 0; i < P2C3HitboxCount; i++)
+		{
+
+			ImGui::Text("X: %f", P2C3Hitboxes[i].GlobalX);
+			ImGui::SameLine();
+			ImGui::Text("Y: %f", P2C3Hitboxes[i].GlobalY);
+			ImGui::SameLine();
+			//ImGui::Text("Z: %f", P2C3Hitboxes[i].GlobalZ);
+			//ImGui::SameLine();
+			ImGui::Text("Size: %f", P2C3Hitboxes[i].Radius);
 
 		}
 

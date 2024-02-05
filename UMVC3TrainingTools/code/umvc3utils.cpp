@@ -2318,6 +2318,58 @@ void SetGlobalPlayerSpeed(float GlobalSpeed)
 
 }
 
+void SetGameSpeed(float GameSpeed)
+{
+
+	uintptr_t PointerToGameSpeedA = 0;
+	VirtualProtect((LPVOID*)0x140E177e8, 8, PAGE_EXECUTE_READWRITE, &oldPageProtection);
+
+	if (!ReadProcessMemory(hProcess, (LPVOID*)(0x140E177e8), &PointerToGameSpeedA, sizeof(uintptr_t), NULL))
+	{
+
+	}
+
+
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(PointerToGameSpeedA + 0x8c), &GameSpeed, sizeof(GameSpeed), NULL))
+	{
+
+	}
+
+
+	VirtualProtect((LPVOID*)0x140B12D10, 8, oldPageProtection, &oldPageProtection);
+
+	/*
+	VirtualProtect((LPVOID*)0x140B12D10, 5, PAGE_EXECUTE_READWRITE, &oldPageProtection);
+
+	ReadProcessMemory(hProcess, (LPVOID*)0x140B12D10, &gameName, sizeof(gameName), 0);
+
+	VirtualProtect((LPVOID*)0x140B12D10, 5, oldPageProtection, &oldPageProtection);
+	*/
+}
+
+void ResetGameSpeed()
+{
+	GameSpeed = 1.0;
+	uintptr_t PointerToGameSpeedA = 0;
+	VirtualProtect((LPVOID*)0x140E177e8, 8, PAGE_EXECUTE_READWRITE, &oldPageProtection);
+
+	if (!ReadProcessMemory(hProcess, (LPVOID*)(0x140E177e8), &PointerToGameSpeedA, sizeof(uintptr_t), NULL))
+	{
+
+	}
+
+
+
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(PointerToGameSpeedA + 0x8c), &GameSpeed, sizeof(GameSpeed), NULL))
+	{
+
+	}
+
+
+	VirtualProtect((LPVOID*)0x140B12D10, 8, oldPageProtection, &oldPageProtection);
+
+}
+
 void GetActiveInstallData()
 {
 
@@ -2998,5 +3050,203 @@ void GetHurtboxData()
 #pragma endregion
 
 
+
+}
+
+void GetHitboxDataPart1() 
+{
+
+	uintptr_t u;
+	uintptr_t uu;
+	uintptr_t uuu;
+	uintptr_t uuuu;
+	uintptr_t w;
+	P1C1HitboxCount = 0;
+	P1C2HitboxCount = 0;
+	P1C3HitboxCount = 0;
+	P2C1HitboxCount = 0;
+	P2C2HitboxCount = 0;
+	P2C3HitboxCount = 0;
+
+#pragma region P1C1
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x4200), &u, sizeof(uintptr_t), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(u + 0x30), &uu, sizeof(uintptr_t), 0);
+	uuuu = uu;
+
+	//Active Hitbox Count.
+	ReadProcessMemory(hProcess, (LPVOID*)(u + 0x20), &P1C1HitboxCount, sizeof(int), 0);
+
+	P1C1Hitboxes.clear();
+	P1C1Hitboxes.resize(P1C1HitboxCount);
+
+	uintptr_t* HurtboxPointers = new uintptr_t[P1C1HitboxCount];
+	uu = uuuu;
+
+
+	//Once More, but this time for the Hitbox pointers.
+	for (int j = 0; j < P1C1HitboxCount; j++)
+	{
+		ReadProcessMemory(hProcess, (LPVOID*)(uu), &w, sizeof(uintptr_t), 0);;
+
+		ReadProcessMemory(hProcess, (LPVOID*)(w + 0x20), &P1C1Hitboxes[j].GlobalX, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(w + 0x24), &P1C1Hitboxes[j].GlobalY, sizeof(float), 0);
+		//ReadProcessMemory(hProcess, (LPVOID*)(w + 0x28), &P1C1Hitboxes[j].GlobalZ, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(w + 0x38), &P1C1Hitboxes[j].Radius, sizeof(float), 0);
+
+
+		uu = uu + 8;
+
+	}
+#pragma endregion
+
+#pragma region P1C2
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x4200), &u, sizeof(uintptr_t), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(u + 0x30), &uu, sizeof(uintptr_t), 0);
+	uuuu = uu;
+
+	//Active Hitbox Count.
+	ReadProcessMemory(hProcess, (LPVOID*)(u + 0x20), &P1C2HitboxCount, sizeof(int), 0);
+
+	P1C2Hitboxes.clear();
+	P1C2Hitboxes.resize(P1C2HitboxCount);
+
+	uu = uuuu;
+
+
+	//Once More, but this time for the Hitbox pointers.
+	for (int j = 0; j < P1C2HitboxCount; j++)
+	{
+		ReadProcessMemory(hProcess, (LPVOID*)(uu), &w, sizeof(uintptr_t), 0);;
+
+		ReadProcessMemory(hProcess, (LPVOID*)(w + 0x20), &P1C2Hitboxes[j].GlobalX, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(w + 0x24), &P1C2Hitboxes[j].GlobalY, sizeof(float), 0);
+		//ReadProcessMemory(hProcess, (LPVOID*)(w + 0x28), &P1C2Hitboxes[j].GlobalZ, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(w + 0x38), &P1C2Hitboxes[j].Radius, sizeof(float), 0);
+
+
+		uu = uu + 8;
+
+	}
+#pragma endregion
+
+#pragma region P1C3
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x4200), &u, sizeof(uintptr_t), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(u + 0x30), &uu, sizeof(uintptr_t), 0);
+	uuuu = uu;
+
+	//Active Hitbox Count.
+	ReadProcessMemory(hProcess, (LPVOID*)(u + 0x20), &P1C3HitboxCount, sizeof(int), 0);
+
+	P1C3Hitboxes.clear();
+	P1C3Hitboxes.resize(P1C3HitboxCount);
+
+	uu = uuuu;
+
+
+	//Once More, but this time for the Hitbox pointers.
+	for (int j = 0; j < P1C3HitboxCount; j++)
+	{
+		ReadProcessMemory(hProcess, (LPVOID*)(uu), &w, sizeof(uintptr_t), 0);;
+
+		ReadProcessMemory(hProcess, (LPVOID*)(w + 0x20), &P1C3Hitboxes[j].GlobalX, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(w + 0x24), &P1C3Hitboxes[j].GlobalY, sizeof(float), 0);
+		//ReadProcessMemory(hProcess, (LPVOID*)(w + 0x28), &P1C3Hitboxes[j].GlobalZ, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(w + 0x38), &P1C3Hitboxes[j].Radius, sizeof(float), 0);
+
+
+		uu = uu + 8;
+
+	}
+#pragma endregion
+
+#pragma region P2C1
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x4200), &u, sizeof(uintptr_t), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(u + 0x30), &uu, sizeof(uintptr_t), 0);
+	uuuu = uu;
+
+	//Active Hitbox Count.
+	ReadProcessMemory(hProcess, (LPVOID*)(u + 0x20), &P2C1HitboxCount, sizeof(int), 0);
+
+	P2C1Hitboxes.clear();
+	P2C1Hitboxes.resize(P2C1HitboxCount);
+
+	uu = uuuu;
+
+
+	//Once More, but this time for the Hitbox pointers.
+	for (int j = 0; j < P2C1HitboxCount; j++)
+	{
+		ReadProcessMemory(hProcess, (LPVOID*)(uu), &w, sizeof(uintptr_t), 0);;
+
+		ReadProcessMemory(hProcess, (LPVOID*)(w + 0x20), &P2C1Hitboxes[j].GlobalX, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(w + 0x24), &P2C1Hitboxes[j].GlobalY, sizeof(float), 0);
+		//ReadProcessMemory(hProcess, (LPVOID*)(w + 0x28), &P2C1Hitboxes[j].GlobalZ, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(w + 0x38), &P2C1Hitboxes[j].Radius, sizeof(float), 0);
+
+
+		uu = uu + 8;
+
+	}
+#pragma endregion
+
+#pragma region P2C2
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x4200), &u, sizeof(uintptr_t), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(u + 0x30), &uu, sizeof(uintptr_t), 0);
+	uuuu = uu;
+
+	//Active Hitbox Count.
+	ReadProcessMemory(hProcess, (LPVOID*)(u + 0x20), &P2C2HitboxCount, sizeof(int), 0);
+
+	P2C2Hitboxes.clear();
+	P2C2Hitboxes.resize(P2C2HitboxCount);
+
+	uu = uuuu;
+
+
+	//Once More, but this time for the Hitbox pointers.
+	for (int j = 0; j < P2C2HitboxCount; j++)
+	{
+		ReadProcessMemory(hProcess, (LPVOID*)(uu), &w, sizeof(uintptr_t), 0);;
+
+		ReadProcessMemory(hProcess, (LPVOID*)(w + 0x20), &P2C2Hitboxes[j].GlobalX, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(w + 0x24), &P2C2Hitboxes[j].GlobalY, sizeof(float), 0);
+		//ReadProcessMemory(hProcess, (LPVOID*)(w + 0x28), &P2C2Hitboxes[j].GlobalZ, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(w + 0x38), &P2C2Hitboxes[j].Radius, sizeof(float), 0);
+
+
+		uu = uu + 8;
+
+	}
+#pragma endregion
+
+#pragma region P2C3
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x4200), &u, sizeof(uintptr_t), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(u + 0x30), &uu, sizeof(uintptr_t), 0);
+	uuuu = uu;
+
+	//Active Hitbox Count.
+	ReadProcessMemory(hProcess, (LPVOID*)(u + 0x20), &P2C3HitboxCount, sizeof(int), 0);
+
+	P2C3Hitboxes.clear();
+	P2C3Hitboxes.resize(P2C3HitboxCount);
+
+	uu = uuuu;
+
+
+	//Once More, but this time for the Hitbox pointers.
+	for (int j = 0; j < P2C3HitboxCount; j++)
+	{
+		ReadProcessMemory(hProcess, (LPVOID*)(uu), &w, sizeof(uintptr_t), 0);;
+
+		ReadProcessMemory(hProcess, (LPVOID*)(w + 0x20), &P2C3Hitboxes[j].GlobalX, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(w + 0x24), &P2C3Hitboxes[j].GlobalY, sizeof(float), 0);
+		//ReadProcessMemory(hProcess, (LPVOID*)(w + 0x28), &P2C3Hitboxes[j].GlobalZ, sizeof(float), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(w + 0x38), &P2C3Hitboxes[j].Radius, sizeof(float), 0);
+
+
+		uu = uu + 8;
+
+	}
+#pragma endregion
 
 }

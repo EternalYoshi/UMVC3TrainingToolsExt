@@ -4,8 +4,6 @@
 
 extern "C" {
 	__declspec(dllexport) void FUN_1402b41b0();
-	//__declspec(dllexport) void char* CheckConnection();
-	//extern void std::string CheckConnection();
 	__declspec(dllexport) std::string CheckConnection();
 	__declspec(dllexport) int CheckConnectionTwo();
 
