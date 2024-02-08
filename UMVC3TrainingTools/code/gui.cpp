@@ -10,8 +10,8 @@
 #include <stdlib.h>
 #include <commdlg.h>
 #include <list>
-
 #include <iostream>
+#include <random>
 #include <fstream>
 #include <iomanip>
 #include <ctime>
@@ -21,6 +21,7 @@
 #include "..\MemoryMgr.h"
 #include "..\minhook\include\MinHook.h"
 
+HINSTANCE ccheck = LoadLibrary("E:\\ULTIMATE MARVEL VS. CAPCOM 3\\Scripts\\ThreeHook.asi");
 
 #define IMGUI_ENABLE_FREETYPE
 
@@ -32,6 +33,8 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler
 	WPARAM wideParameter,
 	LPARAM longParameter
 );
+
+int RecordingSlot = 1;
 
 LRESULT CALLBACK WindowProcess(HWND window, UINT message, WPARAM wideParameter, LPARAM longParameter)
 
@@ -892,1715 +895,164 @@ static void gui::TheRecordPlaybackTab()
 	//For Recording And Playback Stuff.
 	if (ImGui::BeginTabItem("Record & Playback"))
 	{
+		//HINSTANCE ccheck = LoadLibrary("E:\\ULTIMATE MARVEL VS. CAPCOM 3\\Scripts\\ThreeHook.asi");
 
 		ImGui::Text("Remember! These Parameters will only take\neffect when this window is open.");
 
+		typedef bool(*CheckIfRecordingP1)();
+		typedef bool(*CheckIfRecordingP2)();
+		typedef bool(*CheckIfRecordingBoth)();
+		typedef bool(*CheckIfPlayback1P)(int);
+		typedef bool(*CheckIfPlayback2P)(int);
+		typedef void(*RecordBoth)(int);
+		typedef void(*RecordP1)(int);
+		typedef void(*RecordP2)(int);
+		typedef void(*StopRecording)();
+		typedef void(*PlaybackP1)(int);
+		typedef void(*PlaybackP2)(int);
+		typedef void(*PlaybackBoth)(int);
+		typedef bool(*CheckReplayAvailableP1)(int);
+		typedef bool(*CheckReplayAvailableP2)(int);
+		typedef bool(*CheckReplayAvailableBoth)(int);
+		typedef void(*StopPlaybackP1)(int);
+		typedef void(*StopPlaybackP2)(int);
+		typedef void(*StopPlaybackBoth)(int);
 
-		switch (RecordingSlot)
+		if (ccheck != NULL)
 		{
+			CheckIfRecordingP1 RP1 = (CheckIfRecordingP1)GetProcAddress((HMODULE)ccheck, "CheckIfRecordingP1");
+			CheckIfRecordingP1 RP2 = (CheckIfRecordingP2)GetProcAddress((HMODULE)ccheck, "CheckIfRecordingP2");
+			CheckIfRecordingBoth RPB = (CheckIfRecordingBoth)GetProcAddress((HMODULE)ccheck, "CheckIfRecordingBoth");
+			CheckIfPlayback1P IPB1 = (CheckIfPlayback1P)GetProcAddress((HMODULE)ccheck, "CheckIfPlayback1P");
+			CheckIfPlayback2P IPB2 = (CheckIfPlayback2P)GetProcAddress((HMODULE)ccheck, "CheckIfPlayback2P");
+			StopRecording SPB = (StopRecording)GetProcAddress((HMODULE)ccheck, "StopRecording");
+			RecordP1 RCP1 = (RecordP1)GetProcAddress((HMODULE)ccheck, "RecordP1");
+			RecordP2 RCP2 = (RecordP2)GetProcAddress((HMODULE)ccheck, "RecordP2");
+			RecordBoth RCB12 = (RecordBoth)GetProcAddress((HMODULE)ccheck, "RecordBoth");
+			PlaybackP1 PBP1 = (PlaybackP1)GetProcAddress((HMODULE)ccheck, "PlaybackP1");
+			PlaybackP2 PBP2 = (PlaybackP2)GetProcAddress((HMODULE)ccheck, "PlaybackP2");
+			PlaybackBoth PBB12 = (PlaybackBoth)GetProcAddress((HMODULE)ccheck, "PlaybackBoth");
+			CheckReplayAvailableP1 IPBAP1 = (CheckReplayAvailableP1)GetProcAddress((HMODULE)ccheck, "CheckReplayAvailableP1");
+			CheckReplayAvailableP2 IPBAP2 = (CheckReplayAvailableP2)GetProcAddress((HMODULE)ccheck, "CheckReplayAvailableP2");
+			CheckReplayAvailableBoth IPBBA12 = (CheckReplayAvailableBoth)GetProcAddress((HMODULE)ccheck, "CheckReplayAvailableBoth");
+			StopPlaybackP1 SPBP1 = (StopPlaybackP1)GetProcAddress((HMODULE)ccheck, "StopPlaybackP1");
+			StopPlaybackP2 SPBP2 = (StopPlaybackP2)GetProcAddress((HMODULE)ccheck, "StopPlaybackP2");
+			StopPlaybackBoth SPBP12 = (StopPlaybackBoth)GetProcAddress((HMODULE)ccheck, "StopPlaybackBoth");
 
-		case 2:
 
-			if (!recordingP1 && !recordingP2) {
+			if(!RP1() && !RP2())
+			{
 				if (ImGui::Button("Record Both")) {
 					if (CheckTheMode() == true)
 					{
-						//recording = true;
-						//replaying = false;
-						recordingP1 = true;
-						replayingP1 = false;
-						recordingP2 = true;
-						replayingP2 = false;
-						recordReplayIndex2P1 = 0;
-						recordReplayIndex2P2 = 0;
-
-					}
-				}
-			}
-			//ImGui::SameLine();
-			if (!recordingP1 && !recordingP2) {
-				if (ImGui::Button("Record P1")) {
-					if (CheckTheMode() == true)
-					{
-						recordingP1 = true;
-						replayingP1 = false;
-						//recording = false;
-						//replaying = false;
-						recordingP2 = false;
-						replayingP2 = false;
-						recordReplayIndex2P1 = 0;
-					}
-				}
-				ImGui::SameLine();
-			}
-			//ImGui::SameLine();
-			if (!recordingP1 && !recordingP2) {
-				if (ImGui::Button("Record P2")) {
-					if (CheckTheMode() == true)
-					{
-						recordingP2 = true;
-						replayingP2 = false;
-						//recording = false;
-						//replaying = false;
-						recordingP1 = false;
-						replayingP1 = false;
-						recordReplayIndex2P2 = 0;
+						RCB12(RecordingSlot);
 					}
 				}
 			}
 
-			else if (recordReplayIndex2P1 > 90 || recordReplayIndex2P2 > 90) {
+			if (!RP1() && !RP2())
+			{
+				if (ImGui::Button("Record 1P")) {
+					if (CheckTheMode() == true)
+					{
+						RCP1(RecordingSlot);
+					}
+				}
+			}
+
+			if (!RP1() && !RP2())
+			{
+				if (ImGui::Button("Record 2P")) {
+					if (CheckTheMode() == true)
+					{
+						RCP2(RecordingSlot);
+					}
+				}
+			}
+
+			else if (IPB1 || IPB2)
+			{
 				if (ImGui::Button("Stop Recording")) {
 					if (CheckTheMode() == true)
 					{
-						//recording = false;
-						recordingP1 = false;
-						recordingP2 = false;
-						recordedLength2P1 = recordReplayIndex2P1 - 1;
-						recordedLength2P2 = recordReplayIndex2P2 - 1;
+						SPB();
 					}
 				}
 			}
 
-			//Playback Code Below.
-			ImGui::Separator();
-
-			if (replayAvailable2P1 && replayAvailable2P2 && !recordingP1 && !recordingP2) {
-				if (!replayingP1 && !replayingP2) {
+			if(IPBAP1(RecordingSlot) && IPBAP2(RecordingSlot) && !IPB1(RecordingSlot) && !IPB2(RecordingSlot))
+			{
+				if (!PBP1 && !PBP2) 
+				{
 					if (ImGui::Button("Playback Both")) {
 						if (CheckTheMode() == true)
 						{
-
-							replayingP1 = true;
-							replayingP2 = true;
-							recordReplayIndex2 = 0;
-							recordReplayIndex2P1 = 0;
-							recordReplayIndex2P2 = 0;
-
+							PBB12(RecordingSlot);
 						}
 
 					}
 				}
-				else if (recordReplayIndex2P1 > 90 || recordReplayIndex2P2 > 90) {
+				else if(!PBP1 && !PBP2)
+				{
 					if (ImGui::Button("Stop Playback"))
 					{
-						if (CheckTheMode() == true)
-						{
-							replayingP1 = false;
-							replayingP2 = false;
-
-						}
+						SPBP12(RecordingSlot);
 					}
 				}
 			}
 
-			if (replayAvailable2P1 && !recordingP1) {
-				if (!replayingP1) {
+			if (IPBAP1(RecordingSlot) && (IPB1(RecordingSlot) == false))
+			{
+
+				if(!IPB1)
+				{
 					if (ImGui::Button("Playback P1")) {
-						if (CheckTheMode() == true)
 						{
-							replayingP1 = true;
-							recordReplayIndex2P1 = 0;
+							PBP1(RecordingSlot);
 						}
 
 					}
 				}
-				else if (recordReplayIndex2P1 > 90) {
+
+				else if(IPB1)
+				{
 					if (ImGui::Button("Stop Playback P1"))
 					{
-						if (CheckTheMode() == true)
-						{
-							replayingP1 = false;
-						}
+						SPBP1(RecordingSlot);
 					}
 				}
+
 				ImGui::SameLine();
 			}
 
-			if (replayAvailable2P2 && !recordingP2) {
-				if (!replayingP2) {
+			if (IPBAP2(RecordingSlot) && (IPB2(RecordingSlot) == false))
+			{
+
+				if (!IPB2)
+				{
 					if (ImGui::Button("Playback P2")) {
-						if (CheckTheMode() == true)
 						{
-							replayingP2 = true;
-							recordReplayIndex2P2 = 0;
+							PBP2(RecordingSlot);
 						}
 
 					}
 				}
-				else if (recordReplayIndex2P2 > 90) {
+
+				else if (IPB2)
+				{
 					if (ImGui::Button("Stop Playback P2"))
 					{
-						if (CheckTheMode() == true)
-						{
-							replayingP2 = false;
-						}
+						SPBP2(RecordingSlot);
 					}
 				}
-			}
 
-
-			ImGui::Separator();
-
-			//Saves Recordings. Needs to be adjusted.
-			if (ImGui::Button("Save P1 Recording"))
-			{
-				if (CheckTheMode() == true)
-				{
-					if (!recording && replayAvailable2P1)
-					{
-						OPENFILENAME ofn = { sizeof(OPENFILENAME) };
-
-						char szFile[_MAX_PATH] = "RecP1";
-						const char szExt[] = "dat\0"; // extra '\0' for lpstrFilter
-
-						ofn.hwndOwner = GetConsoleWindow();
-						ofn.lpstrFile = szFile; // <--------------------- initial file name
-						ofn.nMaxFile = sizeof(szFile) / sizeof(szFile[0]);
-						ofn.lpstrFilter = ofn.lpstrDefExt = szExt;
-						ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
-						if (GetSaveFileName(&ofn))
-						{
-							pRec = fopen(ofn.lpstrFile, "wb");
-							fwrite(replayBuffer3, 550, recordedLength2P1, pRec);
-							fclose(pRec);
-						}
-					}
-				}
-			}
-			ImGui::SameLine();
-			if (ImGui::Button("Save P2 Recording"))
-			{
-				if (CheckTheMode() == true)
-				{
-					if (!recording && replayAvailable2P2)
-					{
-						OPENFILENAME ofn = { sizeof(OPENFILENAME) };
-
-						char szFile[_MAX_PATH] = "RecP2";
-						const char szExt[] = "dat\0"; // extra '\0' for lpstrFilter
-
-						ofn.hwndOwner = GetConsoleWindow();
-						ofn.lpstrFile = szFile; // <--------------------- initial file name
-						ofn.nMaxFile = sizeof(szFile) / sizeof(szFile[0]);
-						ofn.lpstrFilter = ofn.lpstrDefExt = szExt;
-						ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
-
-						if (GetSaveFileName(&ofn))
-						{
-							pRec = fopen(ofn.lpstrFile, "wb");
-							fwrite(replayBuffer4, 550, recordedLength2P2, pRec);
-							fclose(pRec);
-
-						}
-					}
-				}
-			}
-
-			if (ImGui::Button("Load Recording in P1"))
-			{
-				if (CheckTheMode() == true)
-				{
-					if (!recordingP1 && !replayingP1)
-					{
-						OPENFILENAME ofn = { sizeof(OPENFILENAME) };
-						char szFile[_MAX_PATH] = "RecP1";
-						const char szExt[] = ".dat\0"; // extra '\0' for lpstrFilter
-						ofn.hwndOwner = GetConsoleWindow();
-						ofn.lpstrFile = szFile; // <--------------------- initial file name
-						ofn.nMaxFile = sizeof(szFile) / sizeof(szFile[0]);
-						ofn.lpstrFilter = ofn.lpstrDefExt = szExt;
-						ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
-
-						if (GetOpenFileName(&ofn))
-						{
-							if (ofn.lStructSize > (ReplayBufferSize * ReplayLength))
-							{
-								MessageBoxA(0, "This file is too big to load.\nThe opened file size is: " + ofn.lStructSize, 0, MB_ICONINFORMATION);
-
-							}
-							else
-							{
-								//MessageBoxA(0,ofn.lpstrFile,0,MB_ICONINFORMATION);
-								std::ifstream mRP(ofn.lpstrFile, std::ios::binary | std::ios::ate);
-								mRP.unsetf(std::ios::skipws);
-								std::ifstream::pos_type pos = mRP.tellg();
-								int filesize = pos;
-
-								if (filesize % 550 != 0)
-								{
-									MessageBoxA(0, "This file is malformed.\nRecording files are assumed to be multiples of 550\nand yet the filesize is : " + ofn.lStructSize, 0, MB_ICONINFORMATION);
-								}
-								else
-								{
-									//Gets the file size, sets the needed variables to play the replay when loaded, 
-									//and then copies the file into an array in memory.
-									int length = pos / 550;
-									replayAvailable2P1 = true;
-									recordedLength2P1 = length;
-									recordReplayIndex2P1 = 0;
-
-									mRP.seekg(0, std::ios::beg);
-
-									std::vector<BYTE> pChars;
-									pChars.reserve(filesize);
-
-									pChars.insert(pChars.begin(),
-										std::istream_iterator<BYTE>(mRP),
-										std::istream_iterator<BYTE>());
-
-									//For loop for inserting the frames in the proper place. Based on code from recording.
-									//Need to fix this.
-									for (int i = 0; i < recordedLength2P1; i++)
-									{
-										memcpy(&replayBuffer3[i], &pChars[(i * 550)], ReplayBufferSize);
-									}
-								}
-
-
-							}
-
-						}
-
-
-					}
-				}
-			}
-			ImGui::SameLine();
-			if (ImGui::Button("Load Recording in P2"))
-			{
-				if (CheckTheMode() == true)
-				{
-					if (!recordingP2 && !replayingP2)
-					{
-						OPENFILENAME ofn = { sizeof(OPENFILENAME) };
-						char szFile[_MAX_PATH] = "RecP1";
-						const char szExt[] = ".dat\0"; // extra '\0' for lpstrFilter
-						ofn.hwndOwner = GetConsoleWindow();
-						ofn.lpstrFile = szFile; // <--------------------- initial file name
-						ofn.nMaxFile = sizeof(szFile) / sizeof(szFile[0]);
-						ofn.lpstrFilter = ofn.lpstrDefExt = szExt;
-						ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
-
-						if (GetOpenFileName(&ofn))
-						{
-							if (ofn.lStructSize > (ReplayBufferSize * ReplayLength))
-							{
-								MessageBoxA(0, "This file is too big to load.\nThe opened file size is: " + ofn.lStructSize, 0, MB_ICONINFORMATION);
-
-							}
-							else
-							{
-								//MessageBoxA(0,ofn.lpstrFile,0,MB_ICONINFORMATION);
-								std::ifstream mRP(ofn.lpstrFile, std::ios::binary | std::ios::ate);
-								mRP.unsetf(std::ios::skipws);
-								std::ifstream::pos_type pos = mRP.tellg();
-								int filesize = pos;
-
-								if (filesize % 550 != 0)
-								{
-									MessageBoxA(0, "This file is malformed.\nRecording files are assumed to be multiples of 550\nand yet the filesize is : " + ofn.lStructSize, 0, MB_ICONINFORMATION);
-								}
-								else
-								{
-									//Gets the file size, sets the needed variables to play the replay when loaded, 
-									//and then copies the file into an array in memory.
-									int length = pos / 550;
-									replayAvailable2P2 = true;
-									recordedLength2P2 = length;
-									recordReplayIndex2P2 = 0;
-
-									mRP.seekg(0, std::ios::beg);
-
-									std::vector<BYTE> pChars;
-									pChars.reserve(filesize);
-
-									pChars.insert(pChars.begin(),
-										std::istream_iterator<BYTE>(mRP),
-										std::istream_iterator<BYTE>());
-
-									//For loop for inserting the frames in the proper place. Based on code from recording.
-									for (int i = 0; i < recordedLength2P2; i++)
-									{
-										memcpy(&replayBuffer4[i], &pChars[(i * 550)], ReplayBufferSize);
-									}
-								}
-
-
-							}
-
-						}
-
-
-					}
-				}
-			}
-
-
-			break;
-
-		case 3:
-
-			if (!recordingP1 && !recordingP2) {
-				if (ImGui::Button("Record Both")) {
-					if (CheckTheMode() == true)
-					{
-						//recording = true;
-						//replaying = false;
-						recordingP1 = true;
-						replayingP1 = false;
-						recordingP2 = true;
-						replayingP2 = false;
-						recordReplayIndex3P1 = 0;
-						recordReplayIndex3P2 = 0;
-
-					}
-				}
-			}
-			//ImGui::SameLine();
-			if (!recordingP1 && !recordingP2) {
-				if (ImGui::Button("Record P1")) {
-					if (CheckTheMode() == true)
-					{
-						recordingP1 = true;
-						replayingP1 = false;
-						//recording = false;
-						//replaying = false;
-						recordingP2 = false;
-						replayingP2 = false;
-						recordReplayIndex3P1 = 0;
-					}
-				}
-				ImGui::SameLine();
-			}
-			//ImGui::SameLine();
-			if (!recordingP1 && !recordingP2) {
-				if (ImGui::Button("Record P2")) {
-					if (CheckTheMode() == true)
-					{
-						recordingP2 = true;
-						replayingP2 = false;
-						//recording = false;
-						//replaying = false;
-						recordingP1 = false;
-						replayingP1 = false;
-						recordReplayIndex3P2 = 0;
-					}
-				}
-			}
-
-			else if (recordReplayIndex3P1 > 90 || recordReplayIndex3P2 > 90) {
-				if (ImGui::Button("Stop Recording")) {
-					if (CheckTheMode() == true)
-					{
-						//recording = false;
-						recordingP1 = false;
-						recordingP2 = false;
-						recordedLength3P1 = recordReplayIndex3P1 - 1;
-						recordedLength3P2 = recordReplayIndex3P2 - 1;
-					}
-				}
-			}
-
-			//Playback Code Below.
-			ImGui::Separator();
-
-			if (replayAvailable3P1 && replayAvailable3P2 && !recordingP1 && !recordingP2) {
-				if (!replayingP1 && !replayingP2) {
-					if (ImGui::Button("Playback Both")) {
-						if (CheckTheMode() == true)
-						{
-
-							replayingP1 = true;
-							replayingP2 = true;
-							recordReplayIndex3 = 0;
-							recordReplayIndex3P1 = 0;
-							recordReplayIndex3P2 = 0;
-
-						}
-
-					}
-				}
-				else if (recordReplayIndex3P1 > 90 || recordReplayIndex3P2 > 90) {
-					if (ImGui::Button("Stop Playback"))
-					{
-						if (CheckTheMode() == true)
-						{
-							replayingP1 = false;
-							replayingP2 = false;
-
-						}
-					}
-				}
-			}
-
-			if (replayAvailable3P1 && !recordingP1) {
-				if (!replayingP1) {
-					if (ImGui::Button("Playback P1")) {
-						if (CheckTheMode() == true)
-						{
-							replayingP1 = true;
-							recordReplayIndex3P1 = 0;
-						}
-
-					}
-				}
-				else if (recordReplayIndex3P1 > 90) {
-					if (ImGui::Button("Stop Playback P1"))
-					{
-						if (CheckTheMode() == true)
-						{
-							replayingP1 = false;
-						}
-					}
-				}
 				ImGui::SameLine();
 			}
 
-			if (replayAvailable3P2 && !recordingP2) {
-				if (!replayingP2) {
-					if (ImGui::Button("Playback P2")) {
-						if (CheckTheMode() == true)
-						{
-							replayingP2 = true;
-							recordReplayIndex3P2 = 0;
-						}
 
-					}
-				}
-				else if (recordReplayIndex3P2 > 90) {
-					if (ImGui::Button("Stop Playback P2"))
-					{
-						if (CheckTheMode() == true)
-						{
-							replayingP2 = false;
-						}
-					}
-				}
-			}
-
-
-			ImGui::Separator();
-
-			//Saves Recordings. Needs to be adjusted.
-			if (ImGui::Button("Save P1 Recording"))
-			{
-				if (CheckTheMode() == true)
-				{
-					if (!recording && replayAvailable3P1)
-					{
-						OPENFILENAME ofn = { sizeof(OPENFILENAME) };
-
-						char szFile[_MAX_PATH] = "RecP1";
-						const char szExt[] = "dat\0"; // extra '\0' for lpstrFilter
-
-						ofn.hwndOwner = GetConsoleWindow();
-						ofn.lpstrFile = szFile; // <--------------------- initial file name
-						ofn.nMaxFile = sizeof(szFile) / sizeof(szFile[0]);
-						ofn.lpstrFilter = ofn.lpstrDefExt = szExt;
-						ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
-						if (GetSaveFileName(&ofn))
-						{
-							pRec = fopen(ofn.lpstrFile, "wb");
-							fwrite(replayBuffer5, 550, recordedLength3P1, pRec);
-							fclose(pRec);
-						}
-					}
-				}
-			}
-			ImGui::SameLine();
-			if (ImGui::Button("Save P2 Recording"))
-			{
-				if (CheckTheMode() == true)
-				{
-					if (!recording && replayAvailable3P2)
-					{
-						OPENFILENAME ofn = { sizeof(OPENFILENAME) };
-
-						char szFile[_MAX_PATH] = "RecP2";
-						const char szExt[] = "dat\0"; // extra '\0' for lpstrFilter
-
-						ofn.hwndOwner = GetConsoleWindow();
-						ofn.lpstrFile = szFile; // <--------------------- initial file name
-						ofn.nMaxFile = sizeof(szFile) / sizeof(szFile[0]);
-						ofn.lpstrFilter = ofn.lpstrDefExt = szExt;
-						ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
-
-						if (GetSaveFileName(&ofn))
-						{
-							pRec = fopen(ofn.lpstrFile, "wb");
-							fwrite(replayBuffer6, 550, recordedLength3P2, pRec);
-							fclose(pRec);
-
-						}
-					}
-				}
-			}
-
-			if (ImGui::Button("Load Recording in P1"))
-			{
-				if (CheckTheMode() == true)
-				{
-					if (!recordingP1 && !replayingP1)
-					{
-						OPENFILENAME ofn = { sizeof(OPENFILENAME) };
-						char szFile[_MAX_PATH] = "RecP1";
-						const char szExt[] = ".dat\0"; // extra '\0' for lpstrFilter
-						ofn.hwndOwner = GetConsoleWindow();
-						ofn.lpstrFile = szFile; // <--------------------- initial file name
-						ofn.nMaxFile = sizeof(szFile) / sizeof(szFile[0]);
-						ofn.lpstrFilter = ofn.lpstrDefExt = szExt;
-						ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
-
-						if (GetOpenFileName(&ofn))
-						{
-							if (ofn.lStructSize > (ReplayBufferSize * ReplayLength))
-							{
-								MessageBoxA(0, "This file is too big to load.\nThe opened file size is: " + ofn.lStructSize, 0, MB_ICONINFORMATION);
-
-							}
-							else
-							{
-								//MessageBoxA(0,ofn.lpstrFile,0,MB_ICONINFORMATION);
-								std::ifstream mRP(ofn.lpstrFile, std::ios::binary | std::ios::ate);
-								mRP.unsetf(std::ios::skipws);
-								std::ifstream::pos_type pos = mRP.tellg();
-								int filesize = pos;
-
-								if (filesize % 550 != 0)
-								{
-									MessageBoxA(0, "This file is malformed.\nRecording files are assumed to be multiples of 550\nand yet the filesize is : " + ofn.lStructSize, 0, MB_ICONINFORMATION);
-								}
-								else
-								{
-									//Gets the file size, sets the needed variables to play the replay when loaded, 
-									//and then copies the file into an array in memory.
-									int length = pos / 550;
-									replayAvailable3P1 = true;
-									recordedLength3P1 = length;
-									recordReplayIndex3P1 = 0;
-
-									mRP.seekg(0, std::ios::beg);
-
-									std::vector<BYTE> pChars;
-									pChars.reserve(filesize);
-
-									pChars.insert(pChars.begin(),
-										std::istream_iterator<BYTE>(mRP),
-										std::istream_iterator<BYTE>());
-
-									//For loop for inserting the frames in the proper place. Based on code from recording.
-									//Need to fix this.
-									for (int i = 0; i < recordedLength3P1; i++)
-									{
-										memcpy(&replayBuffer5[i], &pChars[(i * 550)], ReplayBufferSize);
-									}
-								}
-
-
-							}
-
-						}
-
-
-					}
-				}
-			}
-			ImGui::SameLine();
-			if (ImGui::Button("Load Recording in P2"))
-			{
-				if (CheckTheMode() == true)
-				{
-					if (!recordingP2 && !replayingP2)
-					{
-						OPENFILENAME ofn = { sizeof(OPENFILENAME) };
-						char szFile[_MAX_PATH] = "RecP1";
-						const char szExt[] = ".dat\0"; // extra '\0' for lpstrFilter
-						ofn.hwndOwner = GetConsoleWindow();
-						ofn.lpstrFile = szFile; // <--------------------- initial file name
-						ofn.nMaxFile = sizeof(szFile) / sizeof(szFile[0]);
-						ofn.lpstrFilter = ofn.lpstrDefExt = szExt;
-						ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
-
-						if (GetOpenFileName(&ofn))
-						{
-							if (ofn.lStructSize > (ReplayBufferSize * ReplayLength))
-							{
-								MessageBoxA(0, "This file is too big to load.\nThe opened file size is: " + ofn.lStructSize, 0, MB_ICONINFORMATION);
-
-							}
-							else
-							{
-								//MessageBoxA(0,ofn.lpstrFile,0,MB_ICONINFORMATION);
-								std::ifstream mRP(ofn.lpstrFile, std::ios::binary | std::ios::ate);
-								mRP.unsetf(std::ios::skipws);
-								std::ifstream::pos_type pos = mRP.tellg();
-								int filesize = pos;
-
-								if (filesize % 550 != 0)
-								{
-									MessageBoxA(0, "This file is malformed.\nRecording files are assumed to be multiples of 550\nand yet the filesize is : " + ofn.lStructSize, 0, MB_ICONINFORMATION);
-								}
-								else
-								{
-									//Gets the file size, sets the needed variables to play the replay when loaded, 
-									//and then copies the file into an array in memory.
-									int length = pos / 550;
-									replayAvailable3P2 = true;
-									recordedLength3P2 = length;
-									recordReplayIndex3P2 = 0;
-
-									mRP.seekg(0, std::ios::beg);
-
-									std::vector<BYTE> pChars;
-									pChars.reserve(filesize);
-
-									pChars.insert(pChars.begin(),
-										std::istream_iterator<BYTE>(mRP),
-										std::istream_iterator<BYTE>());
-
-									//For loop for inserting the frames in the proper place. Based on code from recording.
-									for (int i = 0; i < recordedLength3P2; i++)
-									{
-										memcpy(&replayBuffer6[i], &pChars[(i * 550)], ReplayBufferSize);
-									}
-								}
-
-
-							}
-
-						}
-
-
-					}
-				}
-			}
-
-
-			break;
-
-		case 4:
-
-			if (!recordingP1 && !recordingP2) {
-				if (ImGui::Button("Record Both")) {
-					if (CheckTheMode() == true)
-					{
-						//recording = true;
-						//replaying = false;
-						recordingP1 = true;
-						replayingP1 = false;
-						recordingP2 = true;
-						replayingP2 = false;
-						recordReplayIndex4P1 = 0;
-						recordReplayIndex4P2 = 0;
-
-					}
-				}
-			}
-			//ImGui::SameLine();
-			if (!recordingP1 && !recordingP2) {
-				if (ImGui::Button("Record P1")) {
-					if (CheckTheMode() == true)
-					{
-						recordingP1 = true;
-						replayingP1 = false;
-						//recording = false;
-						//replaying = false;
-						recordingP2 = false;
-						replayingP2 = false;
-						recordReplayIndex4P1 = 0;
-					}
-				}
-				ImGui::SameLine();
-			}
-			//ImGui::SameLine();
-			if (!recordingP1 && !recordingP2) {
-				if (ImGui::Button("Record P2")) {
-					if (CheckTheMode() == true)
-					{
-						recordingP2 = true;
-						replayingP2 = false;
-						//recording = false;
-						//replaying = false;
-						recordingP1 = false;
-						replayingP1 = false;
-						recordReplayIndex4P2 = 0;
-					}
-				}
-			}
-
-			else if (recordReplayIndex4P1 > 90 || recordReplayIndex4P2 > 90) {
-				if (ImGui::Button("Stop Recording")) {
-					if (CheckTheMode() == true)
-					{
-						//recording = false;
-						recordingP1 = false;
-						recordingP2 = false;
-						recordedLength4P1 = recordReplayIndex4P1 - 1;
-						recordedLength4P2 = recordReplayIndex4P2 - 1;
-					}
-				}
-			}
-
-			//Playback Code Below.
-			ImGui::Separator();
-
-			if (replayAvailable4P1 && replayAvailable4P2 && !recordingP1 && !recordingP2) {
-				if (!replayingP1 && !replayingP2) {
-					if (ImGui::Button("Playback Both")) {
-						if (CheckTheMode() == true)
-						{
-
-							replayingP1 = true;
-							replayingP2 = true;
-							recordReplayIndex4 = 0;
-							recordReplayIndex4P1 = 0;
-							recordReplayIndex4P2 = 0;
-
-						}
-
-					}
-				}
-				else if (recordReplayIndex4P1 > 90 || recordReplayIndex4P2 > 90) {
-					if (ImGui::Button("Stop Playback"))
-					{
-						if (CheckTheMode() == true)
-						{
-							replayingP1 = false;
-							replayingP2 = false;
-
-						}
-					}
-				}
-			}
-
-			if (replayAvailable4P1 && !recordingP1) {
-				if (!replayingP1) {
-					if (ImGui::Button("Playback P1")) {
-						if (CheckTheMode() == true)
-						{
-							replayingP1 = true;
-							recordReplayIndex4P1 = 0;
-						}
-
-					}
-				}
-				else if (recordReplayIndex4P1 > 90) {
-					if (ImGui::Button("Stop Playback P1"))
-					{
-						if (CheckTheMode() == true)
-						{
-							replayingP1 = false;
-						}
-					}
-				}
-				ImGui::SameLine();
-			}
-
-			if (replayAvailable4P2 && !recordingP2) {
-				if (!replayingP2) {
-					if (ImGui::Button("Playback P2")) {
-						if (CheckTheMode() == true)
-						{
-							replayingP2 = true;
-							recordReplayIndex4P2 = 0;
-						}
-
-					}
-				}
-				else if (recordReplayIndex4P2 > 90) {
-					if (ImGui::Button("Stop Playback P2"))
-					{
-						if (CheckTheMode() == true)
-						{
-							replayingP2 = false;
-						}
-					}
-				}
-			}
-
-
-			ImGui::Separator();
-
-			//Saves Recordings. Needs to be adjusted.
-			if (ImGui::Button("Save P1 Recording"))
-			{
-				if (CheckTheMode() == true)
-				{
-					if (!recording && replayAvailable4P1)
-					{
-						OPENFILENAME ofn = { sizeof(OPENFILENAME) };
-
-						char szFile[_MAX_PATH] = "RecP1";
-						const char szExt[] = "dat\0"; // extra '\0' for lpstrFilter
-
-						ofn.hwndOwner = GetConsoleWindow();
-						ofn.lpstrFile = szFile; // <--------------------- initial file name
-						ofn.nMaxFile = sizeof(szFile) / sizeof(szFile[0]);
-						ofn.lpstrFilter = ofn.lpstrDefExt = szExt;
-						ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
-						if (GetSaveFileName(&ofn))
-						{
-							pRec = fopen(ofn.lpstrFile, "wb");
-							fwrite(replayBuffer7, 550, recordedLength4P1, pRec);
-							fclose(pRec);
-						}
-					}
-				}
-			}
-			ImGui::SameLine();
-			if (ImGui::Button("Save P2 Recording"))
-			{
-				if (CheckTheMode() == true)
-				{
-					if (!recording && replayAvailable4P2)
-					{
-						OPENFILENAME ofn = { sizeof(OPENFILENAME) };
-
-						char szFile[_MAX_PATH] = "RecP2";
-						const char szExt[] = "dat\0"; // extra '\0' for lpstrFilter
-
-						ofn.hwndOwner = GetConsoleWindow();
-						ofn.lpstrFile = szFile; // <--------------------- initial file name
-						ofn.nMaxFile = sizeof(szFile) / sizeof(szFile[0]);
-						ofn.lpstrFilter = ofn.lpstrDefExt = szExt;
-						ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
-
-						if (GetSaveFileName(&ofn))
-						{
-							pRec = fopen(ofn.lpstrFile, "wb");
-							fwrite(replayBuffer8, 550, recordedLength4P2, pRec);
-							fclose(pRec);
-
-						}
-					}
-				}
-			}
-
-			if (ImGui::Button("Load Recording in P1"))
-			{
-				if (CheckTheMode() == true)
-				{
-					if (!recordingP1 && !replayingP1)
-					{
-						OPENFILENAME ofn = { sizeof(OPENFILENAME) };
-						char szFile[_MAX_PATH] = "RecP1";
-						const char szExt[] = ".dat\0"; // extra '\0' for lpstrFilter
-						ofn.hwndOwner = GetConsoleWindow();
-						ofn.lpstrFile = szFile; // <--------------------- initial file name
-						ofn.nMaxFile = sizeof(szFile) / sizeof(szFile[0]);
-						ofn.lpstrFilter = ofn.lpstrDefExt = szExt;
-						ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
-
-						if (GetOpenFileName(&ofn))
-						{
-							if (ofn.lStructSize > (ReplayBufferSize * ReplayLength))
-							{
-								MessageBoxA(0, "This file is too big to load.\nThe opened file size is: " + ofn.lStructSize, 0, MB_ICONINFORMATION);
-
-							}
-							else
-							{
-								//MessageBoxA(0,ofn.lpstrFile,0,MB_ICONINFORMATION);
-								std::ifstream mRP(ofn.lpstrFile, std::ios::binary | std::ios::ate);
-								mRP.unsetf(std::ios::skipws);
-								std::ifstream::pos_type pos = mRP.tellg();
-								int filesize = pos;
-
-								if (filesize % 550 != 0)
-								{
-									MessageBoxA(0, "This file is malformed.\nRecording files are assumed to be multiples of 550\nand yet the filesize is : " + ofn.lStructSize, 0, MB_ICONINFORMATION);
-								}
-								else
-								{
-									//Gets the file size, sets the needed variables to play the replay when loaded, 
-									//and then copies the file into an array in memory.
-									int length = pos / 550;
-									replayAvailable4P1 = true;
-									recordedLength4P1 = length;
-									recordReplayIndex4P1 = 0;
-
-									mRP.seekg(0, std::ios::beg);
-
-									std::vector<BYTE> pChars;
-									pChars.reserve(filesize);
-
-									pChars.insert(pChars.begin(),
-										std::istream_iterator<BYTE>(mRP),
-										std::istream_iterator<BYTE>());
-
-									//For loop for inserting the frames in the proper place. Based on code from recording.
-									//Need to fix this.
-									for (int i = 0; i < recordedLength4P1; i++)
-									{
-										memcpy(&replayBuffer7[i], &pChars[(i * 550)], ReplayBufferSize);
-									}
-								}
-
-
-							}
-
-						}
-
-
-					}
-				}
-			}
-			ImGui::SameLine();
-			if (ImGui::Button("Load Recording in P2"))
-			{
-				if (CheckTheMode() == true)
-				{
-					if (!recordingP2 && !replayingP2)
-					{
-						OPENFILENAME ofn = { sizeof(OPENFILENAME) };
-						char szFile[_MAX_PATH] = "RecP1";
-						const char szExt[] = ".dat\0"; // extra '\0' for lpstrFilter
-						ofn.hwndOwner = GetConsoleWindow();
-						ofn.lpstrFile = szFile; // <--------------------- initial file name
-						ofn.nMaxFile = sizeof(szFile) / sizeof(szFile[0]);
-						ofn.lpstrFilter = ofn.lpstrDefExt = szExt;
-						ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
-
-						if (GetOpenFileName(&ofn))
-						{
-							if (ofn.lStructSize > (ReplayBufferSize * ReplayLength))
-							{
-								MessageBoxA(0, "This file is too big to load.\nThe opened file size is: " + ofn.lStructSize, 0, MB_ICONINFORMATION);
-
-							}
-							else
-							{
-								//MessageBoxA(0,ofn.lpstrFile,0,MB_ICONINFORMATION);
-								std::ifstream mRP(ofn.lpstrFile, std::ios::binary | std::ios::ate);
-								mRP.unsetf(std::ios::skipws);
-								std::ifstream::pos_type pos = mRP.tellg();
-								int filesize = pos;
-
-								if (filesize % 550 != 0)
-								{
-									MessageBoxA(0, "This file is malformed.\nRecording files are assumed to be multiples of 550\nand yet the filesize is : " + ofn.lStructSize, 0, MB_ICONINFORMATION);
-								}
-								else
-								{
-									//Gets the file size, sets the needed variables to play the replay when loaded, 
-									//and then copies the file into an array in memory.
-									int length = pos / 550;
-									replayAvailable4P2 = true;
-									recordedLength4P2 = length;
-									recordReplayIndex4P2 = 0;
-
-									mRP.seekg(0, std::ios::beg);
-
-									std::vector<BYTE> pChars;
-									pChars.reserve(filesize);
-
-									pChars.insert(pChars.begin(),
-										std::istream_iterator<BYTE>(mRP),
-										std::istream_iterator<BYTE>());
-
-									//For loop for inserting the frames in the proper place. Based on code from recording.
-									for (int i = 0; i < recordedLength4P2; i++)
-									{
-										memcpy(&replayBuffer8[i], &pChars[(i * 550)], ReplayBufferSize);
-									}
-								}
-
-
-							}
-
-						}
-
-
-					}
-				}
-			}
-
-
-			break;
-
-		case 5:
-
-			if (!recordingP1 && !recordingP2) {
-				if (ImGui::Button("Record Both")) {
-					if (CheckTheMode() == true)
-					{
-						//recording = true;
-						//replaying = false;
-						recordingP1 = true;
-						replayingP1 = false;
-						recordingP2 = true;
-						replayingP2 = false;
-						recordReplayIndex5P1 = 0;
-						recordReplayIndex5P2 = 0;
-
-					}
-				}
-			}
-			//ImGui::SameLine();
-			if (!recordingP1 && !recordingP2) {
-				if (ImGui::Button("Record P1")) {
-					if (CheckTheMode() == true)
-					{
-						recordingP1 = true;
-						replayingP1 = false;
-						//recording = false;
-						//replaying = false;
-						recordingP2 = false;
-						replayingP2 = false;
-						recordReplayIndex5P1 = 0;
-					}
-				}
-				ImGui::SameLine();
-			}
-			//ImGui::SameLine();
-			if (!recordingP1 && !recordingP2) {
-				if (ImGui::Button("Record P2")) {
-					if (CheckTheMode() == true)
-					{
-						recordingP2 = true;
-						replayingP2 = false;
-						//recording = false;
-						//replaying = false;
-						recordingP1 = false;
-						replayingP1 = false;
-						recordReplayIndex5P2 = 0;
-					}
-				}
-			}
-
-			else if (recordReplayIndex5P1 > 90 || recordReplayIndex5P2 > 90) {
-				if (ImGui::Button("Stop Recording")) {
-					if (CheckTheMode() == true)
-					{
-						//recording = false;
-						recordingP1 = false;
-						recordingP2 = false;
-						recordedLength5P1 = recordReplayIndex5P1 - 1;
-						recordedLength5P2 = recordReplayIndex5P2 - 1;
-					}
-				}
-			}
-
-			//Playback Code Below.
-			ImGui::Separator();
-
-			if (replayAvailable5P1 && replayAvailable5P2 && !recordingP1 && !recordingP2) {
-				if (!replayingP1 && !replayingP2) {
-					if (ImGui::Button("Playback Both")) {
-						if (CheckTheMode() == true)
-						{
-
-							replayingP1 = true;
-							replayingP2 = true;
-							recordReplayIndex5 = 0;
-							recordReplayIndex5P1 = 0;
-							recordReplayIndex5P2 = 0;
-
-						}
-
-					}
-				}
-				else if (recordReplayIndex5P1 > 90 || recordReplayIndex5P2 > 90) {
-					if (ImGui::Button("Stop Playback"))
-					{
-						if (CheckTheMode() == true)
-						{
-							replayingP1 = false;
-							replayingP2 = false;
-
-						}
-					}
-				}
-			}
-
-			if (replayAvailable5P1 && !recordingP1) {
-				if (!replayingP1) {
-					if (ImGui::Button("Playback P1")) {
-						if (CheckTheMode() == true)
-						{
-							replayingP1 = true;
-							recordReplayIndex5P1 = 0;
-						}
-
-					}
-				}
-				else if (recordReplayIndex5P1 > 90) {
-					if (ImGui::Button("Stop Playback P1"))
-					{
-						if (CheckTheMode() == true)
-						{
-							replayingP1 = false;
-						}
-					}
-				}
-				ImGui::SameLine();
-			}
-
-			if (replayAvailable5P2 && !recordingP2) {
-				if (!replayingP2) {
-					if (ImGui::Button("Playback P2")) {
-						if (CheckTheMode() == true)
-						{
-							replayingP2 = true;
-							recordReplayIndex5P2 = 0;
-						}
-
-					}
-				}
-				else if (recordReplayIndex5P2 > 90) {
-					if (ImGui::Button("Stop Playback P2"))
-					{
-						if (CheckTheMode() == true)
-						{
-							replayingP2 = false;
-						}
-					}
-				}
-			}
-
-
-			ImGui::Separator();
-
-			//Saves Recordings. Needs to be adjusted.
-			if (ImGui::Button("Save P1 Recording"))
-			{
-				if (CheckTheMode() == true)
-				{
-					if (!recording && replayAvailable5P1)
-					{
-						OPENFILENAME ofn = { sizeof(OPENFILENAME) };
-
-						char szFile[_MAX_PATH] = "RecP1";
-						const char szExt[] = "dat\0"; // extra '\0' for lpstrFilter
-
-						ofn.hwndOwner = GetConsoleWindow();
-						ofn.lpstrFile = szFile; // <--------------------- initial file name
-						ofn.nMaxFile = sizeof(szFile) / sizeof(szFile[0]);
-						ofn.lpstrFilter = ofn.lpstrDefExt = szExt;
-						ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
-						if (GetSaveFileName(&ofn))
-						{
-							pRec = fopen(ofn.lpstrFile, "wb");
-							fwrite(replayBuffer9, 550, recordedLength5P1, pRec);
-							fclose(pRec);
-						}
-					}
-				}
-			}
-			ImGui::SameLine();
-			if (ImGui::Button("Save P2 Recording"))
-			{
-				if (CheckTheMode() == true)
-				{
-					if (!recording && replayAvailable5P2)
-					{
-						OPENFILENAME ofn = { sizeof(OPENFILENAME) };
-
-						char szFile[_MAX_PATH] = "RecP2";
-						const char szExt[] = "dat\0"; // extra '\0' for lpstrFilter
-
-						ofn.hwndOwner = GetConsoleWindow();
-						ofn.lpstrFile = szFile; // <--------------------- initial file name
-						ofn.nMaxFile = sizeof(szFile) / sizeof(szFile[0]);
-						ofn.lpstrFilter = ofn.lpstrDefExt = szExt;
-						ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
-
-						if (GetSaveFileName(&ofn))
-						{
-							pRec = fopen(ofn.lpstrFile, "wb");
-							fwrite(replayBuffer10, 550, recordedLength5P2, pRec);
-							fclose(pRec);
-
-						}
-					}
-				}
-			}
-
-			if (ImGui::Button("Load Recording in P1"))
-			{
-				if (CheckTheMode() == true)
-				{
-					if (!recordingP1 && !replayingP1)
-					{
-						OPENFILENAME ofn = { sizeof(OPENFILENAME) };
-						char szFile[_MAX_PATH] = "RecP1";
-						const char szExt[] = ".dat\0"; // extra '\0' for lpstrFilter
-						ofn.hwndOwner = GetConsoleWindow();
-						ofn.lpstrFile = szFile; // <--------------------- initial file name
-						ofn.nMaxFile = sizeof(szFile) / sizeof(szFile[0]);
-						ofn.lpstrFilter = ofn.lpstrDefExt = szExt;
-						ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
-
-						if (GetOpenFileName(&ofn))
-						{
-							if (ofn.lStructSize > (ReplayBufferSize * ReplayLength))
-							{
-								MessageBoxA(0, "This file is too big to load.\nThe opened file size is: " + ofn.lStructSize, 0, MB_ICONINFORMATION);
-
-							}
-							else
-							{
-								//MessageBoxA(0,ofn.lpstrFile,0,MB_ICONINFORMATION);
-								std::ifstream mRP(ofn.lpstrFile, std::ios::binary | std::ios::ate);
-								mRP.unsetf(std::ios::skipws);
-								std::ifstream::pos_type pos = mRP.tellg();
-								int filesize = pos;
-
-								if (filesize % 550 != 0)
-								{
-									MessageBoxA(0, "This file is malformed.\nRecording files are assumed to be multiples of 550\nand yet the filesize is : " + ofn.lStructSize, 0, MB_ICONINFORMATION);
-								}
-								else
-								{
-									//Gets the file size, sets the needed variables to play the replay when loaded, 
-									//and then copies the file into an array in memory.
-									int length = pos / 550;
-									replayAvailable5P1 = true;
-									recordedLength5P1 = length;
-									recordReplayIndex5P1 = 0;
-
-									mRP.seekg(0, std::ios::beg);
-
-									std::vector<BYTE> pChars;
-									pChars.reserve(filesize);
-
-									pChars.insert(pChars.begin(),
-										std::istream_iterator<BYTE>(mRP),
-										std::istream_iterator<BYTE>());
-
-									//For loop for inserting the frames in the proper place. Based on code from recording.
-									//Need to fix this.
-									for (int i = 0; i < recordedLength5P1; i++)
-									{
-										memcpy(&replayBuffer9[i], &pChars[(i * 550)], ReplayBufferSize);
-									}
-								}
-
-
-							}
-
-						}
-
-
-					}
-				}
-			}
-			ImGui::SameLine();
-			if (ImGui::Button("Load Recording in P2"))
-			{
-				if (CheckTheMode() == true)
-				{
-					if (!recordingP2 && !replayingP2)
-					{
-						OPENFILENAME ofn = { sizeof(OPENFILENAME) };
-						char szFile[_MAX_PATH] = "RecP1";
-						const char szExt[] = ".dat\0"; // extra '\0' for lpstrFilter
-						ofn.hwndOwner = GetConsoleWindow();
-						ofn.lpstrFile = szFile; // <--------------------- initial file name
-						ofn.nMaxFile = sizeof(szFile) / sizeof(szFile[0]);
-						ofn.lpstrFilter = ofn.lpstrDefExt = szExt;
-						ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
-
-						if (GetOpenFileName(&ofn))
-						{
-							if (ofn.lStructSize > (ReplayBufferSize * ReplayLength))
-							{
-								MessageBoxA(0, "This file is too big to load.\nThe opened file size is: " + ofn.lStructSize, 0, MB_ICONINFORMATION);
-
-							}
-							else
-							{
-								//MessageBoxA(0,ofn.lpstrFile,0,MB_ICONINFORMATION);
-								std::ifstream mRP(ofn.lpstrFile, std::ios::binary | std::ios::ate);
-								mRP.unsetf(std::ios::skipws);
-								std::ifstream::pos_type pos = mRP.tellg();
-								int filesize = pos;
-
-								if (filesize % 550 != 0)
-								{
-									MessageBoxA(0, "This file is malformed.\nRecording files are assumed to be multiples of 550\nand yet the filesize is : " + ofn.lStructSize, 0, MB_ICONINFORMATION);
-								}
-								else
-								{
-									//Gets the file size, sets the needed variables to play the replay when loaded, 
-									//and then copies the file into an array in memory.
-									int length = pos / 550;
-									replayAvailable5P2 = true;
-									recordedLength5P2 = length;
-									recordReplayIndex5P2 = 0;
-
-									mRP.seekg(0, std::ios::beg);
-
-									std::vector<BYTE> pChars;
-									pChars.reserve(filesize);
-
-									pChars.insert(pChars.begin(),
-										std::istream_iterator<BYTE>(mRP),
-										std::istream_iterator<BYTE>());
-
-									//For loop for inserting the frames in the proper place. Based on code from recording.
-									for (int i = 0; i < recordedLength5P2; i++)
-									{
-										memcpy(&replayBuffer10[i], &pChars[(i * 550)], ReplayBufferSize);
-									}
-								}
-
-
-							}
-
-						}
-
-
-					}
-				}
-			}
-
-			break;
-
-		case 1:
-		default:
-
-			if (!recordingP1 && !recordingP2) {
-				if (ImGui::Button("Record Both")) {
-					if (CheckTheMode() == true)
-					{
-						//recording = true;
-						//replaying = false;
-						recordingP1 = true;
-						replayingP1 = false;
-						recordingP2 = true;
-						replayingP2 = false;
-						//recordReplayIndex = 0;
-						recordReplayIndexP1 = 0;
-						recordReplayIndexP2 = 0;
-
-					}
-				}
-			}
-			//ImGui::SameLine();
-			if (!recordingP1 && !recordingP2) {
-				if (ImGui::Button("Record P1")) {
-					if (CheckTheMode() == true)
-					{
-						recordingP1 = true;
-						replayingP1 = false;
-						//recording = false;
-						//replaying = false;
-						recordingP2 = false;
-						replayingP2 = false;
-						recordReplayIndexP1 = 0;
-					}
-				}
-				ImGui::SameLine();
-			}
-			//ImGui::SameLine();
-			if (!recordingP1 && !recordingP2) {
-				if (ImGui::Button("Record P2")) {
-					if (CheckTheMode() == true)
-					{
-						recordingP2 = true;
-						replayingP2 = false;
-						//recording = false;
-						//replaying = false;
-						recordingP1 = false;
-						replayingP1 = false;
-						recordReplayIndexP2 = 0;
-					}
-				}
-			}
-
-			else if (recordReplayIndexP1 > 90 || recordReplayIndexP2 > 90) {
-				if (ImGui::Button("Stop Recording")) {
-					if (CheckTheMode() == true)
-					{
-						//recording = false;
-						recordingP1 = false;
-						recordingP2 = false;
-						recordedLengthP1 = recordReplayIndexP1 - 1;
-						recordedLengthP2 = recordReplayIndexP2 - 1;
-					}
-				}
-			}
-
-			//Playback Code Below.
-			ImGui::Separator();
-
-			if (replayAvailableP1 && replayAvailableP2 && !recordingP1 && !recordingP2) {
-				if (!replayingP1 && !replayingP2) {
-					if (ImGui::Button("Playback Both")) {
-						if (CheckTheMode() == true)
-						{
-
-							replayingP1 = true;
-							replayingP2 = true;
-							recordReplayIndex = 0;
-							recordReplayIndexP1 = 0;
-							recordReplayIndexP2 = 0;
-
-						}
-
-					}
-				}
-				else if (recordReplayIndexP1 > 90 || recordReplayIndexP2 > 90) {
-					if (ImGui::Button("Stop Playback"))
-					{
-						if (CheckTheMode() == true)
-						{
-							replayingP1 = false;
-							replayingP2 = false;
-
-						}
-					}
-				}
-			}
-
-			if (replayAvailableP1 && !recordingP1) {
-				if (!replayingP1) {
-					if (ImGui::Button("Playback P1")) {
-						if (CheckTheMode() == true)
-						{
-							replayingP1 = true;
-							recordReplayIndexP1 = 0;
-						}
-
-					}
-				}
-				else if (recordReplayIndexP1 > 90) {
-					if (ImGui::Button("Stop Playback P1"))
-					{
-						if (CheckTheMode() == true)
-						{
-							replayingP1 = false;
-						}
-					}
-				}
-				ImGui::SameLine();
-			}
-
-			if (replayAvailableP2 && !recordingP2) {
-				if (!replayingP2) {
-					if (ImGui::Button("Playback P2")) {
-						if (CheckTheMode() == true)
-						{
-							replayingP2 = true;
-							recordReplayIndexP2 = 0;
-						}
-
-					}
-				}
-				else if (recordReplayIndexP2 > 90) {
-					if (ImGui::Button("Stop Playback P2"))
-					{
-						if (CheckTheMode() == true)
-						{
-							replayingP2 = false;
-						}
-					}
-				}
-			}
-
-
-			ImGui::Separator();
-
-			//Saves Recordings. Needs to be adjusted.
-			if (ImGui::Button("Save P1 Recording"))
-			{
-				if (CheckTheMode() == true)
-				{
-					if (!recording && replayAvailableP1)
-					{
-						OPENFILENAME ofn = { sizeof(OPENFILENAME) };
-
-						char szFile[_MAX_PATH] = "RecP1";
-						const char szExt[] = "dat\0"; // extra '\0' for lpstrFilter
-
-						ofn.hwndOwner = GetConsoleWindow();
-						ofn.lpstrFile = szFile; // <--------------------- initial file name
-						ofn.nMaxFile = sizeof(szFile) / sizeof(szFile[0]);
-						ofn.lpstrFilter = ofn.lpstrDefExt = szExt;
-						ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
-						if (GetSaveFileName(&ofn))
-						{
-							pRec = fopen(ofn.lpstrFile, "wb");
-							fwrite(replayBuffer, 550, recordedLengthP1, pRec);
-							fclose(pRec);
-						}
-					}
-				}
-			}
-			ImGui::SameLine();
-			if (ImGui::Button("Save P2 Recording"))
-			{
-				if (CheckTheMode() == true)
-				{
-					if (!recording && replayAvailableP2)
-					{
-						OPENFILENAME ofn = { sizeof(OPENFILENAME) };
-
-						char szFile[_MAX_PATH] = "RecP2";
-						const char szExt[] = "dat\0"; // extra '\0' for lpstrFilter
-
-						ofn.hwndOwner = GetConsoleWindow();
-						ofn.lpstrFile = szFile; // <--------------------- initial file name
-						ofn.nMaxFile = sizeof(szFile) / sizeof(szFile[0]);
-						ofn.lpstrFilter = ofn.lpstrDefExt = szExt;
-						ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
-
-						if (GetSaveFileName(&ofn))
-						{
-							pRec = fopen(ofn.lpstrFile, "wb");
-							fwrite(replayBuffer2, 550, recordedLengthP2, pRec);
-							fclose(pRec);
-
-						}
-					}
-				}
-			}
-
-			//Loads Recordings. To Be Continued....
-			if (ImGui::Button("Load Recording in P1"))
-			{
-				if (CheckTheMode() == true)
-				{
-					if (!recordingP1 && !replayingP1)
-					{
-						OPENFILENAME ofn = { sizeof(OPENFILENAME) };
-						char szFile[_MAX_PATH] = "RecP1";
-						const char szExt[] = ".dat\0"; // extra '\0' for lpstrFilter
-						ofn.hwndOwner = GetConsoleWindow();
-						ofn.lpstrFile = szFile; // <--------------------- initial file name
-						ofn.nMaxFile = sizeof(szFile) / sizeof(szFile[0]);
-						ofn.lpstrFilter = ofn.lpstrDefExt = szExt;
-						ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
-
-						if (GetOpenFileName(&ofn))
-						{
-							if (ofn.lStructSize > (ReplayBufferSize * ReplayLength))
-							{
-								MessageBoxA(0, "This file is too big to load.\nThe opened file size is: " + ofn.lStructSize, 0, MB_ICONINFORMATION);
-
-							}
-							else
-							{
-								//MessageBoxA(0,ofn.lpstrFile,0,MB_ICONINFORMATION);
-								std::ifstream mRP(ofn.lpstrFile, std::ios::binary | std::ios::ate);
-								mRP.unsetf(std::ios::skipws);
-								std::ifstream::pos_type pos = mRP.tellg();
-								int filesize = pos;
-
-								if (filesize % 550 != 0)
-								{
-									MessageBoxA(0, "This file is malformed.\nRecording files are assumed to be multiples of 550\nand yet the filesize is : " + ofn.lStructSize, 0, MB_ICONINFORMATION);
-								}
-								else
-								{
-									//Gets the file size, sets the needed variables to play the replay when loaded, 
-									//and then copies the file into an array in memory.
-									int length = pos / 550;
-									replayAvailableP1 = true;
-									recordedLengthP1 = length;
-									recordReplayIndexP1 = 0;
-
-									mRP.seekg(0, std::ios::beg);
-
-									std::vector<BYTE> pChars;
-									pChars.reserve(filesize);
-
-									pChars.insert(pChars.begin(),
-										std::istream_iterator<BYTE>(mRP),
-										std::istream_iterator<BYTE>());
-
-									//For loop for inserting the frames in the proper place. Based on code from recording.
-									//Need to fix this.
-									for (int i = 0; i < recordedLengthP1; i++)
-									{
-
-										memcpy(&replayBuffer[i], &pChars[(i * 550)], ReplayBufferSize);
-									}
-								}
-
-
-							}
-
-						}
-
-
-					}
-				}
-			}
-			ImGui::SameLine();
-			if (ImGui::Button("Load Recording in P2"))
-			{
-				if (CheckTheMode() == true)
-				{
-					if (!recordingP2 && !replayingP2)
-					{
-						OPENFILENAME ofn = { sizeof(OPENFILENAME) };
-						char szFile[_MAX_PATH] = "RecP1";
-						const char szExt[] = ".dat\0"; // extra '\0' for lpstrFilter
-						ofn.hwndOwner = GetConsoleWindow();
-						ofn.lpstrFile = szFile; // <--------------------- initial file name
-						ofn.nMaxFile = sizeof(szFile) / sizeof(szFile[0]);
-						ofn.lpstrFilter = ofn.lpstrDefExt = szExt;
-						ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
-
-						if (GetOpenFileName(&ofn))
-						{
-							if (ofn.lStructSize > (ReplayBufferSize * ReplayLength))
-							{
-								MessageBoxA(0, "This file is too big to load.\nThe opened file size is: " + ofn.lStructSize, 0, MB_ICONINFORMATION);
-
-							}
-							else
-							{
-								//MessageBoxA(0,ofn.lpstrFile,0,MB_ICONINFORMATION);
-								std::ifstream mRP(ofn.lpstrFile, std::ios::binary | std::ios::ate);
-								mRP.unsetf(std::ios::skipws);
-								std::ifstream::pos_type pos = mRP.tellg();
-								int filesize = pos;
-
-								if (filesize % 550 != 0)
-								{
-									MessageBoxA(0, "This file is malformed.\nRecording files are assumed to be multiples of 550\nand yet the filesize is : " + ofn.lStructSize, 0, MB_ICONINFORMATION);
-								}
-								else
-								{
-									//Gets the file size, sets the needed variables to play the replay when loaded, 
-									//and then copies the file into an array in memory.
-									int length = pos / 550;
-									replayAvailableP2 = true;
-									recordedLengthP2 = length;
-									recordReplayIndexP2 = 0;
-
-									mRP.seekg(0, std::ios::beg);
-
-									std::vector<BYTE> pChars;
-									pChars.reserve(filesize);
-
-									pChars.insert(pChars.begin(),
-										std::istream_iterator<BYTE>(mRP),
-										std::istream_iterator<BYTE>());
-
-									//For loop for inserting the frames in the proper place. Based on code from recording.
-									for (int i = 0; i < recordedLengthP2; i++)
-									{
-
-										memcpy(&replayBuffer2[i], &pChars[(i * 550)], ReplayBufferSize);
-									}
-								}
-
-
-							}
-
-						}
-
-
-					}
-				}
-			}
-
-			break;
+		}
+		else
+		{
 		}
 
 		if (RecordingSlot)
@@ -2614,8 +1066,6 @@ static void gui::TheRecordPlaybackTab()
 				}
 			}
 		}
-
-		//auto sigger = sigscan::get();
 
 		ImGui::EndTabItem();
 
@@ -2639,7 +1089,7 @@ static void gui::TheDebugStuffTab()
 		DWORD Thing = 0;
 		typedef int(*CheckConnectionTwo)();
 
-		auto ccheck = LoadLibrary("E:\\ULTIMATE MARVEL VS. CAPCOM 3\\Scripts\\ThreeHook.asi");
+		//HINSTANCE ccheck = LoadLibrary("E:\\ULTIMATE MARVEL VS. CAPCOM 3\\Scripts\\ThreeHook.asi");
 
 		if (!ccheck) 
 		{
@@ -3326,6 +1776,11 @@ void gui::Render() noexcept
 
 	ImGui::PushFont(mainfont);
 
+	//typedef void(*DeployTheHooks)();
+	//DeployTheHooks dhook = (DeployTheHooks)GetProcAddress((HMODULE)ccheck, "DeployTheHooks");
+	//dhook();
+
+
 	//The Menu Bar.
 	TheMenuBar();
 
@@ -3408,6 +1863,10 @@ void gui::Render() noexcept
 				char TempByte = 0;
 				ReadProcessMemory(hProcess, (LPVOID*)(0x140289c5a), &TempByte, sizeof(TempByte), 0);
 
+				//For the Record/Playback Tick Function that's important.
+				//
+				// 
+				//  
 				//Memory::InjectHookEx(_addr(0x140289c5a), tramp->Jump(FUN_1402b41b0), PATCH_CALL, hProcess);
 				//TrampHookPart2( hProcess,(LPVOID*)0x140289c5a,tramp, PATCH_CALL);
 
@@ -3438,6 +1897,32 @@ void gui::Render() noexcept
 		ImGui::Text("If the game is open and nothing is happening,\nthen it could be possible\nyou are using an invalid version.");
 		ImGui::PopStyleColor();
 
+	}
+
+	//Starts the Internal Hook.
+	typedef void(*DeployTheHooks)();
+	//auto dcheck = LoadLibrary("E:\\ULTIMATE MARVEL VS. CAPCOM 3\\Scripts\\ThreeHook.asi");
+	if (!ccheck)
+	{
+		std::cout << "could not load the dynamic library" << std::endl;
+	}
+
+	if (ccheck != NULL)
+	{
+		DeployTheHooks dhook = (DeployTheHooks)GetProcAddress((HMODULE)ccheck, "DeployTheHooks");
+		//ImGui::Text(lpcc);
+		if (!dhook)
+		{
+			std::cout << "could not locate the function" << std::endl;
+		}
+		else 
+		{
+			dhook();
+		}
+	}
+	else
+	{
+		ImGui::Text("Nothing Doing!");
 	}
 
 	ImGui::PopFont();

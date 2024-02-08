@@ -1532,7 +1532,7 @@ void ErrorOccured(DWORD errorMessageID)
 
 
 }
-
+/*
 void FUN_1402b41b0(longlong param_1)
 {
 	switch (RecordingSlot)
@@ -1975,9 +1975,11 @@ void FUN_1402b41b0(longlong param_1)
 			}
 		}
 	}
-	*/
+	
 
 }
+*/
+
 
 //Sets whether or not the specified characters are hit by Jamming Bomb.
 void JammingToggle()

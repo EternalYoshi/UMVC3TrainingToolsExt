@@ -181,7 +181,7 @@ inline int recordedLength4P2 = 0;
 inline int recordedLength5 = 0;
 inline int recordedLength5P1 = 0;
 inline int recordedLength5P2 = 0;
-inline int RecordingSlot = 1;
+//inline int RecordingSlot = 1;
 #define ReplayLength (60*120)
 #define ReplayBufferSize 550
 inline uint8_t replayBuffer[ReplayLength][ReplayBufferSize];
@@ -330,6 +330,11 @@ inline std::vector<uintptr_t> P2C1HurtboxPointers;
 inline std::vector<uintptr_t> P2C2HurtboxPointers;
 inline std::vector<uintptr_t> P2C3HurtboxPointers;
 
+inline bool RNGIncludeSlot1 = false;
+inline bool RNGIncludeSlot2 = false;
+inline bool RNGIncludeSlot3 = false;
+inline bool RNGIncludeSlot4 = false;
+inline bool RNGIncludeSlot5 = false;
 
 struct vector {
 	float X;

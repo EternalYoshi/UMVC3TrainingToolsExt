@@ -56,6 +56,7 @@ namespace gui
 	inline ImFont* mainfont;
 
 	//__declspec(dllimport) int CheckConnectionTwo();
+	//HINSTANCE ccheck = LoadLibrary("E:\\ULTIMATE MARVEL VS. CAPCOM 3\\Scripts\\ThreeHook.asi");
 
 }
 
