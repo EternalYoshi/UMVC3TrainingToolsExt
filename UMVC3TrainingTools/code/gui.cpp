@@ -15,13 +15,14 @@
 #include <fstream>
 #include <iomanip>
 #include <ctime>
+#include <string>
 #include "..\utils\Trampoline.h"
 #include "..\utils\addr.h"
 #include "..\utils\MemoryMgr.h"
 #include "..\MemoryMgr.h"
 #include "..\minhook\include\MinHook.h"
 
-HINSTANCE ccheck = LoadLibrary("E:\\ULTIMATE MARVEL VS. CAPCOM 3\\Scripts\\ThreeHook.asi");
+HINSTANCE ccheck = LoadLibrary(const_cast<char*>(ThreeHookPath.c_str()));
 
 #define IMGUI_ENABLE_FREETYPE
 
@@ -303,6 +304,27 @@ static void gui::TheMenuBar()
 	{
 		if (ImGui::BeginMenu("File"))
 		{
+			if(ImGui::MenuItem(("Find ThreeHook"),"CTRL+O"))
+			{
+				std::string ChosenFile = "";
+
+				OPENFILENAME ofn = { sizeof(OPENFILENAME) };
+				char szFile[_MAX_PATH] = "ThreeHook";
+				const char szExt[] = ".asi\0"; // extra '\0' for lpstrFilter
+				ofn.hwndOwner = GetConsoleWindow();
+				ofn.lpstrFile = szFile; // <--------------------- initial file name
+				ofn.nMaxFile = sizeof(szFile) / sizeof(szFile[0]);
+				ofn.lpstrFilter = ofn.lpstrDefExt = szExt;
+				ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
+
+				if (GetOpenFileName(&ofn))
+				{
+					ChosenFile = ofn.lpstrFile;
+					ThreeHookPath = ChosenFile;
+					ccheck = LoadLibrary(const_cast<char*>(ThreeHookPath.c_str()));
+
+				}
+			}
 
 			ImGui::MenuItem(("Exit"), NULL, &exit);
 
@@ -1001,7 +1023,7 @@ static void gui::TheRecordPlaybackTab()
 				}
 			}
 
-			if (IPBAP1(RecordingSlot) && (IPB1(RecordingSlot) == false))
+			if (IPBAP1(RecordingSlot) && (!IPB1(RecordingSlot)))
 			{
 
 				if(!IPB1)
@@ -1025,7 +1047,7 @@ static void gui::TheRecordPlaybackTab()
 				ImGui::SameLine();
 			}
 
-			if (IPBAP2(RecordingSlot) && (IPB2(RecordingSlot) == false))
+			if (IPBAP2(RecordingSlot) && (!IPB2(RecordingSlot)))
 			{
 
 				if (!IPB2)
@@ -1049,23 +1071,26 @@ static void gui::TheRecordPlaybackTab()
 				ImGui::SameLine();
 			}
 
+			if (RecordingSlot)
+			{
+				ImGui::Text("Recording Slot");
+				if (ImGui::SliderInt("Slot", &RecordingSlot, 1, 5))
+				{
+					if (CheckTheMode() == true)
+					{
+
+					}
+				}
+			}
 
 		}
 		else
 		{
+			ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 70, 100, 255));
+			ImGui::Text("The functions on this page will do absolutely nothing without \nThreeHook.asi. Go to File-> Open ThreeHook and open that\n file while it's loaded in the game.");
+			ImGui::PopStyleColor();
 		}
 
-		if (RecordingSlot)
-		{
-			ImGui::Text("Recording Slot");
-			if (ImGui::SliderInt("Slot", &RecordingSlot, 1, 5))
-			{
-				if (CheckTheMode() == true)
-				{
-
-				}
-			}
-		}
 
 		ImGui::EndTabItem();
 
@@ -1125,7 +1150,7 @@ static void gui::TheDebugStuffTab()
 		else
 		{
 			SetLastError(Thing);
-			ImGui::Text("Nothing Doing!");
+			ImGui::Text("Nothing Doing! Go to File-> Find ThreeHook and select the ThreeHook.asi.");
 		}
 		
 		ImGui::Separator();
@@ -1922,7 +1947,7 @@ void gui::Render() noexcept
 	}
 	else
 	{
-		ImGui::Text("Nothing Doing!");
+		ImGui::Text("Nothing Doing! Go to File-> Find ThreeHook and select the ThreeHook.asi");
 	}
 
 	ImGui::PopFont();

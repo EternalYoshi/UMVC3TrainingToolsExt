@@ -15,6 +15,7 @@
 #include "utils/MemoryMgr.h"
 #include "utils/Trampoline.h"
 #include "utils/Patterns.h"
+//#include "umvc3/Internals.h"
 
 
 using namespace Memory::VP;
@@ -33,7 +34,8 @@ void OnInitializeHook()
 
 	Notifications->Init();
 	Trampoline* tramp = Trampoline::MakeTrampoline(GetModuleHandle(nullptr));
-
+	//Trampoline* tramp = Trampoline::MakeTrampoline(GetModuleHandle(nullptr));
+	//InjectHook(_addr(0x140289c5a), tramp->Jump(FUN_1402b41b0), PATCH_CALL);
 	//InjectHook(_addr(0x14001A490), tramp->Jump(CameraConstrutctor_Hook), PATCH_JUMP);
 	//InjectHook(_addr(0x14001A490), tramp->Jump(UMVC3Hooks::HookCamera), PATCH_JUMP);
 

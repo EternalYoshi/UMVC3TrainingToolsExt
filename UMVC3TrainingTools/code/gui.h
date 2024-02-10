@@ -46,6 +46,7 @@ namespace gui
 	static void TheMenuBar();
 	static bool ShowAboutWindow = false;
 	static void TheAboutWindow(bool*);
+	static void FindThreeHook();
 	static void TheExtraOptionsTab();
 	static void TheStatusOptionsTab();
 	static void TheCharacterOptionsTab();

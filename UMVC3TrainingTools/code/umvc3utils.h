@@ -3,6 +3,7 @@
 #include <TlHelp32.h>
 #include <vector>
 #include <list>
+#include <string>
 //#include "proc.h"
 
 inline HANDLE HProc = 0;
@@ -335,6 +336,10 @@ inline bool RNGIncludeSlot2 = false;
 inline bool RNGIncludeSlot3 = false;
 inline bool RNGIncludeSlot4 = false;
 inline bool RNGIncludeSlot5 = false;
+
+//inline std::string GamePath = "E:\\ULTIMATE MARVEL VS. CAPCOM 3\\umvc3.exe";
+inline std::string ThreeHookPath = "E:\\ULTIMATE MARVEL VS. CAPCOM 3\\Scripts\\ThreeHook.asi";
+
 
 struct vector {
 	float X;
