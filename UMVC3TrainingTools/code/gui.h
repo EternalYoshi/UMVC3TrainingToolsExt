@@ -5,6 +5,7 @@
 #include "../imgui/imgui.h"
 
 #pragma region Take1
+
 namespace gui
 {
 	//Window Sizes.
@@ -46,19 +47,19 @@ namespace gui
 	static void TheMenuBar();
 	static bool ShowAboutWindow = false;
 	static void TheAboutWindow(bool*);
-	static void FindThreeHook();
+	//static void FindThreeHook();
 	static void TheExtraOptionsTab();
 	static void TheStatusOptionsTab();
 	static void TheCharacterOptionsTab();
 	static void TheRecordPlaybackTab();
 	static void TheDebugStuffTab();
 	static bool Hooked = false;
+	static bool InMatch = false;
 	static int GameModeRef = 0;
 	inline ImFont* mainfont;
 
 	//__declspec(dllimport) int CheckConnectionTwo();
 	//HINSTANCE ccheck = LoadLibrary("E:\\ULTIMATE MARVEL VS. CAPCOM 3\\Scripts\\ThreeHook.asi");
-
 }
 
 #pragma endregion

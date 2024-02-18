@@ -14,7 +14,8 @@
 #include <iomanip>
 #include <random>
 #include <ctime>
-
+#include <chrono> 
+#include <thread> 
 
 #define undefined4 int
 static int64 timer = GetTickCount64();
@@ -577,6 +578,7 @@ void FUN_1402b41b0(longlong param_1)
 
 }
 
+
 std::string CheckConnection()
 {
 	return "This is from the dll. If you can read this you got it.";
@@ -587,11 +589,20 @@ extern "C" __declspec(dllexport) int CheckConnectionTwo()
 	return 75;
 }
 
-extern "C" __declspec(dllexport) void DeployTheHooks()
+extern "C" __declspec(dllexport) void DeployTheHooks(int Mode)
 {
-	Trampoline* tramp = Trampoline::MakeTrampoline(GetModuleHandle(nullptr));
-	InjectHook(_addr(0x140289c5a), tramp->Jump(FUN_1402b41b0), PATCH_CALL);
+	GameMode = Mode;
+	if (GameMode == 5) 
+	{
+		Trampoline* tramp = Trampoline::MakeTrampoline(GetModuleHandle(nullptr));
+		InjectHook(_addr(0x140289c5a), tramp->Jump(FUN_1402b41b0), PATCH_CALL);
+	}
+}
 
+extern "C" __declspec(dllexport) void StartTheTick()
+{
+	//std::thread tickThread(TickFunction);
+	//tickThread.join();
 }
 
 extern "C" __declspec(dllexport) void RecordBoth(int RecordingSlot)
@@ -666,6 +677,8 @@ extern "C" __declspec(dllexport) void RecordP1(int RecordingSlot)
 	replayingP1 = false;
 	recordingP2 = false;
 	replayingP2 = false;
+	printf("%i", RecordingSlot);
+	printf("Recording P1");
 
 	switch (RecordingSlot)
 	{
@@ -729,12 +742,43 @@ extern "C" __declspec(dllexport) void RecordP2(int RecordingSlot)
 	}
 }
 
-extern "C" __declspec(dllexport) void StopRecording()
+extern "C" __declspec(dllexport) void StopRecording(int RecordingSlot)
 {
 	recordingP1 = false;
 	recordingP2 = false;
-	recordedLengthP1 = recordReplayIndexP1 - 1;
-	recordedLengthP2 = recordReplayIndexP2 - 1;
+
+	switch (RecordingSlot)
+	{
+
+	case 5:
+		recordedLength5P1 = recordReplayIndex5P1 - 1;
+		recordedLength5P2 = recordReplayIndex5P2 - 1;
+		break;
+
+	case 4:
+		recordedLength4P1 = recordReplayIndex4P1 - 1;
+		recordedLength4P2 = recordReplayIndex4P2 - 1;
+		break;
+
+	case 3:
+		recordedLength3P1 = recordReplayIndex3P1 - 1;
+		recordedLength3P2 = recordReplayIndex3P2 - 1;
+		break;
+
+	case 2:
+		recordedLength2P1 = recordReplayIndex2P1 - 1;
+		recordedLength2P2 = recordReplayIndex2P2 - 1;
+		break;
+
+	case 1:
+	default:
+		recordedLengthP1 = recordReplayIndexP1 - 1;
+		recordedLengthP2 = recordReplayIndexP2 - 1;
+		break;
+
+	}
+
+
 }
 
 extern "C" __declspec(dllexport) void SaveP1Recording(int RecordingSlot)
@@ -2067,4 +2111,9 @@ extern "C" __declspec(dllexport) bool CheckReplayAvailableBoth(int RecordingSlot
 		break;
 
 	}
+}
+
+extern "C" __declspec(dllexport) void ChangeRecordingSlot(int RecSlot)
+{
+	RecordingSlot = RecSlot;
 }

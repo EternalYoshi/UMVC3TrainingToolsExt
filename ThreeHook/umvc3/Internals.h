@@ -7,7 +7,7 @@
 extern "C" {
 	__declspec(dllexport) std::string CheckConnection();
 	__declspec(dllexport) int CheckConnectionTwo();
-	__declspec(dllexport) void DeployTheHooks();
+	__declspec(dllexport) void DeployTheHooks(int);
 	__declspec(dllexport) void RecordBoth(int);
 	__declspec(dllexport) void RecordP1(int);
 	__declspec(dllexport) void RecordP2(int);
@@ -31,4 +31,8 @@ extern "C" {
 	__declspec(dllexport) bool CheckReplayAvailableP1(int);
 	__declspec(dllexport) bool CheckReplayAvailableP2(int);
 	__declspec(dllexport) bool CheckReplayAvailableBoth(int);
+	__declspec(dllexport) bool ChangeRecordingSlot(int);
+	__declspec(dllexport) void StartTheTick();
+
+
 }

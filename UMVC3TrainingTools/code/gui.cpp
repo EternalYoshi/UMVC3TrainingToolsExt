@@ -211,9 +211,9 @@ void gui::CreateImGui() noexcept
 	ImGui_ImplWin32_Init(window);
 	ImGui_ImplDX9_Init(device);
 
-	
+
 	io.Fonts->AddFontDefault();
-	mainfont = io.Fonts->AddFontFromFileTTF("Resources\\fonts\\FOT-NewRodinPro-DB.otf",11.5f, NULL, io.Fonts->GetGlyphRangesJapanese());
+	mainfont = io.Fonts->AddFontFromFileTTF("Resources\\fonts\\FOT-NewRodinPro-DB.otf", 11.5f, NULL, io.Fonts->GetGlyphRangesJapanese());
 	IM_ASSERT(mainfont != NULL);
 	//ImFont* secfont = io.Fonts->AddFontFromFileTTF("E:\\DLs\\Fontworks\\Japanese\\Gothic (Black)\\FOT-NewRodinPro-B.otf", 18.5f, NULL, io.Fonts->GetGlyphRangesJapanese());
 	//IM_ASSERT(secfont != NULL);
@@ -276,17 +276,30 @@ void CastTheHook()
 		DWORD ex = GetLastError();
 	}
 
-	if(ProcID != 0)
+	if (ProcID != 0)
 	{
 		ModuleBase = GetModuleBaseAddress(ProcID);
 		ValidVer = CheckGame();
-		if(ValidVer)gui::Hooked = true;
+		if (ValidVer)gui::Hooked = true;
 	}
 	else
 	{
 		gui::Hooked = false;
 	}
 	HProc = hProcess;
+}
+
+void CheckIfInMatch()
+{
+
+	if (Player1TeamTable == 0 && Player2TeamTable == 0)
+	{
+		gui::InMatch = false;
+	}
+	else
+	{
+		gui::InMatch = true;
+	}
 }
 
 void TrampHookPart2(HANDLE hProcess, LPVOID TargetAddress, Trampoline* tramp, unsigned int nType)
@@ -304,7 +317,7 @@ static void gui::TheMenuBar()
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			if(ImGui::MenuItem(("Find ThreeHook"),"CTRL+O"))
+			if (ImGui::MenuItem(("Find ThreeHook"), "CTRL+O"))
 			{
 				std::string ChosenFile = "";
 
@@ -322,6 +335,14 @@ static void gui::TheMenuBar()
 					ChosenFile = ofn.lpstrFile;
 					ThreeHookPath = ChosenFile;
 					ccheck = LoadLibrary(const_cast<char*>(ThreeHookPath.c_str()));
+					if (ccheck)
+					{
+						typedef void(*DeployTheHooks)();
+						DeployTheHooks dhook = (DeployTheHooks)GetProcAddress((HMODULE)ccheck, "DeployTheHooks");
+						dhook();
+					}
+
+
 
 				}
 			}
@@ -359,12 +380,12 @@ void gui::TheAboutWindow(bool* p_open)
 	ImGui::Text("Thanks To SanHKHaan, Sheep, & Gneiss for finding\nthe pointers and memeory offsets that made this \npossible,and Ermmaccer for the original UMVC3Hook\nthis version is based on.");
 	ImGui::Separator();
 	ImGui::Text("In case it isn't obvious, this tool is NOT designed to\nenable cheating in netplay and\nis intended to only function in training mode.");
-	
+
 	ImGui::End();
 
 }
 
-static void gui::TheCharacterOptionsTab() 
+static void gui::TheCharacterOptionsTab()
 {
 
 	if (ImGui::BeginTabItem("Character Settings"))
@@ -379,7 +400,7 @@ static void gui::TheCharacterOptionsTab()
 			ImGui::Text("Frank West's Level");
 			if (ImGui::SliderInt("Lv", &FrankLevel, 1, 5))
 			{
-				ChangeFrankLevel(FrankLevel);				
+				ChangeFrankLevel(FrankLevel);
 			}
 		}
 
@@ -575,7 +596,7 @@ static void gui::TheExtraOptionsTab()
 				{
 
 				}
-				else 
+				else
 				{
 					val = 3;
 				}
@@ -699,7 +720,7 @@ static void gui::TheExtraOptionsTab()
 
 		}
 		ImGui::Separator();
-		
+
 		ImGui::SeparatorText("Incomplete/Experimental Stuff");
 
 		ImGui::Separator();
@@ -710,14 +731,14 @@ static void gui::TheExtraOptionsTab()
 			SetGlobalPlayerSpeed(CharacterSpeed);
 
 		}
-		
+
 		if (ImGui::Checkbox("Enable Game Speed Change(Use at own risk!)", &ModifyGameSpeed))
 		{
 
 		}
 
 
-		if(ModifyGameSpeed)
+		if (ModifyGameSpeed)
 		{
 			if (ImGui::SliderFloat("Game Speed", &GameSpeed, 0.01666667f, 5.0f))
 			{
@@ -929,7 +950,7 @@ static void gui::TheRecordPlaybackTab()
 		typedef void(*RecordBoth)(int);
 		typedef void(*RecordP1)(int);
 		typedef void(*RecordP2)(int);
-		typedef void(*StopRecording)();
+		typedef void(*StopRecording)(int);
 		typedef void(*PlaybackP1)(int);
 		typedef void(*PlaybackP2)(int);
 		typedef void(*PlaybackBoth)(int);
@@ -939,6 +960,8 @@ static void gui::TheRecordPlaybackTab()
 		typedef void(*StopPlaybackP1)(int);
 		typedef void(*StopPlaybackP2)(int);
 		typedef void(*StopPlaybackBoth)(int);
+		//typedef void(*DeployTheHooks)();
+		typedef void(*ChangeRecordingSlot)(int);
 
 		if (ccheck != NULL)
 		{
@@ -960,9 +983,12 @@ static void gui::TheRecordPlaybackTab()
 			StopPlaybackP1 SPBP1 = (StopPlaybackP1)GetProcAddress((HMODULE)ccheck, "StopPlaybackP1");
 			StopPlaybackP2 SPBP2 = (StopPlaybackP2)GetProcAddress((HMODULE)ccheck, "StopPlaybackP2");
 			StopPlaybackBoth SPBP12 = (StopPlaybackBoth)GetProcAddress((HMODULE)ccheck, "StopPlaybackBoth");
+			ChangeRecordingSlot CRS = (ChangeRecordingSlot)GetProcAddress((HMODULE)ccheck, "ChangeRecordingSlot");
+			//DeployTheHooks dhook = (DeployTheHooks)GetProcAddress((HMODULE)ccheck, "DeployTheHooks");
 
+			//dhook();
 
-			if(!RP1() && !RP2())
+			if (!RP1() && !RP2())
 			{
 				if (ImGui::Button("Record Both")) {
 					if (CheckTheMode() == true)
@@ -992,19 +1018,22 @@ static void gui::TheRecordPlaybackTab()
 				}
 			}
 
-			else if (IPB1 || IPB2)
+			else if (RP1 || RP2)
 			{
-				if (ImGui::Button("Stop Recording")) {
+
+				if (ImGui::Button("Stop Recording"))
+				{
 					if (CheckTheMode() == true)
 					{
-						SPB();
+						SPB(RecordingSlot);
 					}
 				}
+
 			}
 
-			if(IPBAP1(RecordingSlot) && IPBAP2(RecordingSlot) && !IPB1(RecordingSlot) && !IPB2(RecordingSlot))
+			if (IPBAP1(RecordingSlot) && IPBAP2(RecordingSlot) && !IPB1(RecordingSlot) && !IPB2(RecordingSlot))
 			{
-				if (!PBP1 && !PBP2) 
+				if (!PBP1 && !PBP2)
 				{
 					if (ImGui::Button("Playback Both")) {
 						if (CheckTheMode() == true)
@@ -1014,7 +1043,7 @@ static void gui::TheRecordPlaybackTab()
 
 					}
 				}
-				else if(!PBP1 && !PBP2)
+				else if (!PBP1 && !PBP2)
 				{
 					if (ImGui::Button("Stop Playback"))
 					{
@@ -1026,7 +1055,7 @@ static void gui::TheRecordPlaybackTab()
 			if (IPBAP1(RecordingSlot) && (!IPB1(RecordingSlot)))
 			{
 
-				if(!IPB1)
+				if (!IPB1)
 				{
 					if (ImGui::Button("Playback P1")) {
 						{
@@ -1036,7 +1065,7 @@ static void gui::TheRecordPlaybackTab()
 					}
 				}
 
-				else if(IPB1)
+				else if (IPB1)
 				{
 					if (ImGui::Button("Stop Playback P1"))
 					{
@@ -1078,7 +1107,7 @@ static void gui::TheRecordPlaybackTab()
 				{
 					if (CheckTheMode() == true)
 					{
-
+						CRS(RecordingSlot);
 					}
 				}
 			}
@@ -1108,7 +1137,7 @@ static void gui::TheDebugStuffTab()
 		GetHitboxDataPart1();
 		ImGui::Text("Remember! These Parameters will only take\neffect when this window is open.");
 		ImGui::Separator();
-		
+
 		std::string Sentence = "";
 		int TestEx = 0;
 		DWORD Thing = 0;
@@ -1116,7 +1145,7 @@ static void gui::TheDebugStuffTab()
 
 		//HINSTANCE ccheck = LoadLibrary("E:\\ULTIMATE MARVEL VS. CAPCOM 3\\Scripts\\ThreeHook.asi");
 
-		if (!ccheck) 
+		if (!ccheck)
 		{
 			std::cout << "could not load the dynamic library" << std::endl;
 		}
@@ -1136,11 +1165,11 @@ static void gui::TheDebugStuffTab()
 		}
 		*/
 
-		if (ccheck != NULL) 
+		if (ccheck != NULL)
 		{
 			CheckConnectionTwo lpcc = (CheckConnectionTwo)GetProcAddress((HMODULE)ccheck, "CheckConnectionTwo");
 			//ImGui::Text(lpcc);
-			if(!lpcc)
+			if (!lpcc)
 			{
 				std::cout << "could not locate the function" << std::endl;
 			}
@@ -1152,9 +1181,9 @@ static void gui::TheDebugStuffTab()
 			SetLastError(Thing);
 			ImGui::Text("Nothing Doing! Go to File-> Find ThreeHook and select the ThreeHook.asi.");
 		}
-		
+
 		ImGui::Separator();
-		
+
 #pragma region Hurtbox Data and Coordinates
 
 		ImGui::SeparatorText("Collision Stuff");
@@ -1181,7 +1210,7 @@ static void gui::TheDebugStuffTab()
 
 		for (int i = 0; i < P1C1HurtboxCount; i++)
 		{
-			
+
 			ImGui::Text("X: %f", P1C1Hurtboxes[i].CollData.Coordinates.X);
 			ImGui::SameLine();
 			ImGui::Text("Y: %f", P1C1Hurtboxes[i].CollData.Coordinates.Y);
@@ -1758,8 +1787,8 @@ static void gui::TheDebugStuffTab()
 				//ImGui::Text("p%d:%llx", i, scriptableFighters[i].fighter);
 				//ImGui::Text("p%d:%llx %llx %s", i, scriptableFighters[i].fighter, scriptableFighters[i].tickPtr, scriptableFighters[i].name);
 			}
-			
-			
+
+
 			if (scriptableFighters[i].fighter->tagState == ETagState::Active || scriptableFighters[i].fighter->tagState == ETagState::Active2)
 			{
 				//ImGui::Text("  X:%d", (int)scriptableFighters[i].fighter->vector.x);
@@ -1774,7 +1803,7 @@ static void gui::TheDebugStuffTab()
 				//ImGui::Text("  Grounded:%s", scriptableFighters[i].GetGroundedState());
 				//ImGui::Text("  TagState:%s", scriptableFighters[i].GetTagState());
 			}
-			
+
 
 		}
 		*/
@@ -1813,96 +1842,109 @@ void gui::Render() noexcept
 	CastTheHook();
 
 	//Hides all the options if the game isn't open.
-	if(Hooked)
+	if (Hooked)
 	{
+
 		ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(70, 255, 70, 255));
 		ImGui::Text("If you can read this then the tool recognizes Marvel 3 is open.");
 		ImGui::Text("The version open is valid too.");
 		ImGui::PopStyleColor();
 
-		if(CheckTheMode() == true)
+		if (CheckTheMode() == true)
 		{
 			GetMainPointers();
-			TickUpdates();
-			GetActiveInstallData();
+			CheckIfInMatch();
 
-			if (ImGui::BeginTabBar("##tabs"))
+			if (InMatch)
 			{
-				ReadProcessMemory(hProcess, (LPVOID*)(block2 + 0x118), &val, sizeof(val), 0);
+				TickUpdates();
+				GetActiveInstallData();
 
-				if (val != 0)
+				if (ImGui::BeginTabBar("##tabs"))
 				{
-					restarted = true;
-					restartTimer = 0;
-				}
-				else if (restarted)
-				{
-					restartTimer += 1;
-					if (restartTimer > 5)//0.166667 sec wait
+					ReadProcessMemory(hProcess, (LPVOID*)(block2 + 0x118), &val, sizeof(val), 0);
+
+					if (val != 0)
 					{
-						RestartWithChanges();
-
+						restarted = true;
+						restartTimer = 0;
+					}
+					else if (restarted)
+					{
+						restartTimer += 1;
+						if (restartTimer > 5)//0.166667 sec wait
 						{
-							//auto ptr = (P1Character1Data + 0x50);
-							//*((float*)ptr) = p1Pos;
-							if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x50), &p1Pos, sizeof(float), NULL))
-							{
+							RestartWithChanges();
 
-							}
-							if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x50), &p1Pos, sizeof(float), NULL))
 							{
+								//auto ptr = (P1Character1Data + 0x50);
+								//*((float*)ptr) = p1Pos;
+								if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x50), &p1Pos, sizeof(float), NULL))
+								{
 
+								}
+								if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x50), &p1Pos, sizeof(float), NULL))
+								{
+
+								}
+								if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x50), &p1Pos, sizeof(float), NULL))
+								{
+
+								}
 							}
-							if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x50), &p1Pos, sizeof(float), NULL))
 							{
+								//auto ptr = (P1Character1Data + 0x50);
+								//*((float*)ptr) = p2Pos;
+								if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x50), &p2Pos, sizeof(float), NULL))
+								{
 
+								}
+								if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x50), &p2Pos, sizeof(float), NULL))
+								{
+
+								}
+								if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x50), &p2Pos, sizeof(float), NULL))
+								{
+
+								}
 							}
+							restarted = false;
+							SetIndividualCharacterHealth();
+							SetMeters();
+							GetDebugData();
 						}
-						{
-							//auto ptr = (P1Character1Data + 0x50);
-							//*((float*)ptr) = p2Pos;
-							if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x50), &p2Pos, sizeof(float), NULL))
-							{
 
-							}
-							if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x50), &p2Pos, sizeof(float), NULL))
-							{
 
-							}
-							if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x50), &p2Pos, sizeof(float), NULL))
-							{
-
-							}
-						}
-						restarted = false;
-						SetIndividualCharacterHealth();
-						SetMeters();
-						GetDebugData();
 					}
 
+					Trampoline* tramp = Trampoline::MakeTrampoline(GetModuleHandle(nullptr));
 
+					char TempByte = 0;
+					ReadProcessMemory(hProcess, (LPVOID*)(0x140289c5a), &TempByte, sizeof(TempByte), 0);
+
+					//For the Record/Playback Tick Function that's important.
+					//
+					// 
+					//  
+					//Memory::InjectHookEx(_addr(0x140289c5a), tramp->Jump(FUN_1402b41b0), PATCH_CALL, hProcess);
+					//TrampHookPart2( hProcess,(LPVOID*)0x140289c5a,tramp, PATCH_CALL);
+
+					TickUpdates();
+					TheExtraOptionsTab();
+					TheStatusOptionsTab();
+					TheCharacterOptionsTab();
+					TheRecordPlaybackTab();
+					TheDebugStuffTab();
+
+					ImGui::EndTabBar();
 				}
-				
-				Trampoline* tramp = Trampoline::MakeTrampoline(GetModuleHandle(nullptr));
 
-				char TempByte = 0;
-				ReadProcessMemory(hProcess, (LPVOID*)(0x140289c5a), &TempByte, sizeof(TempByte), 0);
-
-				//For the Record/Playback Tick Function that's important.
-				//
-				// 
-				//  
-				//Memory::InjectHookEx(_addr(0x140289c5a), tramp->Jump(FUN_1402b41b0), PATCH_CALL, hProcess);
-				//TrampHookPart2( hProcess,(LPVOID*)0x140289c5a,tramp, PATCH_CALL);
-
-				TickUpdates();
-				TheExtraOptionsTab();
-				TheStatusOptionsTab();
-				TheCharacterOptionsTab();
-				TheRecordPlaybackTab();
-				TheDebugStuffTab();
-
-				ImGui::EndTabBar();
+			}
+			else
+			{
+				ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255));
+				ImGui::Text("Choose the characters and get into a match.");
+				ImGui::PopStyleColor();
 
 			}
 		}
@@ -1911,8 +1953,8 @@ void gui::Render() noexcept
 			ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255));
 			ImGui::Text("Get to Training Mode so this tool can do its thing.");
 			ImGui::PopStyleColor();
-		
 		}
+
 
 	}
 	else
@@ -1924,27 +1966,12 @@ void gui::Render() noexcept
 
 	}
 
-	//Starts the Internal Hook.
-	typedef void(*DeployTheHooks)();
-	//auto dcheck = LoadLibrary("E:\\ULTIMATE MARVEL VS. CAPCOM 3\\Scripts\\ThreeHook.asi");
 	if (!ccheck)
 	{
 		std::cout << "could not load the dynamic library" << std::endl;
 	}
 
-	if (ccheck != NULL)
-	{
-		DeployTheHooks dhook = (DeployTheHooks)GetProcAddress((HMODULE)ccheck, "DeployTheHooks");
-		//ImGui::Text(lpcc);
-		if (!dhook)
-		{
-			std::cout << "could not locate the function" << std::endl;
-		}
-		else 
-		{
-			dhook();
-		}
-	}
+
 	else
 	{
 		ImGui::Text("Nothing Doing! Go to File-> Find ThreeHook and select the ThreeHook.asi");

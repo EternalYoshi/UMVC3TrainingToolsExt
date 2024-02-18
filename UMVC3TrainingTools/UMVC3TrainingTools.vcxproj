@@ -160,6 +160,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="resource1.h" />
+    <ClInclude Include="resource2.h" />
     <ClInclude Include="sigscan.h" />
     <ClInclude Include="utils\addr.h" />
     <ClInclude Include="utils\core.h" />
@@ -203,6 +204,12 @@
     <ProjectReference Include="..\ThreeHook\ThreeHook.vcxproj">
       <Project>{8539f2f2-70dc-453a-9a80-1d41ae524a59}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="UMVC3TrainingTools.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\..\Chrome DLs\TrainingToolIcon.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

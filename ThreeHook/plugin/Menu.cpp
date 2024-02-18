@@ -5,6 +5,7 @@
 #include "../gui/notifications.h"
 #include "../gui/imgui/imgui.h"
 #include "../umvc3/Camera.h"
+#include "../umvc3/Internals.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <commdlg.h>
@@ -332,11 +333,10 @@ void UMVC3Menu::Draw()
 {
 	if (!m_bIsActive)
 		return;
-	FILE* pRec;
-	Trampoline* tramp = Trampoline::MakeTrampoline(GetModuleHandle(nullptr));
-	//InjectHook(_addr(0x140289c5a), tramp->Jump(FUN_1402b41b0), PATCH_CALL);
-	auto block2 = *(uintptr_t*)_addr(0x140d47e68);
-	auto val = *(unsigned char*)(block2 + 0x118);
+	//FILE* pRec;
+	//DeployTheHooks();
+	//auto block2 = *(uintptr_t*)_addr(0x140d47e68);
+	//auto val = *(unsigned char*)(block2 + 0x118);
 	/*
 	if (val != 0)
 	{

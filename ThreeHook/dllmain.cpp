@@ -15,7 +15,7 @@
 #include "utils/MemoryMgr.h"
 #include "utils/Trampoline.h"
 #include "utils/Patterns.h"
-//#include "umvc3/Internals.h"
+#include "umvc3/Internals.h"
 
 
 using namespace Memory::VP;
@@ -33,7 +33,7 @@ void OnInitializeHook()
 	eLog::Message(__FUNCTION__, "INFO: UMVC3Hook Begin!");
 
 	Notifications->Init();
-	Trampoline* tramp = Trampoline::MakeTrampoline(GetModuleHandle(nullptr));
+	//DeployTheHooks();
 	//Trampoline* tramp = Trampoline::MakeTrampoline(GetModuleHandle(nullptr));
 	//InjectHook(_addr(0x140289c5a), tramp->Jump(FUN_1402b41b0), PATCH_CALL);
 	//InjectHook(_addr(0x14001A490), tramp->Jump(CameraConstrutctor_Hook), PATCH_JUMP);
@@ -41,14 +41,14 @@ void OnInitializeHook()
 
 	// change dinput coop level
 	//Patch<char>(_addr(0x1406A9864) + 2, 0x14);
+	/*
+	CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(PluginProcess), 0, NULL, 0);
+	HANDLE h = 0;
 
-	//CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(PluginProcess), 0, NULL, 0);
-	//HANDLE h = 0;
+	h = CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(DX9Hook_Thread), 0, NULL, 0);
 
-	//h = CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(DX9Hook_Thread), 0, NULL, 0);
-
-	//if (!(h == nullptr)) CloseHandle(h);
-
+	if (!(h == nullptr)) CloseHandle(h);
+	*/
 }
 
 bool CheckGame()
@@ -65,7 +65,6 @@ bool CheckGame()
 		return false;
 	}
 }
-
 
 extern "C"
 {
