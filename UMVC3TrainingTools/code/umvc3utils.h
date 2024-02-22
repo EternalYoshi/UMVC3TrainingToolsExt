@@ -307,6 +307,13 @@ inline bool P2C1Jammed = false;
 inline bool P2C2Jammed = false;
 inline bool P2C3Jammed = false;
 
+inline bool P1C1JammedAlready = false;
+inline bool P1C2JammedAlready = false;
+inline bool P1C3JammedAlready = false;
+inline bool P2C1JammedAlready = false;
+inline bool P2C2JammedAlready = false;
+inline bool P2C3JammedAlready = false;
+
 inline int P1Meter = 10000;
 inline int P2Meter = 10000;
 
@@ -336,6 +343,13 @@ inline bool RNGIncludeSlot2 = false;
 inline bool RNGIncludeSlot3 = false;
 inline bool RNGIncludeSlot4 = false;
 inline bool RNGIncludeSlot5 = false;
+
+inline int P1C1JammedSlot = 0;
+inline int P1C2JammedSlot = 0;
+inline int P1C3JammedSlot = 0;
+inline int P2C1JammedSlot = 0;
+inline int P2C2JammedSlot = 0;
+inline int P2C3JammedSlot = 0;
 
 inline std::string ThreeHookPath = "E:\\ULTIMATE MARVEL VS. CAPCOM 3\\Scripts\\ThreeHook.asi";
 
@@ -856,6 +870,8 @@ void SetGameSpeed(float GameSpeed);
 void ResetGameSpeed();
 
 void JammingToggle();
+
+void JammingToggleRestart();
 
 void GetActiveInstallData();
 

@@ -1,7 +1,8 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 #include "pch.h"
 #include <iostream>
-
+#include <chrono> 
+#include <thread>
 #include "gui/dx9hook.h"
 #include "gui/log.h"
 #include "gui/notifications.h"
@@ -49,6 +50,10 @@ void OnInitializeHook()
 
 	if (!(h == nullptr)) CloseHandle(h);
 	*/
+	//HANDLE r = 0;
+	CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(TheRecordButton), 0, NULL, 0);
+	
+
 }
 
 bool CheckGame()

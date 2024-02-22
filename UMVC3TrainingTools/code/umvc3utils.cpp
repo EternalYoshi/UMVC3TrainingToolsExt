@@ -1,10 +1,11 @@
 #include "umvc3utils.h"
-
+#include <iostream>
 #include "proc.h"
 #include "gui.h"
 #include <Windows.h>
 #include <TlHelp32.h>
 #include <vector>
+#include <chrono>
 #include "..\utils\addr.h"
 
 /*
@@ -29,6 +30,8 @@ bool CheckGame()
 
 bool CheckGame()
 {
+	//Sleep(5000);
+
 	char gameName[5] = { 0 };
 
 	VirtualProtect((LPVOID*)0x140B12D10, 5, PAGE_EXECUTE_READWRITE, &oldPageProtection);
@@ -281,6 +284,7 @@ void RestartWithChanges()
 	SetDormSpellLevels();
 	EndlessInstallBoolUpdate();
 	SetDeadpoolTeleport();
+	JammingToggleRestart();
 }
 
 //Forces the X Factor Timer to stay at a stupid high time to be unlimited.
@@ -1984,12 +1988,15 @@ void FUN_1402b41b0(longlong param_1)
 //Sets whether or not the specified characters are hit by Jamming Bomb.
 void JammingToggle()
 {
+	GetPlayerData();
 
 	if (P1C1Jammed == true)
 	{
 	
-		if(P1C1Slot2Free == true)
+		if(P1C1Slot2Free == true && !P1C1JammedAlready)
 		{
+			P1C1JammedSlot = 2;
+			P1C1JammedAlready = true;
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x15F0), &Jammed, sizeof(FighterInstall), NULL))
 			{
 
@@ -1999,8 +2006,10 @@ void JammingToggle()
 				return;
 			}
 		}
-		else if (P1C1Slot3Free == true)
+		else if (P1C1Slot3Free == true && !P1C1JammedAlready)
 		{
+			P1C1JammedSlot = 3;
+			P1C1JammedAlready = true;
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1670), &Jammed, sizeof(FighterInstall), NULL))
 			{
 
@@ -2010,8 +2019,10 @@ void JammingToggle()
 				return;
 			}
 		}
-		else if (P1C1Slot4Free == true)
+		else if (P1C1Slot4Free == true && !P1C1JammedAlready)
 		{
+			P1C1JammedAlready = true;
+			P1C1JammedSlot = 4;
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x16F0), &Jammed, sizeof(FighterInstall), NULL))
 			{
 
@@ -2021,8 +2032,10 @@ void JammingToggle()
 				return;
 			}
 		}
-		else if (P1C1Slot5Free == true)
+		else if (P1C1Slot5Free == true && !P1C1JammedAlready)
 		{
+			P1C1JammedAlready = true;
+			P1C1JammedSlot = 5;
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1770), &Jammed, sizeof(FighterInstall), NULL))
 			{
 
@@ -2034,12 +2047,56 @@ void JammingToggle()
 		}
 
 	}
+	else
+	{
+		switch (P1C1JammedSlot)
+		{
+		case 5:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1770), &EmptyInstall, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			P1C1JammedSlot = 0;
+			P1C1JammedAlready = false;
+			break;
+		case 4:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x16F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			P1C1JammedSlot = 0;
+			P1C1JammedAlready = false;
+			break;
+		case 3:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1670), &EmptyInstall, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			P1C1JammedSlot = 0;
+			P1C1JammedAlready = false;
+			break;
+		case 2:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x15F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			P1C1JammedSlot = 0;
+			P1C1JammedAlready = false;
+			break;
+		default:
+			P1C1JammedSlot = 0;
+			P1C1JammedAlready = false;
+			break;
+		}
+	}
 
 	if (P1C2Jammed == true)
 	{
 
-		if (P1C2Slot2Free == true)
+		if (P1C2Slot2Free == true && !P1C2JammedAlready)
 		{
+			P1C2JammedSlot = 2;
+			P1C2JammedAlready = true;
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x15F0), &Jammed, sizeof(FighterInstall), NULL))
 			{
 
@@ -2049,8 +2106,10 @@ void JammingToggle()
 				return;
 			}
 		}
-		else if (P1C2Slot3Free == true)
+		else if (P1C2Slot3Free == true && !P1C2JammedAlready)
 		{
+			P1C2JammedSlot = 3;
+			P1C2JammedAlready = true;
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x1670), &Jammed, sizeof(FighterInstall), NULL))
 			{
 
@@ -2060,8 +2119,10 @@ void JammingToggle()
 				return;
 			}
 		}
-		else if (P1C2Slot4Free == true)
+		else if (P1C2Slot4Free == true && !P1C2JammedAlready)
 		{
+			P1C2JammedAlready = true;
+			P1C2JammedSlot = 4;
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x16F0), &Jammed, sizeof(FighterInstall), NULL))
 			{
 
@@ -2071,8 +2132,10 @@ void JammingToggle()
 				return;
 			}
 		}
-		else if (P1C2Slot5Free == true)
+		else if (P1C2Slot5Free == true && !P1C2JammedAlready)
 		{
+			P1C2JammedAlready = true;
+			P1C2JammedSlot = 5;
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x1770), &Jammed, sizeof(FighterInstall), NULL))
 			{
 
@@ -2084,12 +2147,56 @@ void JammingToggle()
 		}
 
 	}
+	else
+	{
+		switch (P1C2JammedSlot)
+		{
+		case 5:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x1770), &EmptyInstall, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			P1C2JammedSlot = 0;
+			P1C2JammedAlready = false;
+			break;
+		case 4:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x16F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			P1C2JammedSlot = 0;
+			P1C2JammedAlready = false;
+			break;
+		case 3:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x1670), &EmptyInstall, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			P1C2JammedSlot = 0;
+			P1C2JammedAlready = false;
+			break;
+		case 2:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x15F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			P1C2JammedSlot = 0;
+			P1C2JammedAlready = false;
+			break;
+		default:
+			P1C2JammedSlot = 0;
+			P1C2JammedAlready = false;
+			break;
+		}
+	}
 
 	if (P1C3Jammed == true)
 	{
 
-		if (P1C3Slot2Free == true)
+		if (P1C3Slot2Free == true && !P1C3JammedAlready)
 		{
+			P1C3JammedSlot = 2;
+			P1C3JammedAlready = true;
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x15F0), &Jammed, sizeof(FighterInstall), NULL))
 			{
 
@@ -2099,8 +2206,10 @@ void JammingToggle()
 				return;
 			}
 		}
-		else if (P1C3Slot3Free == true)
+		else if (P1C3Slot3Free == true && !P1C3JammedAlready)
 		{
+			P1C3JammedSlot = 3;
+			P1C3JammedAlready = true;
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x1670), &Jammed, sizeof(FighterInstall), NULL))
 			{
 
@@ -2110,8 +2219,10 @@ void JammingToggle()
 				return;
 			}
 		}
-		else if (P1C3Slot4Free == true)
+		else if (P1C3Slot4Free == true && !P1C3JammedAlready)
 		{
+			P1C3JammedAlready = true;
+			P1C3JammedSlot = 4;
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x16F0), &Jammed, sizeof(FighterInstall), NULL))
 			{
 
@@ -2121,8 +2232,10 @@ void JammingToggle()
 				return;
 			}
 		}
-		else if (P1C3Slot5Free == true)
+		else if (P1C3Slot5Free == true && !P1C3JammedAlready)
 		{
+			P1C3JammedAlready = true;
+			P1C3JammedSlot = 5;
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x1770), &Jammed, sizeof(FighterInstall), NULL))
 			{
 
@@ -2134,12 +2247,56 @@ void JammingToggle()
 		}
 
 	}
+	else
+	{
+		switch (P1C3JammedSlot)
+		{
+		case 5:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x1770), &EmptyInstall, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			P1C3JammedSlot = 0;
+			P1C3JammedAlready = false;
+			break;
+		case 4:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x16F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			P1C3JammedSlot = 0;
+			P1C3JammedAlready = false;
+			break;
+		case 3:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x1670), &EmptyInstall, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			P1C3JammedSlot = 0;
+			P1C3JammedAlready = false;
+			break;
+		case 2:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x15F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			P1C3JammedSlot = 0;
+			P1C3JammedAlready = false;
+			break;
+		default:
+			P1C3JammedSlot = 0;
+			P1C3JammedAlready = false;
+			break;
+		}
+	}
 
 	if (P2C1Jammed == true)
 	{
 
-		if (P2C1Slot2Free == true)
+		if (P2C1Slot2Free == true && !P2C1JammedAlready)
 		{
+			P2C1JammedSlot = 2;
+			P2C1JammedAlready = true;
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x15F0), &Jammed, sizeof(FighterInstall), NULL))
 			{
 
@@ -2149,8 +2306,10 @@ void JammingToggle()
 				return;
 			}
 		}
-		else if (P2C1Slot3Free == true)
+		else if (P2C1Slot3Free == true && !P2C1JammedAlready)
 		{
+			P2C1JammedSlot = 3;
+			P2C1JammedAlready = true;
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1670), &Jammed, sizeof(FighterInstall), NULL))
 			{
 
@@ -2160,8 +2319,10 @@ void JammingToggle()
 				return;
 			}
 		}
-		else if (P2C1Slot4Free == true)
+		else if (P2C1Slot4Free == true && !P2C1JammedAlready)
 		{
+			P2C1JammedAlready = true;
+			P2C1JammedSlot = 4;
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x16F0), &Jammed, sizeof(FighterInstall), NULL))
 			{
 
@@ -2171,8 +2332,10 @@ void JammingToggle()
 				return;
 			}
 		}
-		else if (P2C1Slot5Free == true)
+		else if (P2C1Slot5Free == true && !P2C1JammedAlready)
 		{
+			P2C1JammedAlready = true;
+			P2C1JammedSlot = 5;
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1770), &Jammed, sizeof(FighterInstall), NULL))
 			{
 
@@ -2184,12 +2347,56 @@ void JammingToggle()
 		}
 
 	}
+	else
+	{
+		switch (P2C1JammedSlot)
+		{
+		case 5:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1770), &EmptyInstall, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			P2C1JammedSlot = 0;
+			P2C1JammedAlready = false;
+			break;
+		case 4:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x16F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			P2C1JammedSlot = 0;
+			P2C1JammedAlready = false;
+			break;
+		case 3:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1670), &EmptyInstall, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			P2C1JammedSlot = 0;
+			P2C1JammedAlready = false;
+			break;
+		case 2:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x15F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			P2C1JammedSlot = 0;
+			P2C1JammedAlready = false;
+			break;
+		default:
+			P2C1JammedSlot = 0;
+			P2C1JammedAlready = false;
+			break;
+		}
+	}
 
 	if (P2C2Jammed == true)
 	{
 
-		if (P2C2Slot2Free == true)
+		if (P2C2Slot2Free == true && !P2C2JammedAlready)
 		{
+			P2C2JammedSlot = 2;
+			P2C2JammedAlready = true;
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x15F0), &Jammed, sizeof(FighterInstall), NULL))
 			{
 
@@ -2199,8 +2406,10 @@ void JammingToggle()
 				return;
 			}
 		}
-		else if (P2C2Slot3Free == true)
+		else if (P2C2Slot3Free == true && !P2C2JammedAlready)
 		{
+			P2C2JammedSlot = 3;
+			P2C2JammedAlready = true;
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x1670), &Jammed, sizeof(FighterInstall), NULL))
 			{
 
@@ -2210,8 +2419,10 @@ void JammingToggle()
 				return;
 			}
 		}
-		else if (P2C2Slot4Free == true)
+		else if (P2C2Slot4Free == true && !P2C2JammedAlready)
 		{
+			P2C2JammedAlready = true;
+			P2C2JammedSlot = 4;
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x16F0), &Jammed, sizeof(FighterInstall), NULL))
 			{
 
@@ -2221,8 +2432,10 @@ void JammingToggle()
 				return;
 			}
 		}
-		else if (P2C2Slot5Free == true)
+		else if (P2C2Slot5Free == true && !P2C2JammedAlready)
 		{
+			P2C2JammedAlready = true;
+			P2C2JammedSlot = 5;
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x1770), &Jammed, sizeof(FighterInstall), NULL))
 			{
 
@@ -2234,12 +2447,56 @@ void JammingToggle()
 		}
 
 	}
+	else
+	{
+		switch (P2C2JammedSlot)
+		{
+		case 5:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x1770), &EmptyInstall, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			P2C2JammedSlot = 0;
+			P2C2JammedAlready = false;
+			break;
+		case 4:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x16F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			P2C2JammedSlot = 0;
+			P2C2JammedAlready = false;
+			break;
+		case 3:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x1670), &EmptyInstall, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			P2C2JammedSlot = 0;
+			P2C2JammedAlready = false;
+			break;
+		case 2:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x15F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			P2C2JammedSlot = 0;
+			P2C2JammedAlready = false;
+			break;
+		default:
+			P2C2JammedSlot = 0;
+			P2C2JammedAlready = false;
+			break;
+		}
+	}
 
 	if (P2C3Jammed == true)
 	{
 
-		if (P2C3Slot2Free == true)
+		if (P2C3Slot2Free == true && !P2C3JammedAlready)
 		{
+			P2C3JammedSlot = 2;
+			P2C3JammedAlready = true;
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x15F0), &Jammed, sizeof(FighterInstall), NULL))
 			{
 
@@ -2249,8 +2506,10 @@ void JammingToggle()
 				return;
 			}
 		}
-		else if (P2C3Slot3Free == true)
+		else if (P2C3Slot3Free == true && !P2C3JammedAlready)
 		{
+			P2C3JammedSlot = 3;
+			P2C3JammedAlready = true;
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x1670), &Jammed, sizeof(FighterInstall), NULL))
 			{
 
@@ -2260,8 +2519,10 @@ void JammingToggle()
 				return;
 			}
 		}
-		else if (P2C3Slot4Free == true)
+		else if (P2C3Slot4Free == true && !P2C3JammedAlready)
 		{
+			P2C3JammedAlready = true;
+			P2C3JammedSlot = 4;
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x16F0), &Jammed, sizeof(FighterInstall), NULL))
 			{
 
@@ -2271,8 +2532,10 @@ void JammingToggle()
 				return;
 			}
 		}
-		else if (P2C3Slot5Free == true)
+		else if (P2C3Slot5Free == true && !P2C3JammedAlready)
 		{
+			P2C3JammedAlready = true;
+			P2C3JammedSlot = 5;
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x1770), &Jammed, sizeof(FighterInstall), NULL))
 			{
 
@@ -2284,10 +2547,274 @@ void JammingToggle()
 		}
 
 	}
+	else
+	{
+		switch (P2C3JammedSlot)
+		{
+		case 5:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x1770), &EmptyInstall, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			P2C3JammedSlot = 0;
+			P2C3JammedAlready = false;
+			break;
+		case 4:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x16F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			P2C3JammedSlot = 0;
+			P2C3JammedAlready = false;
+			break;
+		case 3:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x1670), &EmptyInstall, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			P2C3JammedSlot = 0;
+			P2C3JammedAlready = false;
+			break;
+		case 2:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x15F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			P2C3JammedSlot = 0;
+			P2C3JammedAlready = false;
+			break;
+		default:
+			P2C3JammedSlot = 0;
+			P2C3JammedAlready = false;
+			break;
+		}
+	}
+
+}
+
+void JammingToggleRestart()
+{
+	if (P1C1Jammed == true)
+	{
+		switch (P1C1JammedSlot)
+		{
+		case 2:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x15F0), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			break;
+		case 3:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1670), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			break;
+		case 4:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x16F0), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			break;
+		case 5:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1770), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			break;
+		default:
+			break;
 
 
 
 
+		}
+	}
+
+	if (P1C2Jammed == true)
+	{
+		switch (P1C2JammedSlot)
+		{
+		case 2:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x15F0), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			break;
+		case 3:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x1670), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			break;
+		case 4:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x16F0), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			break;
+		case 5:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x1770), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			break;
+		default:
+			break;
+
+
+
+
+		}
+	}
+
+	if (P1C3Jammed == true)
+	{
+		switch (P1C3JammedSlot)
+		{
+		case 2:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x15F0), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			break;
+		case 3:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x1670), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			break;
+		case 4:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x16F0), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			break;
+		case 5:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x1770), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			break;
+		default:
+			break;
+
+
+
+
+		}
+	}
+
+	if (P2C1Jammed == true)
+	{
+		switch (P2C1JammedSlot)
+		{
+		case 2:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x15F0), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			break;
+		case 3:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1670), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			break;
+		case 4:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x16F0), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			break;
+		case 5:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1770), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			break;
+		default:
+			break;
+
+
+
+
+		}
+	}
+
+	if (P2C2Jammed == true)
+	{
+		switch (P2C2JammedSlot)
+		{
+		case 2:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x15F0), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			break;
+		case 3:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x1670), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			break;
+		case 4:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x16F0), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			break;
+		case 5:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x1770), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			break;
+		default:
+			break;
+
+
+
+
+		}
+	}
+
+	if (P2C3Jammed == true)
+	{
+		switch (P2C3JammedSlot)
+		{
+		case 2:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x15F0), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			break;
+		case 3:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x1670), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			break;
+		case 4:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x16F0), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			break;
+		case 5:
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x1770), &Jammed, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			break;
+		default:
+			break;
+
+
+
+
+		}
+	}
 
 }
 

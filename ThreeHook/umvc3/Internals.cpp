@@ -123,7 +123,11 @@ FILE* pRec;
 int GameMode;
 int RandomNum;
 bool VCROn = false;
-
+int GameModeInternal = 0;
+inline uintptr_t TysonTableInternal;
+inline uintptr_t Player1TeamTableInternal;
+inline uintptr_t Player2TeamTableInternal;
+inline uintptr_t StrangeTableInternal;
 struct Recording {
 
 	int FrameCount;
@@ -592,7 +596,7 @@ extern "C" __declspec(dllexport) int CheckConnectionTwo()
 extern "C" __declspec(dllexport) void DeployTheHooks(int Mode)
 {
 	GameMode = Mode;
-	if (GameMode == 5) 
+	if (GameMode == 5)
 	{
 		Trampoline* tramp = Trampoline::MakeTrampoline(GetModuleHandle(nullptr));
 		InjectHook(_addr(0x140289c5a), tramp->Jump(FUN_1402b41b0), PATCH_CALL);
@@ -678,7 +682,7 @@ extern "C" __declspec(dllexport) void RecordP1(int RecordingSlot)
 	recordingP2 = false;
 	replayingP2 = false;
 	printf("%i", RecordingSlot);
-	printf("Recording P1");
+	printf("Recording P1 Start!");
 
 	switch (RecordingSlot)
 	{
@@ -701,7 +705,7 @@ extern "C" __declspec(dllexport) void RecordP1(int RecordingSlot)
 
 	case 1:
 	default:
-	recordReplayIndexP1 = 0;
+		recordReplayIndexP1 = 0;
 		break;
 
 	}
@@ -715,6 +719,8 @@ extern "C" __declspec(dllexport) void RecordP2(int RecordingSlot)
 	replayingP2 = false;
 	recordingP1 = false;
 	replayingP1 = false;
+	printf("%i", RecordingSlot);
+	printf("Recording P2 Start!");
 	switch (RecordingSlot)
 	{
 
@@ -1175,7 +1181,7 @@ extern "C" __declspec(dllexport) void LoadRecordingP1(int RecordingSlot)
 
 		case 1:
 		default:
-			
+
 			if (GetOpenFileName(&ofn))
 			{
 				if (ofn.lStructSize > (ReplayBufferSize * ReplayLength))
@@ -1225,7 +1231,7 @@ extern "C" __declspec(dllexport) void LoadRecordingP1(int RecordingSlot)
 				}
 
 			}
-			
+
 			break;
 
 		}
@@ -1251,7 +1257,7 @@ extern "C" __declspec(dllexport) void LoadRecordingP1(int RecordingSlot)
 				}
 				else
 				{
-					//Gets the file size, sets the needed variables to play the replay when loaded, 
+					//Gets the file size, sets the needed variables to play the replay when loaded,
 					//and then copies the file into an array in memory.
 					int length = pos / 550;
 					replayAvailableP1 = true;
@@ -1592,7 +1598,7 @@ extern "C" __declspec(dllexport) void LoadRecordingP2(int RecordingSlot)
 				}
 				else
 				{
-					//Gets the file size, sets the needed variables to play the replay when loaded, 
+					//Gets the file size, sets the needed variables to play the replay when loaded,
 					//and then copies the file into an array in memory.
 					int length = pos / 550;
 					replayAvailableP2 = true;
@@ -1668,7 +1674,7 @@ extern "C" __declspec(dllexport) void StopPlaybackP1(int RecordingSlot)
 extern "C" __declspec(dllexport) void PlaybackP2(int RecordingSlot)
 {
 	replayingP2 = true;
-	
+
 	switch (RecordingSlot)
 	{
 
@@ -1707,7 +1713,7 @@ extern "C" __declspec(dllexport) void PlaybackBoth(int RecordingSlot)
 {
 	replayingP1 = true;
 	replayingP2 = true;
-	
+
 	switch (RecordingSlot)
 	{
 
@@ -1744,7 +1750,7 @@ extern "C" __declspec(dllexport) void PlaybackBoth(int RecordingSlot)
 
 	}
 
-	
+
 	/*
 	recordReplayIndex = 0;
 	recordReplayIndexP1 = 0;
@@ -1883,17 +1889,17 @@ extern "C" __declspec(dllexport) void PlaybackRandomP2()
 	}
 }
 
-extern "C" __declspec(dllexport) bool CheckIfRecordingP1() 
+extern "C" __declspec(dllexport) bool CheckIfRecordingP1()
 {
 	return recordingP1;
 }
 
-extern "C" __declspec(dllexport) bool CheckIfRecordingP2() 
+extern "C" __declspec(dllexport) bool CheckIfRecordingP2()
 {
 	return recordingP2;
 }
 
-extern "C" __declspec(dllexport) bool CheckIfRecordingBoth() 
+extern "C" __declspec(dllexport) bool CheckIfRecordingBoth()
 {
 	return recording;
 }
@@ -1968,7 +1974,7 @@ extern "C" __declspec(dllexport) bool CheckIfPlayback2P(int RecordingSlot)
 	{
 
 	case 5:
-		if(recordReplayIndex5P2 > 90)
+		if (recordReplayIndex5P2 > 90)
 		{
 			return true;
 		}
@@ -2117,3 +2123,45 @@ extern "C" __declspec(dllexport) void ChangeRecordingSlot(int RecSlot)
 {
 	RecordingSlot = RecSlot;
 }
+
+void TheRecordButton()
+{
+	while (true)
+	{
+		StrangeTableInternal = *(uintptr_t*)_addr(0x140d50e58);
+		if (StrangeTableInternal != 0)
+		{
+			GameModeInternal = *((int*)(StrangeTableInternal + 0x34C));
+			if (GameModeInternal == 5)
+			{
+				TysonTableInternal = *(uintptr_t*)_addr(0x140D44A70);
+				Player1TeamTableInternal = *((int*)(TysonTableInternal + 0x58));
+				Player2TeamTableInternal = *((int*)(TysonTableInternal + 0x328));
+
+				if (Player1TeamTableInternal != 0 && Player2TeamTableInternal != 0)
+				{
+					//Thread stuff later.
+					DeployTheHooks(GameModeInternal);
+					printf("Can Record.....\n");
+				}
+				else
+				{
+					printf("Not in a match yet.....\n");
+
+				}
+
+
+			}
+			else
+			{
+				printf("Not Recording anything.....\n");
+
+			}
+		}
+		printf("recordingP1: %s\n", recordingP1 ? "true" : "false");
+		printf("recordingP2: %s\n", recordingP2 ? "true" : "false");
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+	}
+}
+

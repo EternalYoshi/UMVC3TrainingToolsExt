@@ -36,3 +36,5 @@ extern "C" {
 
 
 }
+
+void TheRecordButton();

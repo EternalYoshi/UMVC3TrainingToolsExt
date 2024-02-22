@@ -213,8 +213,8 @@ void gui::CreateImGui() noexcept
 
 
 	io.Fonts->AddFontDefault();
-	mainfont = io.Fonts->AddFontFromFileTTF("Resources\\fonts\\FOT-NewRodinPro-DB.otf", 11.5f, NULL, io.Fonts->GetGlyphRangesJapanese());
-	IM_ASSERT(mainfont != NULL);
+	//mainfont = io.Fonts->AddFontFromFileTTF("Resources\\fonts\\FOT-NewRodinPro-DB.otf", 11.5f, NULL, io.Fonts->GetGlyphRangesJapanese());
+	//IM_ASSERT(mainfont != NULL);
 	//ImFont* secfont = io.Fonts->AddFontFromFileTTF("E:\\DLs\\Fontworks\\Japanese\\Gothic (Black)\\FOT-NewRodinPro-B.otf", 18.5f, NULL, io.Fonts->GetGlyphRangesJapanese());
 	//IM_ASSERT(secfont != NULL);
 
@@ -387,7 +387,7 @@ void gui::TheAboutWindow(bool* p_open)
 
 static void gui::TheCharacterOptionsTab()
 {
-
+	GetMainPointers();
 	if (ImGui::BeginTabItem("Character Settings"))
 	{
 
@@ -582,6 +582,7 @@ static void gui::TheCharacterOptionsTab()
 
 static void gui::TheExtraOptionsTab()
 {
+	GetMainPointers();
 	if (ImGui::BeginTabItem("Extra Settings"))
 	{
 		ImGui::Separator();
@@ -759,6 +760,7 @@ static void gui::TheExtraOptionsTab()
 
 static void gui::TheStatusOptionsTab()
 {
+	GetMainPointers();
 	//Player and Status Related  Settings such as Health.
 	if (ImGui::BeginTabItem("Status Options"))
 	{
@@ -853,7 +855,7 @@ static void gui::TheStatusOptionsTab()
 		if (P1Meter)
 		{
 			ImGui::Text("Player 1 Meter");
-			if (ImGui::SliderInt("P1 Meter", &P1Meter, 1, 50000))
+			if (ImGui::SliderInt("P1 Meter", &P1Meter, 0, 50000))
 			{
 				if (CheckTheMode() == true)
 				{
@@ -865,7 +867,7 @@ static void gui::TheStatusOptionsTab()
 		if (P2Meter)
 		{
 			ImGui::Text("Player 2 Meter");
-			if (ImGui::SliderInt("P2 Meter", &P2Meter, 1, 50000))
+			if (ImGui::SliderInt("P2 Meter", &P2Meter, 0, 50000))
 			{
 				if (CheckTheMode() == true)
 				{
@@ -938,6 +940,7 @@ static void gui::TheRecordPlaybackTab()
 	//For Recording And Playback Stuff.
 	if (ImGui::BeginTabItem("Record & Playback"))
 	{
+		GetMainPointers();
 		//HINSTANCE ccheck = LoadLibrary("E:\\ULTIMATE MARVEL VS. CAPCOM 3\\Scripts\\ThreeHook.asi");
 
 		ImGui::Text("Remember! These Parameters will only take\neffect when this window is open.");
@@ -1132,6 +1135,7 @@ static void gui::TheDebugStuffTab()
 	//For Debug Stuff and keeping records.
 	if (ImGui::BeginTabItem("Debug Stuff"))
 	{
+		GetMainPointers();
 		GetPlayerData();
 		GetHurtboxData();
 		GetHitboxDataPart1();
