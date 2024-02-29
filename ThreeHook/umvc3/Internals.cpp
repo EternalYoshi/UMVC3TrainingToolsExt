@@ -124,6 +124,7 @@ int GameMode;
 int RandomNum;
 bool VCROn = false;
 int GameModeInternal = 0;
+bool LinkedWithTool = false;
 inline uintptr_t TysonTableInternal;
 inline uintptr_t Player1TeamTableInternal;
 inline uintptr_t Player2TeamTableInternal;
@@ -135,6 +136,11 @@ struct Recording {
 
 };
 
+//bool* Linked = &LinkedWithTool;
+
+//std::thread rp;
+// 
+// 
 //Based on the hook by SanHKHaan. Modified for use with multiple slots.
 void FUN_1402b41b0(longlong param_1)
 {
@@ -582,7 +588,6 @@ void FUN_1402b41b0(longlong param_1)
 
 }
 
-
 std::string CheckConnection()
 {
 	return "This is from the dll. If you can read this you got it.";
@@ -590,12 +595,12 @@ std::string CheckConnection()
 
 extern "C" __declspec(dllexport) int CheckConnectionTwo()
 {
+	LinkedWithTool = true;
 	return 75;
 }
 
-extern "C" __declspec(dllexport) void DeployTheHooks(int Mode)
+extern "C" __declspec(dllexport) void DeployTheHooks()
 {
-	GameMode = Mode;
 	if (GameMode == 5)
 	{
 		Trampoline* tramp = Trampoline::MakeTrampoline(GetModuleHandle(nullptr));
@@ -683,6 +688,8 @@ extern "C" __declspec(dllexport) void RecordP1(int RecordingSlot)
 	replayingP2 = false;
 	printf("%i", RecordingSlot);
 	printf("Recording P1 Start!");
+
+	//std::thread rp(&MessagesSender::updateMessages, &recordingP1);
 
 	switch (RecordingSlot)
 	{
@@ -2128,10 +2135,13 @@ void TheRecordButton()
 {
 	while (true)
 	{
+		//system("cls");
+		printf("Currently Connected With Training Tool: %s\n", LinkedWithTool ? "true" : "false");
 		StrangeTableInternal = *(uintptr_t*)_addr(0x140d50e58);
 		if (StrangeTableInternal != 0)
 		{
 			GameModeInternal = *((int*)(StrangeTableInternal + 0x34C));
+			GameMode = GameModeInternal;
 			if (GameModeInternal == 5)
 			{
 				TysonTableInternal = *(uintptr_t*)_addr(0x140D44A70);
@@ -2141,7 +2151,15 @@ void TheRecordButton()
 				if (Player1TeamTableInternal != 0 && Player2TeamTableInternal != 0)
 				{
 					//Thread stuff later.
-					DeployTheHooks(GameModeInternal);
+					Trampoline* tramp = Trampoline::MakeTrampoline(GetModuleHandle(nullptr));
+					InjectHook(_addr(0x140289c5a), tramp->Jump(FUN_1402b41b0), PATCH_CALL);
+					printf("recordingP1: %s\n", recordingP1 ? "true" : "false");
+					printf("recordingP2: %s\n", recordingP2 ? "true" : "false");
+					printf("replayAvailableP1: %s\n", replayAvailableP1 ? "true" : "false");
+					printf("replayAvailableP2: %s\n", replayAvailableP2 ? "true" : "false");
+					printf("recordReplayIndexP1: %s\n", recordReplayIndexP1 ? "true" : "false");
+					printf("recordReplayIndexP2: %s\n", recordReplayIndexP2 ? "true" : "false");					
+					printf("Recording Slot: %i", RecordingSlot);
 					printf("Can Record.....\n");
 				}
 				else
@@ -2158,10 +2176,9 @@ void TheRecordButton()
 
 			}
 		}
-		printf("recordingP1: %s\n", recordingP1 ? "true" : "false");
-		printf("recordingP2: %s\n", recordingP2 ? "true" : "false");
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(15));
 	}
 }
 

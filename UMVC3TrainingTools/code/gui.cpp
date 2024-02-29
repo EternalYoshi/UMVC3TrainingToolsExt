@@ -1973,12 +1973,8 @@ void gui::Render() noexcept
 	if (!ccheck)
 	{
 		std::cout << "could not load the dynamic library" << std::endl;
-	}
-
-
-	else
-	{
 		ImGui::Text("Nothing Doing! Go to File-> Find ThreeHook and select the ThreeHook.asi");
+
 	}
 
 	ImGui::PopFont();

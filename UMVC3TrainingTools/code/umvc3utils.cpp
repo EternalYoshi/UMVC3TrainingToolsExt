@@ -46,8 +46,8 @@ bool CheckGame()
 	}
 	else
 	{
-		MessageBoxA(0, "Bad News.\nThis tool only supports latest (or at least the version from 2017) Steam executable\nof Ultimate Marvel vs Capcom 3.", 0, MB_ICONINFORMATION);
-		exit(1);
+		//MessageBoxA(0, "Bad News.\nThis tool only supports latest (or at least the version from 2017) Steam executable\nof Ultimate Marvel vs Capcom 3.", 0, MB_ICONINFORMATION);
+		//exit(1);
 		return false;
 	}
 
