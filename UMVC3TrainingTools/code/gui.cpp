@@ -852,8 +852,8 @@ static void gui::TheStatusOptionsTab()
 
 		ImGui::SeparatorText("Hyper Meter");
 
-		if (P1Meter)
-		{
+		//if (P1Meter)
+		//{
 			ImGui::Text("Player 1 Meter");
 			if (ImGui::SliderInt("P1 Meter", &P1Meter, 0, 50000))
 			{
@@ -862,10 +862,10 @@ static void gui::TheStatusOptionsTab()
 					SetMeters();
 				}
 			}
-		}
+		//}
 
-		if (P2Meter)
-		{
+		//if (P2Meter)
+		//{
 			ImGui::Text("Player 2 Meter");
 			if (ImGui::SliderInt("P2 Meter", &P2Meter, 0, 50000))
 			{
@@ -874,7 +874,7 @@ static void gui::TheStatusOptionsTab()
 					SetMeters();
 				}
 			}
-		}
+		//}
 
 
 		ImGui::SeparatorText("Jamming Bomb/Reversed Controls");

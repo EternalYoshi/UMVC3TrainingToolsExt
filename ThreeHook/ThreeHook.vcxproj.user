@@ -7,7 +7,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LocalDebuggerCommand>E:\ULTIMATE MARVEL VS. CAPCOM 3\umvc3.exe</LocalDebuggerCommand>
-    <LocalDebuggerWorkingDirectory>E:\ULTIMATE MARVEL VS. CAPCOM 3\Scripts</LocalDebuggerWorkingDirectory>
+    <LocalDebuggerWorkingDirectory>E:\ULTIMATE MARVEL VS. CAPCOM 3\</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup>

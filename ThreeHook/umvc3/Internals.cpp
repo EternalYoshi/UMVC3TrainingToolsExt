@@ -129,13 +129,14 @@ inline uintptr_t TysonTableInternal;
 inline uintptr_t Player1TeamTableInternal;
 inline uintptr_t Player2TeamTableInternal;
 inline uintptr_t StrangeTableInternal;
+
 struct Recording {
 
 	int FrameCount;
 	char* InputBinary[3844];
 
 };
-
+//HANDLE rp = 0;
 //bool* Linked = &LinkedWithTool;
 
 //std::thread rp;
@@ -614,6 +615,58 @@ extern "C" __declspec(dllexport) void StartTheTick()
 	//tickThread.join();
 }
 
+void TheRecordButton()
+{
+	while (true)
+	{
+		//system("cls");
+		printf("Currently Connected With Training Tool: %s\n", LinkedWithTool ? "true" : "false");
+		StrangeTableInternal = *(uintptr_t*)_addr(0x140d50e58);
+		if (StrangeTableInternal != 0)
+		{
+			GameModeInternal = *((int*)(StrangeTableInternal + 0x34C));
+			GameMode = GameModeInternal;
+			if (GameModeInternal == 5)
+			{
+				TysonTableInternal = *(uintptr_t*)_addr(0x140D44A70);
+				Player1TeamTableInternal = *((int*)(TysonTableInternal + 0x58));
+				Player2TeamTableInternal = *((int*)(TysonTableInternal + 0x328));
+
+				if (Player1TeamTableInternal != 0 && Player2TeamTableInternal != 0)
+				{
+					//Thread stuff later.
+					Trampoline* tramp = Trampoline::MakeTrampoline(GetModuleHandle(nullptr));
+					InjectHook(_addr(0x140289c5a), tramp->Jump(FUN_1402b41b0), PATCH_CALL);
+					printf("recordingP1: %s\n", recordingP1 ? "true" : "false");
+					printf("recordingP2: %s\n", recordingP2 ? "true" : "false");
+					printf("replayAvailableP1: %s\n", replayAvailableP1 ? "true" : "false");
+					printf("replayAvailableP2: %s\n", replayAvailableP2 ? "true" : "false");
+					printf("recordReplayIndexP1: %s\n", recordReplayIndexP1 ? "true" : "false");
+					printf("recordReplayIndexP2: %s\n", recordReplayIndexP2 ? "true" : "false");
+					printf("Recording Slot: %i", RecordingSlot);
+					printf("\nCan Record.....\n");
+				}
+				else
+				{
+					printf("Not in a match yet.....\n");
+
+				}
+
+
+			}
+			else
+			{
+				printf("Not Recording anything.....\n");
+
+			}
+		}
+
+
+		//std::this_thread::sleep_for(std::chrono::milliseconds(15));
+	}
+}
+
+
 extern "C" __declspec(dllexport) void RecordBoth(int RecordingSlot)
 {
 
@@ -689,6 +742,8 @@ extern "C" __declspec(dllexport) void RecordP1(int RecordingSlot)
 	printf("%i", RecordingSlot);
 	printf("Recording P1 Start!");
 
+	//rp = CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(TheRecordButton), 0, NULL, 0);
+
 	//std::thread rp(&MessagesSender::updateMessages, &recordingP1);
 
 	switch (RecordingSlot)
@@ -759,6 +814,9 @@ extern "C" __declspec(dllexport) void StopRecording(int RecordingSlot)
 {
 	recordingP1 = false;
 	recordingP2 = false;
+
+	//rp = CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(TheRecordButton), 0, NULL, 0);
+
 
 	switch (RecordingSlot)
 	{
@@ -2131,54 +2189,13 @@ extern "C" __declspec(dllexport) void ChangeRecordingSlot(int RecSlot)
 	RecordingSlot = RecSlot;
 }
 
-void TheRecordButton()
+
+void TheProccess()
 {
 	while (true)
 	{
-		//system("cls");
-		printf("Currently Connected With Training Tool: %s\n", LinkedWithTool ? "true" : "false");
-		StrangeTableInternal = *(uintptr_t*)_addr(0x140d50e58);
-		if (StrangeTableInternal != 0)
-		{
-			GameModeInternal = *((int*)(StrangeTableInternal + 0x34C));
-			GameMode = GameModeInternal;
-			if (GameModeInternal == 5)
-			{
-				TysonTableInternal = *(uintptr_t*)_addr(0x140D44A70);
-				Player1TeamTableInternal = *((int*)(TysonTableInternal + 0x58));
-				Player2TeamTableInternal = *((int*)(TysonTableInternal + 0x328));
-
-				if (Player1TeamTableInternal != 0 && Player2TeamTableInternal != 0)
-				{
-					//Thread stuff later.
-					Trampoline* tramp = Trampoline::MakeTrampoline(GetModuleHandle(nullptr));
-					InjectHook(_addr(0x140289c5a), tramp->Jump(FUN_1402b41b0), PATCH_CALL);
-					printf("recordingP1: %s\n", recordingP1 ? "true" : "false");
-					printf("recordingP2: %s\n", recordingP2 ? "true" : "false");
-					printf("replayAvailableP1: %s\n", replayAvailableP1 ? "true" : "false");
-					printf("replayAvailableP2: %s\n", replayAvailableP2 ? "true" : "false");
-					printf("recordReplayIndexP1: %s\n", recordReplayIndexP1 ? "true" : "false");
-					printf("recordReplayIndexP2: %s\n", recordReplayIndexP2 ? "true" : "false");					
-					printf("Recording Slot: %i", RecordingSlot);
-					printf("Can Record.....\n");
-				}
-				else
-				{
-					printf("Not in a match yet.....\n");
-
-				}
-
-
-			}
-			else
-			{
-				printf("Not Recording anything.....\n");
-
-			}
-		}
-
-
-		std::this_thread::sleep_for(std::chrono::milliseconds(15));
+		TheRecordButton();
+		Sleep(1);
 	}
-}
 
+}

@@ -18,7 +18,6 @@
 #include "utils/Patterns.h"
 #include "umvc3/Internals.h"
 
-HANDLE rp = 0;
 
 using namespace Memory::VP;
 // TODO: patterns
@@ -26,6 +25,8 @@ using namespace Memory::VP;
 
 void OnInitializeHook()
 {
+
+//#ifdef DEBUG
 	if (SettingsMgr->bEnableConsoleWindow)
 	{
 		AllocConsole();
@@ -33,6 +34,7 @@ void OnInitializeHook()
 		freopen("CONOUT$", "w", stderr);
 	}
 	eLog::Message(__FUNCTION__, "INFO: UMVC3Hook Begin!");
+//#endif
 
 	Notifications->Init();
 
@@ -54,8 +56,7 @@ void OnInitializeHook()
 	//HANDLE r = 0;
 	//CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(TheRecordButton), 0, NULL, 0);
 
-	rp = CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(TheRecordButton), 0, NULL, 0);
-	
+	//std::thread R1Take2(TheRecordButton);
 
 }
 
