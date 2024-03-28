@@ -883,3 +883,7 @@ void GetHitboxDataPart1();
 
 //Gets Debug Data for future use.
 void GetDebugData();
+
+void RemoveAllInstalls();
+
+void ResetSettings();

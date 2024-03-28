@@ -347,6 +347,11 @@ static void gui::TheMenuBar()
 				}
 			}
 
+			if (ImGui::MenuItem(("Reset Settings To Default"))) 
+			{
+				ResetSettings();
+			}
+
 			ImGui::MenuItem(("Exit"), NULL, &exit);
 
 			ImGui::EndMenu();
@@ -1823,7 +1828,7 @@ void gui::Render() noexcept
 	ImGui::SetNextWindowPos({ 0,0 }, ImGuiCond_FirstUseEver);
 
 	ImGui::Begin(
-		"UMVC3 Training Tools Mod V0.4X By Eternal Yoshi",
+		"UMVC3 Training Tools Mod V0.5X By Eternal Yoshi",
 		&exit,
 		ImGuiWindowFlags_MenuBar |
 		ImGuiWindowFlags_NoResize |

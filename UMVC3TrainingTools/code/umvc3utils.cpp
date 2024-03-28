@@ -362,7 +362,7 @@ void TickUpdates()
 		ChangeMODOKUnderstanding(MODOKLOU);
 	}
 
-	if(P1C1Jammed == true || P1C2Jammed == true || P1C3Jammed == true || P2C1Jammed == true || P2C2Jammed == true || P2C3Jammed == true)
+	if (P1C1Jammed == true || P1C2Jammed == true || P1C3Jammed == true || P2C1Jammed == true || P2C2Jammed == true || P2C3Jammed == true)
 	{
 		JammingToggle();
 	}
@@ -1979,7 +1979,7 @@ void FUN_1402b41b0(longlong param_1)
 			}
 		}
 	}
-	
+
 
 }
 */
@@ -1992,8 +1992,8 @@ void JammingToggle()
 
 	if (P1C1Jammed == true)
 	{
-	
-		if(P1C1Slot2Free == true && !P1C1JammedAlready)
+
+		if (P1C1Slot2Free == true && !P1C1JammedAlready)
 		{
 			P1C1JammedSlot = 2;
 			P1C1JammedAlready = true;
@@ -2594,6 +2594,7 @@ void JammingToggle()
 
 void JammingToggleRestart()
 {
+
 	if (P1C1Jammed == true)
 	{
 		switch (P1C1JammedSlot)
@@ -3215,7 +3216,7 @@ void GetDebugData()
 
 }
 
-void GetHurtboxData() 
+void GetHurtboxData()
 {
 	//The Hurtboxes aren't really stored in the same way as the character data stuff I'm used to working with normally.
 	//Have to use this funky looking method to get the characters' hurtboxes during runtime.
@@ -3275,7 +3276,7 @@ void GetHurtboxData()
 			&P1C1Hurtboxes[j].CollData.Coordinates.Y, sizeof(float), 0);
 		ReadProcessMemory(hProcess, (LPVOID*)((P1C1Hurtboxes[j].PointerToMoreData + 0x28)),
 			&P1C1Hurtboxes[j].CollData.Coordinates.Z, sizeof(float), 0);
-		ReadProcessMemory(hProcess, (LPVOID*)((P1C1Hurtboxes[j].PointerToMoreData + 0x2C)), 
+		ReadProcessMemory(hProcess, (LPVOID*)((P1C1Hurtboxes[j].PointerToMoreData + 0x2C)),
 			&P1C1Hurtboxes[j].CollData.Radius, sizeof(float), 0);
 
 
@@ -3285,7 +3286,7 @@ void GetHurtboxData()
 		tt = tt + 8;
 
 	}
-	
+
 #pragma endregion
 
 #pragma region Player 1 Character 2
@@ -3582,7 +3583,7 @@ void GetHurtboxData()
 
 }
 
-void GetHitboxDataPart1() 
+void GetHitboxDataPart1()
 {
 
 	uintptr_t u;
@@ -3778,4 +3779,243 @@ void GetHitboxDataPart1()
 	}
 #pragma endregion
 
+}
+
+void RemoveAllInstalls()
+{
+
+	//Player 1 Character 1.
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x15F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+	{
+
+	}
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1670), &EmptyInstall, sizeof(FighterInstall), NULL))
+	{
+
+	}
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x16F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+	{
+
+	}
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1770), &EmptyInstall, sizeof(FighterInstall), NULL))
+	{
+
+	}
+
+	//Player 1 Character 2.
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x15F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+	{
+
+	}
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x1670), &EmptyInstall, sizeof(FighterInstall), NULL))
+	{
+
+	}
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x16F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+	{
+
+	}
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x1770), &EmptyInstall, sizeof(FighterInstall), NULL))
+	{
+
+	}
+
+	//Player 1 Character 3.
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x15F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+	{
+
+	}
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x1670), &EmptyInstall, sizeof(FighterInstall), NULL))
+	{
+
+	}
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x16F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+	{
+
+	}
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x1770), &EmptyInstall, sizeof(FighterInstall), NULL))
+	{
+
+	}
+
+	//Player 2 Character 1.
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x15F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+	{
+
+	}
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1670), &EmptyInstall, sizeof(FighterInstall), NULL))
+	{
+
+	}
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x16F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+	{
+
+	}
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1770), &EmptyInstall, sizeof(FighterInstall), NULL))
+	{
+
+	}
+
+	//Player 2 Character 2.
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x15F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+	{
+
+	}
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x1670), &EmptyInstall, sizeof(FighterInstall), NULL))
+	{
+
+	}
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x16F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+	{
+
+	}
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x1770), &EmptyInstall, sizeof(FighterInstall), NULL))
+	{
+
+	}
+
+	//Player 2 Character 3.
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x15F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+	{
+
+	}
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x1670), &EmptyInstall, sizeof(FighterInstall), NULL))
+	{
+
+	}
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x16F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+	{
+
+	}
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x1770), &EmptyInstall, sizeof(FighterInstall), NULL))
+	{
+
+	}
+
+
+
+
+}
+
+//Sets all settings back to default.
+void ResetSettings()
+{
+	GetMainPointers();
+	GetPlayerData();
+	GetCharacterIDs();
+	p1Pos = -125.0f;
+	p2Pos = 125.0f;
+	MODOKLOU = 1;
+	FrankLevel = 1;
+	PrestigePoints = 0.0;
+	WrightEvidenceA = -1;
+	WrightEvidenceB = -1;
+	WrightEvidenceC = -1;
+	SaveStateSlot = 0;
+	DormRed = 0;
+	DormBlue = 0;
+	DormSpellSet = false;
+	EndlessInstalls = false;
+	DeadpoolTeleportCount = 0;
+	FreezeDeadpoolTPCounter = false;
+	P1Character1Dead = false;
+	P1Character2Dead = false;
+	P1Character3Dead = false;
+	P2Character1Dead = false;
+	P2Character2Dead = false;
+	P2Character3Dead = false;
+	EndlessXFactor = false;
+	EndlessXFactorP1 = false;
+	EndlessXFactorP2 = false;
+	SpecialFeature = false;
+	HitboxDisplay = false;
+	SetIndividualHP = false;
+	AlsoSetRedHealth = false;
+	P1Char1Health = 1.0;
+	P1Char1RedHealth = 1.0;
+	P1Char2Health = 1.0;
+	P1Char2RedHealth = 1.0;
+	P1Char3Health = 1.0;
+	P1Char3RedHealth = 1.0;
+	P2Char1Health = 1.0;
+	P2Char1RedHealth = 1.0;
+	P2Char2Health = 1.0;
+	P2Char2RedHealth = 1.0;
+	P2Char3Health = 1.0;
+	P2Char3RedHealth = 1.0;
+	P1Char1HealthNew = 1.0;
+	P1Char2HealthNew = 1.0;
+	P1Char3HealthNew = 1.0;
+	P2Char1HealthNew = 1.0;
+	P2Char2HealthNew = 1.0;
+	P2Char3HealthNew = 1.0;
+	P1Char1Slow = false;
+	P1Char2Slow = false;
+	P1Char3Slow = false;
+	P2Char1Slow = false;
+	P2Char2Slow = false;
+	P2Char3Slow = false;
+	DarkPhoenix = false;
+	Turnabout = false;
+	LockMODOKLOU = false;
+	P1C1MaxHP = 0;
+	P1C2MaxHP = 0;
+	P1C3MaxHP = 0;
+	P2C1MaxHP = 0;
+	P2C2MaxHP = 0;
+	P2C3MaxHP = 0;
+	CharacterSpeed = 1.0;
+	ModifyGameSpeed = false;
+	GameSpeed = 1.0;
+	QuickRestartType = 3;
+	selected_item = "Nothing";
+	selected_itemTwo = "Nothing";
+	selected_itemThree = "Nothing";
+	P1C1Slot2Free = false;
+	P1C1Slot3Free = false;
+	P1C1Slot4Free = false;
+	P1C1Slot5Free = false;
+	P1C2Slot2Free = false;
+	P1C2Slot3Free = false;
+	P1C2Slot4Free = false;
+	P1C2Slot5Free = false;
+	P1C3Slot2Free = false;
+	P1C3Slot3Free = false;
+	P1C3Slot4Free = false;
+	P1C3Slot5Free = false;
+	P2C1Slot2Free = false;
+	P2C1Slot3Free = false;
+	P2C1Slot4Free = false;
+	P2C1Slot5Free = false;
+	P2C2Slot2Free = false;
+	P2C2Slot3Free = false;
+	P2C2Slot4Free = false;
+	P2C2Slot5Free = false;
+	P2C3Slot2Free = false;
+	P2C3Slot3Free = false;
+	P2C3Slot4Free = false;
+	P2C3Slot5Free = false;
+	P1C1Jammed = false;
+	P1C2Jammed = false;
+	P1C3Jammed = false;
+	P2C1Jammed = false;
+	P2C2Jammed = false;
+	P2C3Jammed = false;
+	P1C1JammedAlready = false;
+	P1C2JammedAlready = false;
+	P1C3JammedAlready = false;
+	P2C1JammedAlready = false;
+	P2C2JammedAlready = false;
+	P2C3JammedAlready = false;
+	P1Meter = 10000;
+	P2Meter = 10000;
+	P1C1JammedSlot = 0;
+	P1C2JammedSlot = 0;
+	P1C3JammedSlot = 0;
+	P2C1JammedSlot = 0;
+	P2C2JammedSlot = 0;
+	P2C3JammedSlot = 0;
+	ResetGameSpeed();
+	SetGlobalPlayerSpeed(1);
+	RemoveAllInstalls();
 }

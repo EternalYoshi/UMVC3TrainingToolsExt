@@ -129,6 +129,7 @@ inline uintptr_t TysonTableInternal;
 inline uintptr_t Player1TeamTableInternal;
 inline uintptr_t Player2TeamTableInternal;
 inline uintptr_t StrangeTableInternal;
+bool PLinked = &LinkedWithTool;
 
 struct Recording {
 
@@ -620,7 +621,7 @@ void TheRecordButton()
 	while (true)
 	{
 		//system("cls");
-		printf("Currently Connected With Training Tool: %s\n", LinkedWithTool ? "true" : "false");
+		printf("Currently Connected With Training Tool: %s\n", &LinkedWithTool ? "true" : "false");
 		StrangeTableInternal = *(uintptr_t*)_addr(0x140d50e58);
 		if (StrangeTableInternal != 0)
 		{

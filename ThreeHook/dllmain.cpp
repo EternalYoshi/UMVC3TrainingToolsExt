@@ -54,7 +54,7 @@ void OnInitializeHook()
 	if (!(h == nullptr)) CloseHandle(h);
 	*/
 	//HANDLE r = 0;
-	//CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(TheRecordButton), 0, NULL, 0);
+	CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(TheRecordButton), 0, NULL, 0);
 
 	//std::thread R1Take2(TheRecordButton);
 
