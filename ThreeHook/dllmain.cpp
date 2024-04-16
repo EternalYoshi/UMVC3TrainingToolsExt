@@ -39,24 +39,6 @@ void OnInitializeHook()
 	Notifications->Init();
 
 	Trampoline* tramp = Trampoline::MakeTrampoline(GetModuleHandle(nullptr));
-	//InjectHook(_addr(0x140289c5a), tramp->Jump(FUN_1402b41b0), PATCH_CALL);
-	//InjectHook(_addr(0x14001A490), tramp->Jump(CameraConstrutctor_Hook), PATCH_JUMP);
-	//InjectHook(_addr(0x14001A490), tramp->Jump(UMVC3Hooks::HookCamera), PATCH_JUMP);
-
-	// change dinput coop level
-	//Patch<char>(_addr(0x1406A9864) + 2, 0x14);
-	/*
-	CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(PluginProcess), 0, NULL, 0);
-	HANDLE h = 0;
-
-	h = CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(DX9Hook_Thread), 0, NULL, 0);
-
-	if (!(h == nullptr)) CloseHandle(h);
-	*/
-	//HANDLE r = 0;
-	CreateThread(NULL, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(TheRecordButton), 0, NULL, 0);
-
-	//std::thread R1Take2(TheRecordButton);
 
 }
 

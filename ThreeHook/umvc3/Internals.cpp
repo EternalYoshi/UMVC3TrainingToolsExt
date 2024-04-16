@@ -616,12 +616,12 @@ extern "C" __declspec(dllexport) void StartTheTick()
 	//tickThread.join();
 }
 
-void TheRecordButton()
+extern "C" __declspec(dllexport) void TheRecordButton()
 {
 	while (true)
 	{
 		//system("cls");
-		printf("Currently Connected With Training Tool: %s\n", &LinkedWithTool ? "true" : "false");
+		printf("Currently Connected With Training Tool: %s\n", LinkedWithTool ? "true" : "false");
 		StrangeTableInternal = *(uintptr_t*)_addr(0x140d50e58);
 		if (StrangeTableInternal != 0)
 		{
@@ -666,7 +666,6 @@ void TheRecordButton()
 		//std::this_thread::sleep_for(std::chrono::milliseconds(15));
 	}
 }
-
 
 extern "C" __declspec(dllexport) void RecordBoth(int RecordingSlot)
 {

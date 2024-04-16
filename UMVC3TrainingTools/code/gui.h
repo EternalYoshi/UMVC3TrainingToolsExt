@@ -53,6 +53,7 @@ namespace gui
 	static void TheCharacterOptionsTab();
 	static void TheRecordPlaybackTab();
 	static void TheDebugStuffTab();
+	static void TheIncomingStuffTab();
 	static bool Hooked = false;
 	static bool InMatch = false;
 	static int GameModeRef = 0;

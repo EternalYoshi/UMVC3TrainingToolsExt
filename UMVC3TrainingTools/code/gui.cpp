@@ -21,6 +21,7 @@
 #include "..\utils\MemoryMgr.h"
 #include "..\MemoryMgr.h"
 #include "..\minhook\include\MinHook.h"
+#include <thread>
 
 HINSTANCE ccheck = LoadLibrary(const_cast<char*>(ThreeHookPath.c_str()));
 
@@ -292,7 +293,7 @@ void CastTheHook()
 void CheckIfInMatch()
 {
 
-	if (Player1TeamTable == 0 && Player2TeamTable == 0)
+	if (Player1CharNodeTree == 0 && Player2CharNodeTree == 0)
 	{
 		gui::InMatch = false;
 	}
@@ -347,7 +348,7 @@ static void gui::TheMenuBar()
 				}
 			}
 
-			if (ImGui::MenuItem(("Reset Settings To Default"))) 
+			if (ImGui::MenuItem(("Reset Settings To Default")))
 			{
 				ResetSettings();
 			}
@@ -393,7 +394,7 @@ void gui::TheAboutWindow(bool* p_open)
 static void gui::TheCharacterOptionsTab()
 {
 	GetMainPointers();
-	if (ImGui::BeginTabItem("Character Settings"))
+	if (ImGui::BeginTabItem("Character"))
 	{
 
 		ImGui::Text("Remember! These Parameters will only take\neffect in training mode.");
@@ -588,7 +589,7 @@ static void gui::TheCharacterOptionsTab()
 static void gui::TheExtraOptionsTab()
 {
 	GetMainPointers();
-	if (ImGui::BeginTabItem("Extra Settings"))
+	if (ImGui::BeginTabItem("Extra"))
 	{
 		ImGui::Separator();
 
@@ -767,7 +768,7 @@ static void gui::TheStatusOptionsTab()
 {
 	GetMainPointers();
 	//Player and Status Related  Settings such as Health.
-	if (ImGui::BeginTabItem("Status Options"))
+	if (ImGui::BeginTabItem("Status"))
 	{
 		ImGui::SeparatorText("Character HP");
 
@@ -859,26 +860,26 @@ static void gui::TheStatusOptionsTab()
 
 		//if (P1Meter)
 		//{
-			ImGui::Text("Player 1 Meter");
-			if (ImGui::SliderInt("P1 Meter", &P1Meter, 0, 50000))
+		ImGui::Text("Player 1 Meter");
+		if (ImGui::SliderInt("P1 Meter", &P1Meter, 0, 50000))
+		{
+			if (CheckTheMode() == true)
 			{
-				if (CheckTheMode() == true)
-				{
-					SetMeters();
-				}
+				SetMeters();
 			}
+		}
 		//}
 
 		//if (P2Meter)
 		//{
-			ImGui::Text("Player 2 Meter");
-			if (ImGui::SliderInt("P2 Meter", &P2Meter, 0, 50000))
+		ImGui::Text("Player 2 Meter");
+		if (ImGui::SliderInt("P2 Meter", &P2Meter, 0, 50000))
+		{
+			if (CheckTheMode() == true)
 			{
-				if (CheckTheMode() == true)
-				{
-					SetMeters();
-				}
+				SetMeters();
 			}
+		}
 		//}
 
 
@@ -940,6 +941,77 @@ static void gui::TheStatusOptionsTab()
 	}
 }
 
+static void gui::TheIncomingStuffTab()
+{
+	GetMainPointers();
+	if (ImGui::BeginTabItem("Incoming"))
+	{
+		ImGui::Text("Experimental! Be Smart about using these.");
+		ImGui::Separator();
+		//
+		//ImGui::Text("Time Delay(Frames)");
+		//if (ImGui::SliderInt("Frames Until Death", &FrameDelayofDeath, 0, 300))
+		//{
+		//}
+		//
+		if (ImGui::SliderFloat("Position of KO", &DeathSiteX, -800.0f, 800.0f))
+		{
+
+		}
+
+		if (ImGui::Checkbox("KO Player 1's Active Character At Training Mode Restart", &KOActiveCharacterAtStart))
+		{
+			if (CheckTheMode() == true)
+			{
+			}
+		}
+
+		if (ImGui::Checkbox("KO Player 2's Active Character At Training Mode Restart", &KOActiveOpponentAtStart))
+		{
+			if (CheckTheMode() == true)
+			{
+			}
+		}
+	
+		ImGui::SeparatorText("KO Toggles");
+
+		if (ImGui::Checkbox("Player 1 Character 1 Dead", &Player1Character1Dead))
+		{
+			KOToggles();
+		}
+		ImGui::SameLine();
+		if (ImGui::Checkbox("Player 1 Character 2 Dead", &Player1Character2Dead))
+		{
+			KOToggles();
+		}
+		ImGui::SameLine();
+		if (ImGui::Checkbox("Player 1 Character 3 Dead", &Player1Character3Dead))
+		{
+			KOToggles();
+		}
+		if (ImGui::Checkbox("Player 2 Character 1 Dead", &Player2Character1Dead))
+		{
+			KOToggles();
+		}
+		ImGui::SameLine();
+		if (ImGui::Checkbox("Player 2 Character 2 Dead", &Player2Character2Dead))
+		{
+			KOToggles();
+		}
+		ImGui::SameLine();
+		if (ImGui::Checkbox("Player 2 Character 3 Dead", &Player2Character3Dead))
+		{
+			KOToggles();
+		}
+
+		ImGui::Text("More stuff coming soon!");
+
+		ImGui::EndTabItem();
+	
+	}
+
+}
+
 static void gui::TheRecordPlaybackTab()
 {
 	//For Recording And Playback Stuff.
@@ -974,7 +1046,7 @@ static void gui::TheRecordPlaybackTab()
 		if (ccheck != NULL)
 		{
 			CheckIfRecordingP1 RP1 = (CheckIfRecordingP1)GetProcAddress((HMODULE)ccheck, "CheckIfRecordingP1");
-			CheckIfRecordingP1 RP2 = (CheckIfRecordingP2)GetProcAddress((HMODULE)ccheck, "CheckIfRecordingP2");
+			CheckIfRecordingP2 RP2 = (CheckIfRecordingP2)GetProcAddress((HMODULE)ccheck, "CheckIfRecordingP2");
 			CheckIfRecordingBoth RPB = (CheckIfRecordingBoth)GetProcAddress((HMODULE)ccheck, "CheckIfRecordingBoth");
 			CheckIfPlayback1P IPB1 = (CheckIfPlayback1P)GetProcAddress((HMODULE)ccheck, "CheckIfPlayback1P");
 			CheckIfPlayback2P IPB2 = (CheckIfPlayback2P)GetProcAddress((HMODULE)ccheck, "CheckIfPlayback2P");
@@ -1921,6 +1993,12 @@ void gui::Render() noexcept
 							SetIndividualCharacterHealth();
 							SetMeters();
 							GetDebugData();
+							KOToggles();
+
+							//std::thread t1(DeathDelay);
+							DeathDelay();
+
+
 						}
 
 
@@ -1943,8 +2021,15 @@ void gui::Render() noexcept
 					TheStatusOptionsTab();
 					TheCharacterOptionsTab();
 					TheRecordPlaybackTab();
+					TheIncomingStuffTab();
 					TheDebugStuffTab();
 
+					if (ccheck != NULL)
+					{
+						typedef void(*TheRecordButton)();
+						TheRecordButton TRCTake1 = (TheRecordButton)GetProcAddress((HMODULE)ccheck, "TheRecordButton");
+						TRCTake1();
+					}
 					ImGui::EndTabBar();
 				}
 

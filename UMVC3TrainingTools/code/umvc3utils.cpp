@@ -7,6 +7,8 @@
 #include <vector>
 #include <chrono>
 #include "..\utils\addr.h"
+#include <thread>
+
 
 /*
 bool CheckGame()
@@ -195,10 +197,12 @@ void GetMainPointers()
 
 		//Gets better Pointers.
 		ReadProcessMemory(hProcess, (LPVOID*)0x140D44A70, &TysonTable, sizeof(uintptr_t), 0);
-		ReadProcessMemory(hProcess, (LPVOID*)(TysonTable + 0x58), &Player1TeamTable, sizeof(uintptr_t), 0);
-		ReadProcessMemory(hProcess, (LPVOID*)(TysonTable + 0x328), &Player2TeamTable, sizeof(uintptr_t), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(TysonTable + 0x58), &Player1CharNodeTree, sizeof(uintptr_t), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(TysonTable + 0x328), &Player2CharNodeTree, sizeof(uintptr_t), 0);
 
-
+		//Gets More Pointers.
+		ReadProcessMemory(hProcess, (LPVOID*)(block2 + 0x350), &Player1TeamTable, sizeof(uintptr_t), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(block2 + 0x610), &Player2TeamTable, sizeof(uintptr_t), 0);
 	}
 }
 
@@ -226,12 +230,12 @@ void GetPlayerData()
 
 		uintptr_t TempA = 0;
 		uintptr_t TempB = 0;
-		ReadProcessMemory(hProcess, (LPVOID*)(Player1TeamTable + 0x10), &TempA, sizeof(uintptr_t), 0);
-		ReadProcessMemory(hProcess, (LPVOID*)(Player2TeamTable + 0x10), &TempB, sizeof(uintptr_t), 0);
-		ReadProcessMemory(hProcess, (LPVOID*)(Player1TeamTable + 0x8), &P1Character1Data, sizeof(int), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(Player1CharNodeTree + 0x10), &TempA, sizeof(uintptr_t), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(Player2CharNodeTree + 0x10), &TempB, sizeof(uintptr_t), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(Player1CharNodeTree + 0x8), &P1Character1Data, sizeof(int), 0);
 		ReadProcessMemory(hProcess, (LPVOID*)(TempA + 0x8), &P1Character2Data, sizeof(int), 0);
 		ReadProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x18), &P1Character3Data, sizeof(int), 0);
-		ReadProcessMemory(hProcess, (LPVOID*)(Player2TeamTable + 0x8), &P2Character1Data, sizeof(int), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(Player2CharNodeTree + 0x8), &P2Character1Data, sizeof(int), 0);
 		ReadProcessMemory(hProcess, (LPVOID*)(TempB + 0x8), &P2Character2Data, sizeof(int), 0);
 		ReadProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x18), &P2Character3Data, sizeof(int), 0);
 		ReadProcessMemory(hProcess, (LPVOID*)(P1Character1Data), scriptableFighters[0].fighter, sizeof(Fighter), 0);
@@ -242,6 +246,13 @@ void GetPlayerData()
 		ReadProcessMemory(hProcess, (LPVOID*)(P2Character3Data), scriptableFighters[5].fighter, sizeof(Fighter), 0);
 
 		const char* name = nullptr;
+
+		ReadProcessMemory(hProcess, (LPVOID*)(Player1TeamTable + 0x48), &Player1ActiveCharacter, sizeof(int), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(Player2TeamTable + 0x48), &Player2ActiveCharacter, sizeof(int), 0);
+
+
+
+
 		/*
 		if (scriptableFighters[0].name == nullptr) {
 			scriptableFighters[0].name = new char[strlen(name) + 1] {0};
@@ -285,6 +296,8 @@ void RestartWithChanges()
 	EndlessInstallBoolUpdate();
 	SetDeadpoolTeleport();
 	JammingToggleRestart();
+
+
 }
 
 //Forces the X Factor Timer to stay at a stupid high time to be unlimited.
@@ -3897,6 +3910,238 @@ void RemoveAllInstalls()
 
 }
 
+void TheKillingFloor()
+{
+
+	int FlagA = 89;
+	int FlagB = 0;
+	int FlagC = 1050672;
+	//char FlagD = 89;
+	//char FlagE = 89;
+
+	if (KOActiveCharacterAtStart)
+	{
+
+		//X Coordinate.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x50), &DeathSiteX, sizeof(float), NULL))
+		{
+
+		}
+
+		//Action/Anm thing.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1310), &FlagA, sizeof(int), NULL))
+		{
+
+		}
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1314), &FlagA, sizeof(int), NULL))
+		{
+
+		}
+
+		//Sets Health and Red Health to 0.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1550), &FlagB, sizeof(int), NULL))
+		{
+
+		}
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1558), &FlagB, sizeof(int), NULL))
+		{
+
+		}
+
+		//TagState Flag Thing.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x14F0), &FlagC, sizeof(int), NULL))
+		{
+
+		}
+
+	}
+	if (KOActiveOpponentAtStart)
+	{
+
+		//X Coordinate.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x50), &DeathSiteX, sizeof(float), NULL))
+		{
+
+		}
+
+		//Action/Anm thing.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1310), &FlagA, sizeof(int), NULL))
+		{
+
+		}
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1314), &FlagA, sizeof(int), NULL))
+		{
+
+		}
+
+		//Sets Health and Red Health to 0.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1550), &FlagB, sizeof(int), NULL))
+		{
+
+		}
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1558), &FlagB, sizeof(int), NULL))
+		{
+
+		}
+
+		//TagState Flag Thing.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x14F0), &FlagC, sizeof(int), NULL))
+		{
+
+		}
+
+	}
+
+
+}
+
+void DeathDelay()
+{
+
+
+
+	if (FrameDelayofDeath > 0)
+	{
+		//Sleep(FrameDelayofDeath * 16.67);
+		TheKillingFloor();
+	}
+	else
+	{
+		TheKillingFloor();
+	}
+
+
+
+}
+
+void KOToggles()
+{
+	int FlagB = 0;
+	int FlagC = 1050672;
+	//Sleep(160);
+	if (Player1Character1Dead == true) 
+	{
+		//Sets Health and Red Health to 0.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1550), &FlagB, sizeof(int), NULL))
+		{
+
+		}
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1558), &FlagB, sizeof(int), NULL))
+		{
+
+		}
+		
+		//TagState Flag Thing.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x14F0), &FlagC, sizeof(int), NULL))
+		{
+
+		}
+		
+	}
+	else {}
+	if (Player1Character2Dead == true) 
+	{
+		//Sets Health and Red Health to 0.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x1550), &FlagB, sizeof(int), NULL))
+		{
+
+		}
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x1558), &FlagB, sizeof(int), NULL))
+		{
+
+		}
+		
+		//TagState Flag Thing.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x14F0), &FlagC, sizeof(int), NULL))
+		{
+
+		}
+		
+	}
+	else {}
+	if (Player1Character3Dead == true) 
+	{
+		//Sets Health and Red Health to 0.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x1550), &FlagB, sizeof(int), NULL))
+		{
+
+		}
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x1558), &FlagB, sizeof(int), NULL))
+		{
+
+		}
+		
+		//TagState Flag Thing.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x14F0), &FlagC, sizeof(int), NULL))
+		{
+
+		}
+		
+	}
+	else {}
+
+	if (Player2Character1Dead == true)
+	{
+		//Sets Health and Red Health to 0.
+		
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1550), &FlagB, sizeof(int), NULL))
+		{
+
+		}
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1558), &FlagB, sizeof(int), NULL))
+		{
+
+		}
+
+		//TagState Flag Thing.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x14F0), &FlagC, sizeof(int), NULL))
+		{
+
+		}
+	}
+	else {}
+	if (Player2Character2Dead == true)
+	{
+		//Sets Health and Red Health to 0.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x1550), &FlagB, sizeof(int), NULL))
+		{
+
+		}
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x1558), &FlagB, sizeof(int), NULL))
+		{
+
+		}
+
+		//TagState Flag Thing.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x14F0), &FlagC, sizeof(int), NULL))
+		{
+
+		}
+	}
+	else {}
+	if (Player2Character3Dead == true)
+	{
+		//Sets Health and Red Health to 0.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x1550), &FlagB, sizeof(int), NULL))
+		{
+
+		}
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x1558), &FlagB, sizeof(int), NULL))
+		{
+
+		}
+
+		//TagState Flag Thing.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x14F0), &FlagC, sizeof(int), NULL))
+		{
+
+		}
+	}
+	
+	else {}
+
+}
+
 //Sets all settings back to default.
 void ResetSettings()
 {
@@ -4015,6 +4260,17 @@ void ResetSettings()
 	P2C1JammedSlot = 0;
 	P2C2JammedSlot = 0;
 	P2C3JammedSlot = 0;
+	KOActiveCharacterAtStart = false;
+	KOActiveOpponentAtStart = false;
+	FrameDelayofDeath = 0;
+	DeathSiteX = 0.0;
+	DeathSiteY = 0.0;
+	Player1Character1Dead = false;
+	Player1Character2Dead = false;
+	Player1Character3Dead = false;
+	Player2Character1Dead = false;
+	Player2Character2Dead = false;
+	Player2Character3Dead = false;
 	ResetGameSpeed();
 	SetGlobalPlayerSpeed(1);
 	RemoveAllInstalls();

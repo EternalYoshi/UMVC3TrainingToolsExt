@@ -33,8 +33,8 @@ extern "C" {
 	__declspec(dllexport) bool CheckReplayAvailableBoth(int);
 	__declspec(dllexport) bool ChangeRecordingSlot(int);
 	__declspec(dllexport) void StartTheTick();
+	__declspec(dllexport) void TheRecordButton();
 
 
 }
 
-void TheRecordButton();

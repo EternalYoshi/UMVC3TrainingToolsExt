@@ -14,8 +14,8 @@ inline uintptr_t mysterytable;
 inline uintptr_t block2;
 inline uintptr_t ptable;
 inline uintptr_t TysonTable;
-inline uintptr_t Player1TeamTable;
-inline uintptr_t Player2TeamTable;
+inline uintptr_t Player1CharNodeTree;
+inline uintptr_t Player2CharNodeTree;
 inline uintptr_t BaseFighterUpdateMethod = 0x14004bd30;
 
 inline DWORD errorMessageID;
@@ -350,6 +350,22 @@ inline int P1C3JammedSlot = 0;
 inline int P2C1JammedSlot = 0;
 inline int P2C2JammedSlot = 0;
 inline int P2C3JammedSlot = 0;
+
+inline int FrameDelayofDeath = 0;
+inline float DeathSiteX = 0.0;
+inline float DeathSiteY = 0.0;
+inline bool KOActiveOpponentAtStart = false;
+inline bool KOActiveCharacterAtStart = false;
+inline bool Player1Character1Dead = false;
+inline bool Player1Character2Dead = false;
+inline bool Player1Character3Dead = false;
+inline bool Player2Character1Dead = false;
+inline bool Player2Character2Dead = false;
+inline bool Player2Character3Dead = false;
+inline uintptr_t Player1ActiveCharacter;
+inline uintptr_t Player2ActiveCharacter;
+inline uintptr_t Player1TeamTable;
+inline uintptr_t Player2TeamTable;
 
 inline std::string ThreeHookPath = "E:\\ULTIMATE MARVEL VS. CAPCOM 3\\Scripts\\ThreeHook.asi";
 
@@ -885,5 +901,11 @@ void GetHitboxDataPart1();
 void GetDebugData();
 
 void RemoveAllInstalls();
+
+void TheKillingFloor();
+
+void DeathDelay();
+
+void KOToggles();
 
 void ResetSettings();
