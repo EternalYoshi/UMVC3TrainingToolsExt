@@ -4005,7 +4005,7 @@ void DeathDelay()
 
 	if (FrameDelayofDeath > 0)
 	{
-		//Sleep(FrameDelayofDeath * 16.67);
+		Sleep(FrameDelayofDeath * 16.67);
 		TheKillingFloor();
 	}
 	else

@@ -318,10 +318,10 @@ static void gui::TheMenuBar()
 	{
 		if (ImGui::BeginMenu("File"))
 		{
+#ifdef _DEBUG
 			if (ImGui::MenuItem(("Find ThreeHook"), "CTRL+O"))
 			{
 				std::string ChosenFile = "";
-
 				OPENFILENAME ofn = { sizeof(OPENFILENAME) };
 				char szFile[_MAX_PATH] = "ThreeHook";
 				const char szExt[] = ".asi\0"; // extra '\0' for lpstrFilter
@@ -330,7 +330,6 @@ static void gui::TheMenuBar()
 				ofn.nMaxFile = sizeof(szFile) / sizeof(szFile[0]);
 				ofn.lpstrFilter = ofn.lpstrDefExt = szExt;
 				ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
-
 				if (GetOpenFileName(&ofn))
 				{
 					ChosenFile = ofn.lpstrFile;
@@ -347,7 +346,7 @@ static void gui::TheMenuBar()
 
 				}
 			}
-
+#endif
 			if (ImGui::MenuItem(("Reset Settings To Default")))
 			{
 				ResetSettings();
@@ -376,16 +375,16 @@ static void gui::TheMenuBar()
 void gui::TheAboutWindow(bool* p_open)
 {
 	ImGui::SetNextWindowSize({ 400, 400 }, ImGuiCond_FirstUseEver);
-	if (!ImGui::Begin("UMVC3 Training Tools Mod V0.4X", p_open))
+	if (!ImGui::Begin("UMVC3 Training Tools Mod V0.6", p_open))
 	{
 		ImGui::End();
 		return;
 	}
-	ImGui::Text("2023 By Eternal Yoshi");
+	ImGui::Text("2023, 2024 By Eternal Yoshi");
 	ImGui::Separator();
-	ImGui::Text("Thanks To SanHKHaan, Sheep, & Gneiss for finding\nthe pointers and memeory offsets that made this \npossible,and Ermmaccer for the original UMVC3Hook\nthis version is based on.");
+	ImGui::Text("Thanks To SanHKHaan, Sheep, & Gneiss for finding\nthe pointers and memeory offsets that made this \npossible,and Ermmaccer for the original UMVC3Hook.\n");
 	ImGui::Separator();
-	ImGui::Text("In case it isn't obvious, this tool is NOT designed to\nenable cheating in netplay and\nis intended to only function in training mode.");
+	ImGui::Text("In case it isn't obvious, this tool is NOT designed to\nenable cheating in online multiplayer and\nis intended to only function in Training Mode.");
 
 	ImGui::End();
 
@@ -650,7 +649,7 @@ static void gui::TheExtraOptionsTab()
 		ImGui::Text("Player 1 Position");
 		if (ImGui::DragFloat("P1 X Position", &p1Pos, 1.0f, -800.0f, 800.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
 		{
-			if(p1Pos > 800)
+			if (p1Pos > 800)
 			{
 				p1Pos = 800;
 			}
@@ -742,7 +741,7 @@ static void gui::TheExtraOptionsTab()
 		}
 		ImGui::Separator();
 
-		ImGui::SeparatorText("Incomplete/Experimental Stuff");
+		ImGui::SeparatorText("Etc.");
 
 		ImGui::Separator();
 
@@ -945,7 +944,7 @@ static void gui::TheStatusOptionsTab()
 		//if (P1Meter)
 		//{
 		ImGui::Text("Player 1 Meter");
-		if (ImGui::DragInt("P1 Meter", &P1Meter, 100.0f,0, 50000,"%d"))
+		if (ImGui::DragInt("P1 Meter", &P1Meter, 100.0f, 0, 50000, "%d"))
 		{
 			if (CheckTheMode() == true)
 			{
@@ -967,7 +966,7 @@ static void gui::TheStatusOptionsTab()
 		//if (P2Meter)
 		//{
 		ImGui::Text("Player 2 Meter");
-		if (ImGui::DragInt("P2 Meter", &P2Meter,100.0f, 0, 50000,"%d" ))
+		if (ImGui::DragInt("P2 Meter", &P2Meter, 100.0f, 0, 50000, "%d"))
 		{
 			if (CheckTheMode() == true)
 			{
@@ -1053,12 +1052,12 @@ static void gui::TheIncomingStuffTab()
 	{
 		ImGui::Text("Experimental! Be Smart about using these.");
 		ImGui::Separator();
-		//
-		//ImGui::Text("Time Delay(Frames)");
-		//if (ImGui::SliderInt("Frames Until Death", &FrameDelayofDeath, 0, 300))
-		//{
-		//}
-		//
+		
+		ImGui::Text("Time Delay(Frames)");
+		if (ImGui::SliderInt("Frames Until Death", &FrameDelayofDeath, 0, 300))
+		{
+		}
+		
 		if (ImGui::SliderFloat("Position of KO", &DeathSiteX, -800.0f, 800.0f))
 		{
 
@@ -1077,7 +1076,7 @@ static void gui::TheIncomingStuffTab()
 			{
 			}
 		}
-	
+
 		ImGui::SeparatorText("KO Toggles");
 
 		if (ImGui::Checkbox("Player 1 Character 1 Dead", &Player1Character1Dead))
@@ -1112,7 +1111,7 @@ static void gui::TheIncomingStuffTab()
 		ImGui::Text("More stuff coming soon!");
 
 		ImGui::EndTabItem();
-	
+
 	}
 
 }
@@ -1350,6 +1349,7 @@ static void gui::TheDebugStuffTab()
 			ImGui::Text("%i", TestEx);
 		}
 		*/
+#ifdef _DEBUG
 
 		if (ccheck != NULL)
 		{
@@ -1365,8 +1365,13 @@ static void gui::TheDebugStuffTab()
 		else
 		{
 			SetLastError(Thing);
+
 			ImGui::Text("Nothing Doing! Go to File-> Find ThreeHook and select the ThreeHook.asi.");
+
+
 		}
+#endif
+
 
 		ImGui::Separator();
 
@@ -2125,6 +2130,8 @@ void gui::Render() noexcept
 					TheExtraOptionsTab();
 					TheStatusOptionsTab();
 					TheCharacterOptionsTab();
+#ifdef _DEBUG
+
 					TheRecordPlaybackTab();
 					TheIncomingStuffTab();
 					TheDebugStuffTab();
@@ -2135,6 +2142,9 @@ void gui::Render() noexcept
 						TheRecordButton TRCTake1 = (TheRecordButton)GetProcAddress((HMODULE)ccheck, "TheRecordButton");
 						TRCTake1();
 					}
+
+#endif
+
 					ImGui::EndTabBar();
 				}
 
@@ -2165,12 +2175,13 @@ void gui::Render() noexcept
 
 	}
 
+#ifdef _DEBUG
 	if (!ccheck)
 	{
 		std::cout << "could not load the dynamic library" << std::endl;
 		ImGui::Text("Nothing Doing! Go to File-> Find ThreeHook and select the ThreeHook.asi");
-
 	}
+#endif
 
 	ImGui::PopFont();
 
