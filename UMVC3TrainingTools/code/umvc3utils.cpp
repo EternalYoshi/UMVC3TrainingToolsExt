@@ -3915,7 +3915,7 @@ void RemoveAllInstalls()
 
 void TheKillingFloor()
 {
-
+	GetPlayerData();
 	int FlagA = 89;
 	int FlagB = 0;
 	int FlagC = 1050672;
@@ -4021,6 +4021,7 @@ void KOToggles()
 {
 	int FlagB = 0;
 	int FlagC = 1050672;
+	GetPlayerData();
 	//Sleep(160);
 	if (Player1Character1Dead == true) 
 	{
