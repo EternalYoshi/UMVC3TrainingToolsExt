@@ -2834,6 +2834,9 @@ void JammingToggleRestart()
 
 void SetGlobalPlayerSpeed(float GlobalSpeed)
 {
+
+	GetPlayerData();
+
 	if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x15B4), &GlobalSpeed, sizeof(GlobalSpeed), NULL))
 	{
 

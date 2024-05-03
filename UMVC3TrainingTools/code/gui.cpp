@@ -648,15 +648,29 @@ static void gui::TheExtraOptionsTab()
 		ImGui::SeparatorText("Positioning");
 
 		ImGui::Text("Player 1 Position");
-		if (ImGui::SliderFloat("P1 X Position", &p1Pos, -800.0f, 800.0f))
+		if (ImGui::DragFloat("P1 X Position", &p1Pos, 1.0f, -800.0f, 800.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
 		{
-
+			if(p1Pos > 800)
+			{
+				p1Pos = 800;
+			}
+			else if (p1Pos < -800)
+			{
+				p1Pos = -800;
+			}
 		}
 
 		ImGui::Text("Player 2 Position");
-		if (ImGui::SliderFloat("P2 X Position", &p2Pos, -800.0f, 800.0f))
+		if (ImGui::DragFloat("P2 X Position", &p2Pos, 1.0f, -800.0f, 800.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
 		{
-
+			if (p2Pos > 800)
+			{
+				p2Pos = 800;
+			}
+			else if (p2Pos < -800)
+			{
+				p2Pos = -800;
+			}
 		}
 
 		ImGui::Text("Position Presets");
@@ -733,12 +747,21 @@ static void gui::TheExtraOptionsTab()
 		ImGui::Separator();
 
 		//ImGui::Text("Game Speed");
-		if (ImGui::SliderFloat("Character Speed", &CharacterSpeed, 0.01666667f, 2.0f))
+		if (ImGui::DragFloat("Character Speed", &CharacterSpeed, 0.01f, 0.01666667f, 2.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
 		{
+
+			if (CharacterSpeed > 2.0)
+			{
+				CharacterSpeed = 2.0;
+			}
+			else if (CharacterSpeed < 0.01666667)
+			{
+				CharacterSpeed = 0.01666667;
+			}
+
 			SetGlobalPlayerSpeed(CharacterSpeed);
-
 		}
-
+		/*
 		if (ImGui::Checkbox("Enable Game Speed Change(Use at own risk!)", &ModifyGameSpeed))
 		{
 
@@ -757,7 +780,7 @@ static void gui::TheExtraOptionsTab()
 		{
 			ResetGameSpeed();
 		}
-
+		*/
 		ImGui::Text("More features coming soon!");
 
 		ImGui::EndTabItem();
@@ -787,8 +810,19 @@ static void gui::TheStatusOptionsTab()
 		if (P1Char1Health)
 		{
 			ImGui::Text("Player 1 Character 1 Health");
-			if (ImGui::SliderFloat("P1C1 HP %", &P1Char1Health, 0.01f, 1.0f))
+			if (ImGui::DragFloat("P1C1 HP %", &P1Char1Health, 0.003f, 0.001f, 1.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
 			{
+
+
+				if (P1Char1Health > 1.0)
+				{
+					P1Char1Health = 1.0;
+				}
+				else if (P1Char1Health < 0.01)
+				{
+					P1Char1Health = 0.01;
+				}
+
 				if (CheckTheMode() == true)
 				{
 
@@ -799,8 +833,18 @@ static void gui::TheStatusOptionsTab()
 		if (P1Char2Health)
 		{
 			ImGui::Text("Player 1 Character 2 Health");
-			if (ImGui::SliderFloat("P1C2 HP %", &P1Char2Health, 0.01f, 1.0f))
+			if (ImGui::DragFloat("P1C2 HP %", &P1Char2Health, 0.003f, 0.001f, 1.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
 			{
+
+				if (P1Char2Health > 1.0)
+				{
+					P1Char2Health = 1.0;
+				}
+				else if (P1Char2Health < 0.01)
+				{
+					P1Char2Health = 0.01;
+				}
+
 				if (CheckTheMode() == true)
 				{
 
@@ -811,8 +855,18 @@ static void gui::TheStatusOptionsTab()
 		if (P1Char3Health)
 		{
 			ImGui::Text("Player 1 Character 3 Health");
-			if (ImGui::SliderFloat("P1C3 HP %", &P1Char3Health, 0.01f, 1.0f))
+			if (ImGui::DragFloat("P1C3 HP %", &P1Char3Health, 0.003f, 0.001f, 1.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
 			{
+
+				if (P1Char3Health > 1.0)
+				{
+					P1Char3Health = 1.0;
+				}
+				else if (P1Char3Health < 0.01)
+				{
+					P1Char3Health = 0.01;
+				}
+
 				if (CheckTheMode() == true)
 				{
 
@@ -823,8 +877,18 @@ static void gui::TheStatusOptionsTab()
 		if (P2Char1Health)
 		{
 			ImGui::Text("Player 2 Character 1 Health");
-			if (ImGui::SliderFloat("P2C1 HP %", &P2Char1Health, 0.01f, 1.0f))
+			if (ImGui::DragFloat("P2C1 HP %", &P2Char1Health, 0.003f, 0.001f, 1.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
 			{
+
+				if (P2Char1Health > 1.0)
+				{
+					P2Char1Health = 1.0;
+				}
+				else if (P2Char1Health < 0.01)
+				{
+					P2Char1Health = 0.01;
+				}
+
 				if (CheckTheMode() == true)
 				{
 
@@ -835,8 +899,18 @@ static void gui::TheStatusOptionsTab()
 		if (P2Char2Health)
 		{
 			ImGui::Text("Player 2 Character 2 Health");
-			if (ImGui::SliderFloat("P2C2 HP %", &P2Char2Health, 0.01f, 1.0f))
+			if (ImGui::DragFloat("P2C2 HP %", &P2Char2Health, 0.003f, 0.001f, 1.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
 			{
+
+				if (P2Char2Health > 1.0)
+				{
+					P2Char2Health = 1.0;
+				}
+				else if (P2Char2Health < 0.01)
+				{
+					P2Char2Health = 0.01;
+				}
+
 				if (CheckTheMode() == true)
 				{
 
@@ -847,8 +921,18 @@ static void gui::TheStatusOptionsTab()
 		if (P2Char3Health)
 		{
 			ImGui::Text("Player 2 Character 3 Health");
-			if (ImGui::SliderFloat("P2C3 HP %", &P2Char3Health, 0.01f, 1.0f))
+			if (ImGui::DragFloat("P2C3 HP %", &P2Char3Health, 0.003f, 0.001f, 1.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
 			{
+
+				if (P2Char3Health > 1.0)
+				{
+					P2Char3Health = 1.0;
+				}
+				else if (P2Char3Health < 0.01)
+				{
+					P2Char3Health = 0.01;
+				}
+
 				if (CheckTheMode() == true)
 				{
 
@@ -861,10 +945,20 @@ static void gui::TheStatusOptionsTab()
 		//if (P1Meter)
 		//{
 		ImGui::Text("Player 1 Meter");
-		if (ImGui::SliderInt("P1 Meter", &P1Meter, 0, 50000))
+		if (ImGui::DragInt("P1 Meter", &P1Meter, 100.0f,0, 50000,"%d"))
 		{
 			if (CheckTheMode() == true)
 			{
+
+				if (P1Meter > 50000)
+				{
+					P1Meter = 50000;
+				}
+				else if (P1Meter < 0)
+				{
+					P1Meter = 0;
+				}
+
 				SetMeters();
 			}
 		}
@@ -873,10 +967,21 @@ static void gui::TheStatusOptionsTab()
 		//if (P2Meter)
 		//{
 		ImGui::Text("Player 2 Meter");
-		if (ImGui::SliderInt("P2 Meter", &P2Meter, 0, 50000))
+		if (ImGui::DragInt("P2 Meter", &P2Meter,100.0f, 0, 50000,"%d" ))
 		{
 			if (CheckTheMode() == true)
 			{
+
+
+				if (P2Meter > 50000)
+				{
+					P2Meter = 50000;
+				}
+				else if (P2Meter < 0)
+				{
+					P2Meter = 0;
+				}
+
 				SetMeters();
 			}
 		}
