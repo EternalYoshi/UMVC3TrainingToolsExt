@@ -104,6 +104,14 @@ inline int P2C1MaxHP = 0;
 inline int P2C2MaxHP = 0;
 inline int P2C3MaxHP = 0;
 inline float CharacterSpeed = 1.0;
+inline float P1Char1Speed = 1.0;
+inline float P1Char2Speed = 1.0;
+inline float P1Char3Speed = 1.0;
+inline float P2Char1Speed = 1.0;
+inline float P2Char2Speed = 1.0;
+inline float P2Char3Speed = 1.0;
+
+
 inline bool ModifyGameSpeed = false;
 inline float GameSpeed = 1.0;
 inline int QuickRestartType = 3;
@@ -317,6 +325,9 @@ inline bool P2C3JammedAlready = false;
 inline int P1Meter = 10000;
 inline int P2Meter = 10000;
 
+inline bool LockP1Meter = false;
+inline bool LockP2Meter = false;
+
 inline int P1C1HurtboxCount;
 inline int P1C2HurtboxCount;
 inline int P1C3HurtboxCount;
@@ -366,8 +377,12 @@ inline uintptr_t Player1ActiveCharacter;
 inline uintptr_t Player2ActiveCharacter;
 inline uintptr_t Player1TeamTable;
 inline uintptr_t Player2TeamTable;
+inline uintptr_t InputDisplayDataPointer;
+inline bool MoveInputDisplay = false;
 
 inline std::string ThreeHookPath = "E:\\ULTIMATE MARVEL VS. CAPCOM 3\\Scripts\\ThreeHook.asi";
+
+
 
 
 struct vector {
@@ -850,6 +865,8 @@ void GetPlayerData();
 void EndlessXFactorUpdate();
 
 void RestartWithChanges();
+
+void LeftSideInputDisplay();
 
 void TickUpdates();
 

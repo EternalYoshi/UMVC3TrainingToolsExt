@@ -203,6 +203,7 @@ void GetMainPointers()
 		//Gets More Pointers.
 		ReadProcessMemory(hProcess, (LPVOID*)(block2 + 0x350), &Player1TeamTable, sizeof(uintptr_t), 0);
 		ReadProcessMemory(hProcess, (LPVOID*)(block2 + 0x610), &Player2TeamTable, sizeof(uintptr_t), 0);
+
 	}
 }
 
@@ -288,22 +289,29 @@ void GetPlayerData()
 void RestartWithChanges()
 {
 	ChangeFrankLevel(FrankLevel);
-	ChangeWrightEvidence();
-	Objection();
-	PopTheBird();
+	if (Turnabout == true)
+	{
+		ChangeWrightEvidence();
+		Objection();
+	}
+	if (DarkPhoenix == true)
+	{
+		PopTheBird();
+	}
 	ChangeMODOKUnderstanding(MODOKLOU);
 	SetDormSpellLevels();
+	SetGameSpeed(1);
+	SetGlobalPlayerSpeed(P1Char1Speed);
 	EndlessInstallBoolUpdate();
 	SetDeadpoolTeleport();
 	JammingToggleRestart();
-
 
 }
 
 //Forces the X Factor Timer to stay at a stupid high time to be unlimited.
 void EndlessXFactorUpdate()
 {
-
+	GetPlayerData();
 	float fli = 7000.0;
 
 	//Team1.
@@ -325,6 +333,105 @@ void EndlessXFactorUpdate()
 	}
 
 
+
+}
+
+void LeftSideInputDisplay()
+{
+	if (MoveInputDisplay == true)
+	{
+		//Gets Yet Another Pointer.
+		uintptr_t TempA = 0;
+		uintptr_t TempB = 0;
+		uintptr_t TempC = 0;
+		uintptr_t TempD = 0;
+		uintptr_t TempE = 0;
+
+		float TempFloat = 0.0;
+		ReadProcessMemory(hProcess, (LPVOID*)0x140E1BC98, &TempA, sizeof(uintptr_t), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(TempA + 0x70), &TempB, sizeof(uintptr_t), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(TempB + 0x20), &TempC, sizeof(uintptr_t), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(TempC + 0x70), &TempD, sizeof(uintptr_t), 0);
+		//ReadProcessMemory(hProcess, (LPVOID*)(TempD), &TempE, sizeof(uintptr_t), 0);
+
+		InputDisplayDataPointer = TempD;
+
+		if (TempA == 0 || TempB == 0 || TempC == 0 || InputDisplayDataPointer == 0)
+		{
+		}
+		else
+		{
+			//InputDisplayDataPointer stuff.
+			TempFloat = 32;
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(InputDisplayDataPointer + 0x70), &TempFloat, sizeof(float), NULL))
+			{
+
+			}
+
+			TempFloat = 150;
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(InputDisplayDataPointer + 0x74), &TempFloat, sizeof(float), NULL))
+			{
+
+			}
+
+			TempFloat = 0;
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(InputDisplayDataPointer + 0x78), &TempFloat, sizeof(float), NULL))
+			{
+
+			}
+
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(InputDisplayDataPointer + 0x7C), &TempFloat, sizeof(float), NULL))
+			{
+
+			}
+
+			TempFloat = 0.00146484;
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(InputDisplayDataPointer + 0x80), &TempFloat, sizeof(float), NULL))
+			{
+
+			}
+
+			TempFloat = 1;
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(InputDisplayDataPointer + 0x84), &TempFloat, sizeof(float), NULL))
+			{
+
+			}
+
+			TempFloat = 0;
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(InputDisplayDataPointer + 0x88), &TempFloat, sizeof(float), NULL))
+			{
+
+			}
+
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(InputDisplayDataPointer + 0x8C), &TempFloat, sizeof(float), NULL))
+			{
+
+			}
+
+			TempFloat = 1;
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(InputDisplayDataPointer + 0x90), &TempFloat, sizeof(float), NULL))
+			{
+
+			}
+
+			TempFloat = 0.00146484;
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(InputDisplayDataPointer + 0x94), &TempFloat, sizeof(float), NULL))
+			{
+
+			}
+
+			TempFloat = 0;
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(InputDisplayDataPointer + 0x98), &TempFloat, sizeof(float), NULL))
+			{
+
+			}
+
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(InputDisplayDataPointer + 0x9C), &TempFloat, sizeof(float), NULL))
+			{
+
+			}
+		}
+	}
 
 }
 
@@ -375,10 +482,31 @@ void TickUpdates()
 		ChangeMODOKUnderstanding(MODOKLOU);
 	}
 
+	if (LockP1Meter == true)
+	{
+		float P1MeterToFloat = P1Meter;
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(team1ptr + 0x78), &P1MeterToFloat, sizeof(P1MeterToFloat), NULL))
+		{
+
+		}
+	}
+
+	if (LockP2Meter == true)
+	{
+		float P2MeterToFloat = P2Meter;
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(team2ptr + 0x78), &P2MeterToFloat, sizeof(P2MeterToFloat), NULL))
+		{
+
+		}
+	}
+
 	if (P1C1Jammed == true || P1C2Jammed == true || P1C3Jammed == true || P2C1Jammed == true || P2C2Jammed == true || P2C3Jammed == true)
 	{
 		JammingToggle();
 	}
+
+	LeftSideInputDisplay();
+
 }
 
 //Sets Individual Character HP on Training Mode restarts.
@@ -2837,27 +2965,27 @@ void SetGlobalPlayerSpeed(float GlobalSpeed)
 
 	GetPlayerData();
 
-	if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x15B4), &GlobalSpeed, sizeof(GlobalSpeed), NULL))
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x15B4), &P1Char1Speed, sizeof(P1Char1Speed), NULL))
 	{
 
 	}
-	if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x15B4), &GlobalSpeed, sizeof(GlobalSpeed), NULL))
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x15B4), &P1Char1Speed, sizeof(P1Char1Speed), NULL))
 	{
 
 	}
-	if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x15B4), &GlobalSpeed, sizeof(GlobalSpeed), NULL))
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x15B4), &P1Char1Speed, sizeof(P1Char1Speed), NULL))
 	{
 
 	}
-	if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x15B4), &GlobalSpeed, sizeof(GlobalSpeed), NULL))
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x15B4), &P2Char1Speed, sizeof(P2Char1Speed), NULL))
 	{
 
 	}
-	if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x15B4), &GlobalSpeed, sizeof(GlobalSpeed), NULL))
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x15B4), &P2Char1Speed, sizeof(P2Char1Speed), NULL))
 	{
 
 	}
-	if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x15B4), &GlobalSpeed, sizeof(GlobalSpeed), NULL))
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x15B4), &P2Char1Speed, sizeof(P2Char1Speed), NULL))
 	{
 
 	}
@@ -4023,7 +4151,7 @@ void KOToggles()
 	int FlagC = 1050672;
 	GetPlayerData();
 	//Sleep(160);
-	if (Player1Character1Dead == true) 
+	if (Player1Character1Dead == true)
 	{
 		//Sets Health and Red Health to 0.
 		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1550), &FlagB, sizeof(int), NULL))
@@ -4034,16 +4162,16 @@ void KOToggles()
 		{
 
 		}
-		
+
 		//TagState Flag Thing.
 		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x14F0), &FlagC, sizeof(int), NULL))
 		{
 
 		}
-		
+
 	}
 	else {}
-	if (Player1Character2Dead == true) 
+	if (Player1Character2Dead == true)
 	{
 		//Sets Health and Red Health to 0.
 		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x1550), &FlagB, sizeof(int), NULL))
@@ -4054,16 +4182,16 @@ void KOToggles()
 		{
 
 		}
-		
+
 		//TagState Flag Thing.
 		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x14F0), &FlagC, sizeof(int), NULL))
 		{
 
 		}
-		
+
 	}
 	else {}
-	if (Player1Character3Dead == true) 
+	if (Player1Character3Dead == true)
 	{
 		//Sets Health and Red Health to 0.
 		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x1550), &FlagB, sizeof(int), NULL))
@@ -4074,20 +4202,20 @@ void KOToggles()
 		{
 
 		}
-		
+
 		//TagState Flag Thing.
 		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x14F0), &FlagC, sizeof(int), NULL))
 		{
 
 		}
-		
+
 	}
 	else {}
 
 	if (Player2Character1Dead == true)
 	{
 		//Sets Health and Red Health to 0.
-		
+
 		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1550), &FlagB, sizeof(int), NULL))
 		{
 
@@ -4141,7 +4269,7 @@ void KOToggles()
 
 		}
 	}
-	
+
 	else {}
 
 }
@@ -4275,6 +4403,13 @@ void ResetSettings()
 	Player2Character1Dead = false;
 	Player2Character2Dead = false;
 	Player2Character3Dead = false;
+	P1Char1Speed = 1.0;
+	P1Char2Speed = 1.0;
+	P1Char3Speed = 1.0;
+	P2Char1Speed = 1.0;
+	P2Char2Speed = 1.0;
+	P2Char3Speed = 1.0;
+	MoveInputDisplay = false;
 	ResetGameSpeed();
 	SetGlobalPlayerSpeed(1);
 	RemoveAllInstalls();

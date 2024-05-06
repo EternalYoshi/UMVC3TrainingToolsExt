@@ -382,7 +382,7 @@ void gui::TheAboutWindow(bool* p_open)
 	}
 	ImGui::Text("2023, 2024 By Eternal Yoshi");
 	ImGui::Separator();
-	ImGui::Text("Thanks To SanHKHaan, Sheep, & Gneiss for finding\nthe pointers and memeory offsets that made this \npossible,and Ermmaccer for the original UMVC3Hook.\n");
+	ImGui::Text("Thanks To SanHKHaan, Sheep, Techs, & Gneiss for finding\nthe pointers and memeory offsets that made this \npossible,and Ermmaccer for the original UMVC3Hook.\n");
 	ImGui::Separator();
 	ImGui::Text("In case it isn't obvious, this tool is NOT designed to\nenable cheating in online multiplayer and\nis intended to only function in Training Mode.");
 
@@ -746,20 +746,64 @@ static void gui::TheExtraOptionsTab()
 		ImGui::Separator();
 
 		//ImGui::Text("Game Speed");
-		if (ImGui::DragFloat("Character Speed", &CharacterSpeed, 0.01f, 0.01666667f, 2.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
+		if (ImGui::DragFloat("Character Speed P1", &P1Char1Speed, 0.01f, 0.01666667f, 2.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
 		{
 
-			if (CharacterSpeed > 2.0)
+			if (P1Char1Speed > 2.0)
 			{
-				CharacterSpeed = 2.0;
+				P1Char1Speed = 2.0;
 			}
-			else if (CharacterSpeed < 0.01666667)
+			else if (P1Char1Speed < 0.01666667)
 			{
-				CharacterSpeed = 0.01666667;
+				P1Char1Speed = 0.01666667;
 			}
 
-			SetGlobalPlayerSpeed(CharacterSpeed);
+			SetGlobalPlayerSpeed(P1Char1Speed);
 		}
+		
+		if (ImGui::DragFloat("Character Speed P2", &P2Char1Speed, 0.01f, 0.01666667f, 2.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
+		{
+
+			if (P2Char1Speed > 2.0)
+			{
+				P2Char1Speed = 2.0;
+			}
+			else if (P2Char1Speed < 0.01666667)
+			{
+				P2Char1Speed = 0.01666667;
+			}
+
+			SetGlobalPlayerSpeed(P2Char1Speed);
+		}
+
+		if (ImGui::Button("Normal Speed P1"))
+		{
+			P1Char1Speed = 1;
+			SetGlobalPlayerSpeed(P1Char1Speed);
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Normal Speed P2"))
+		{
+			P2Char1Speed = 1;
+			SetGlobalPlayerSpeed(P1Char1Speed);
+		}
+
+		if (ImGui::Button("VJoe Slow Speed P1"))
+		{
+			P1Char1Speed = 0.75;
+			SetGlobalPlayerSpeed(P1Char1Speed);
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("VJoe Slow Speed P2"))
+		{
+			P2Char1Speed = 0.75;
+			SetGlobalPlayerSpeed(P1Char1Speed);
+		}
+
 		/*
 		if (ImGui::Checkbox("Enable Game Speed Change(Use at own risk!)", &ModifyGameSpeed))
 		{
@@ -780,6 +824,18 @@ static void gui::TheExtraOptionsTab()
 			ResetGameSpeed();
 		}
 		*/
+
+		ImGui::Separator();
+
+#ifdef _DEBUG
+
+		if (ImGui::Checkbox("Move Inputs to Left Side of Screen", &MoveInputDisplay))
+		{
+			LeftSideInputDisplay();
+		}
+
+		ImGui::Separator();
+#endif
 		ImGui::Text("More features coming soon!");
 
 		ImGui::EndTabItem();
@@ -986,6 +1042,17 @@ static void gui::TheStatusOptionsTab()
 		}
 		//}
 
+		if (ImGui::Checkbox("Lock P1 Meter", &LockP1Meter))
+		{
+
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Checkbox("Lock P2 Meter", &LockP2Meter))
+		{
+
+		}
 
 		ImGui::SeparatorText("Jamming Bomb/Reversed Controls");
 
@@ -2010,7 +2077,7 @@ void gui::Render() noexcept
 	ImGui::SetNextWindowPos({ 0,0 }, ImGuiCond_FirstUseEver);
 
 	ImGui::Begin(
-		"UMVC3 Training Tools Mod V0.5X By Eternal Yoshi",
+		"UMVC3 Training Tools Mod V0.6 By Eternal Yoshi",
 		&exit,
 		ImGuiWindowFlags_MenuBar |
 		ImGuiWindowFlags_NoResize |

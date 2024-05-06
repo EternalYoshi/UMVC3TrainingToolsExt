@@ -43,6 +43,6 @@ int __stdcall wWinMain(HINSTANCE instance, HINSTANCE previousInstance, PWSTR arg
 	gui::DestoryDevice();
 	gui::DestroyHWindow();
 	MH_STATUS WINAPI MH_Uninitialize(VOID);
-
+	exit(0);
 	return EXIT_SUCCESS;
 }
