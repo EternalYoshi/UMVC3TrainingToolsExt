@@ -4440,6 +4440,10 @@ void ResetSettings()
 	P2Char3Speed = 1.0;
 	MoveInputDisplay = false;
 	LockEvidence = false;
+	LockP1Meter = false;
+	LockP2Meter = false;
+	AlsoSetRedHealthP1 = false;
+	AlsoSetRedHealthP2 = false;
 	ResetGameSpeed();
 	SetGlobalPlayerSpeed(1);
 	RemoveAllInstalls();
