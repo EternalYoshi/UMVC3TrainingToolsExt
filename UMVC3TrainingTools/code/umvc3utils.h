@@ -798,6 +798,42 @@ inline FighterInstall TurnaboutMode =
 	-0
 };
 
+inline FighterInstall InvestiagtionMode =
+{
+	1084673544,//IdentifyingHashA
+	1,//IdentifyingHashA
+	0,//InstallID
+	8,//mType
+	0.0,//Duration
+	0,//PossibleRelatedAnmchrEntry
+	0,
+	0,
+	0,//mLifeAdd
+	0,
+	0,
+	0,
+	1.0,
+	1.0,
+	1.0,
+	1.0,
+	1.0,
+	1.0,
+	-1.0,
+	-1,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	-1,
+	-0
+};
+
 inline FighterInstall Jammed =
 {
 	1084673544,//IdentifyingHashA

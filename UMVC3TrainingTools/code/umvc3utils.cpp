@@ -28,8 +28,6 @@ bool CheckGame()
 }
 */
 
-
-
 bool CheckGame()
 {
 	//Sleep(5000);
@@ -975,7 +973,7 @@ void Objection()
 		}
 		else
 		{
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x15F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x15F0), &InvestiagtionMode, sizeof(FighterInstall), NULL))
 			{
 
 			}
@@ -983,6 +981,7 @@ void Objection()
 			{
 
 			}
+			
 		}
 	}
 	if (P1Character2ID == 23)
@@ -1000,7 +999,7 @@ void Objection()
 		}
 		else
 		{
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x15F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x15F0), &InvestiagtionMode, sizeof(FighterInstall), NULL))
 			{
 
 			}
@@ -1025,7 +1024,7 @@ void Objection()
 		}
 		else
 		{
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x15F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x15F0), &InvestiagtionMode, sizeof(FighterInstall), NULL))
 			{
 
 			}
@@ -1050,7 +1049,7 @@ void Objection()
 		}
 		else
 		{
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x15F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x15F0), &InvestiagtionMode, sizeof(FighterInstall), NULL))
 			{
 
 			}
@@ -1075,7 +1074,7 @@ void Objection()
 		}
 		else
 		{
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x15F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x15F0), &InvestiagtionMode, sizeof(FighterInstall), NULL))
 			{
 
 			}
@@ -1100,7 +1099,7 @@ void Objection()
 		}
 		else
 		{
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x15F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x15F0), &InvestiagtionMode, sizeof(FighterInstall), NULL))
 			{
 
 			}
