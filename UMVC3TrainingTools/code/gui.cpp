@@ -487,6 +487,11 @@ static void gui::TheCharacterOptionsTab()
 
 		}
 
+		if (ImGui::Checkbox("Lock Evidence", &LockEvidence))
+		{
+
+		}
+
 		//ImGui::Text("Turnabout Toggle");
 		if (ImGui::Checkbox("Turnabout Toggle", &Turnabout))
 		{
@@ -804,6 +809,20 @@ static void gui::TheExtraOptionsTab()
 			SetGlobalPlayerSpeed(P1Char1Speed);
 		}
 
+		if (ImGui::Button("Vale of Mist Slow Speed P1"))
+		{
+			P1Char1Speed = 0.66666666667;
+			SetGlobalPlayerSpeed(P1Char1Speed);
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Vale of Mist Slow Slow Speed P2"))
+		{
+			P2Char1Speed = 0.66666666667;
+			SetGlobalPlayerSpeed(P1Char1Speed);
+		}
+
 		/*
 		if (ImGui::Checkbox("Enable Game Speed Change(Use at own risk!)", &ModifyGameSpeed))
 		{
@@ -857,7 +876,12 @@ static void gui::TheStatusOptionsTab()
 		}
 
 		//Toggle for Applying Health Settings to Red Health.
-		if (ImGui::Checkbox("Also Apply To Red Health", &AlsoSetRedHealth))
+		if (ImGui::Checkbox("Also Apply To P1's Red Health", &AlsoSetRedHealthP1))
+		{
+
+		}
+
+		if (ImGui::Checkbox("Also Apply To P2's Red Health", &AlsoSetRedHealthP2))
 		{
 
 		}

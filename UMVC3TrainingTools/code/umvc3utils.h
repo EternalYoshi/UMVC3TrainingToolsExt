@@ -70,6 +70,8 @@ inline bool SpecialFeature = false;
 inline bool HitboxDisplay = false;
 inline bool SetIndividualHP = false;
 inline bool AlsoSetRedHealth = false;
+inline bool AlsoSetRedHealthP1 = false;
+inline bool AlsoSetRedHealthP2 = false;
 inline float P1Char1Health = 1.0;
 inline float P1Char1RedHealth = 1.0;
 inline float P1Char2Health = 1.0;
@@ -110,7 +112,7 @@ inline float P1Char3Speed = 1.0;
 inline float P2Char1Speed = 1.0;
 inline float P2Char2Speed = 1.0;
 inline float P2Char3Speed = 1.0;
-
+inline bool LockEvidence = false;
 
 inline bool ModifyGameSpeed = false;
 inline float GameSpeed = 1.0;

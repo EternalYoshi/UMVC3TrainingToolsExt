@@ -291,12 +291,15 @@ void RestartWithChanges()
 	ChangeFrankLevel(FrankLevel);
 	if (Turnabout == true)
 	{
-		ChangeWrightEvidence();
 		Objection();
 	}
 	if (DarkPhoenix == true)
 	{
 		PopTheBird();
+	}
+	if(LockEvidence == true)
+	{
+		ChangeWrightEvidence();
 	}
 	ChangeMODOKUnderstanding(MODOKLOU);
 	SetDormSpellLevels();
@@ -362,13 +365,13 @@ void LeftSideInputDisplay()
 		else
 		{
 			//InputDisplayDataPointer stuff.
-			TempFloat = 32;
+			TempFloat = 12;
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(InputDisplayDataPointer + 0x70), &TempFloat, sizeof(float), NULL))
 			{
 
 			}
 
-			TempFloat = 150;
+			TempFloat = 100;
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(InputDisplayDataPointer + 0x74), &TempFloat, sizeof(float), NULL))
 			{
 
@@ -505,6 +508,11 @@ void TickUpdates()
 		JammingToggle();
 	}
 
+	if(LockEvidence == true)
+	{
+		ChangeWrightEvidence();
+	}
+
 	LeftSideInputDisplay();
 
 }
@@ -593,7 +601,7 @@ void SetIndividualCharacterHealth()
 		}
 
 		//Applies the requested values to the characters' red health as well.
-		if (AlsoSetRedHealth == true)
+		if (AlsoSetRedHealthP1 == true)
 		{
 			//P1 Character 1.
 			//*(float*)_addr(P1Character1Data + 0x1558) = P1C1MaxHP * P1Char1Health;
@@ -612,6 +620,26 @@ void SetIndividualCharacterHealth()
 
 			}
 
+
+
+			//P1 Character 2.
+			//*(float*)_addr(P1Character2Data + 0x1558) = P1C2MaxHP * P1Char3Health;
+
+			//P1 Character 3.
+			//*(float*)_addr(P1Character3Data + 0x1558) = P1C3MaxHP * P1Char3Health;
+
+			//P2 Character 1.
+			//*(float*)_addr(P2Character1Data + 0x1558) = P2C1MaxHP * P2Char1Health;
+
+			//P2 Character 2.
+			//*(float*)_addr(P2Character2Data + 0x1558) = P2C2MaxHP * P2Char2Health;
+
+			//P2 Character 3.
+			//*(float*)_addr(P2Character3Data + 0x1558) = P2C3MaxHP * P2Char3Health;
+		}
+
+		if (AlsoSetRedHealthP2 == true)
+		{
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1558), &P2Char1HealthNew, sizeof(P2Char1HealthNew), NULL))
 			{
 
@@ -626,6 +654,8 @@ void SetIndividualCharacterHealth()
 			{
 
 			}
+
+
 
 			//P1 Character 2.
 			//*(float*)_addr(P1Character2Data + 0x1558) = P1C2MaxHP * P1Char3Health;
@@ -4410,6 +4440,7 @@ void ResetSettings()
 	P2Char2Speed = 1.0;
 	P2Char3Speed = 1.0;
 	MoveInputDisplay = false;
+	LockEvidence = false;
 	ResetGameSpeed();
 	SetGlobalPlayerSpeed(1);
 	RemoveAllInstalls();
