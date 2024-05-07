@@ -407,6 +407,8 @@ static void gui::TheCharacterOptionsTab()
 			{
 				ChangeFrankLevel(FrankLevel);
 			}
+			if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+				ImGui::SetTooltip("Sets Frank West's level. His Prestige Points will be\nset to the lowest amount required for that level.");
 		}
 
 		ImGui::Separator();
@@ -438,6 +440,8 @@ static void gui::TheCharacterOptionsTab()
 				}
 				ImGui::EndCombo();
 			}
+			if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+				ImGui::SetTooltip("Sets Mr. Wright's Evidence for this slot.");
 
 			ImGui::Text("Evidence Slot 2");
 
@@ -461,6 +465,8 @@ static void gui::TheCharacterOptionsTab()
 				}
 				ImGui::EndCombo();
 			}
+			if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+				ImGui::SetTooltip("Sets Mr. Wright's Evidence for this slot.");
 
 			ImGui::Text("Evidence Slot 3");
 
@@ -484,13 +490,17 @@ static void gui::TheCharacterOptionsTab()
 				}
 				ImGui::EndCombo();
 			}
-
+			if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+				ImGui::SetTooltip("Sets Mr. Wright's Evidence for this slot.");
 		}
 
 		if (ImGui::Checkbox("Lock Evidence", &LockEvidence))
 		{
 
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Prevents the selected Evidence from being discarded when\nrestarting Training Mode, exiting Turnabout Mode, and discarding.");
+
 
 		//ImGui::Text("Turnabout Toggle");
 		if (ImGui::Checkbox("Turnabout Toggle", &Turnabout))
@@ -500,6 +510,8 @@ static void gui::TheCharacterOptionsTab()
 				Objection();
 			}
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Activates/Deactivates Turnabout Mode with no time limit, regardless\nof Evidence. Note that the glow isn't present but the\nmode still functions.");
 
 		ImGui::SeparatorText("Phoenix/Jean");
 		//ImGui::Text("Dark Phoenix Toggle");
@@ -510,6 +522,8 @@ static void gui::TheCharacterOptionsTab()
 				PopTheBird();
 			}
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Activates Dark Phoenix, regardless of meter and health state.");
 
 		ImGui::SeparatorText("MODOK");
 		if (MODOKLOU)
@@ -523,7 +537,9 @@ static void gui::TheCharacterOptionsTab()
 				}
 			}
 		}
-		//ImGui::Text("Lock Understanding");
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Sets MODOK's level of understanding. The flame on his head\nwon't update until at least 1 LOU point is used.");
+
 		if (ImGui::Checkbox("Lock Understanding", &LockMODOKLOU))
 		{
 			if (CheckTheMode() == true)
@@ -531,6 +547,8 @@ static void gui::TheCharacterOptionsTab()
 				ChangeMODOKUnderstanding(MODOKLOU);
 			}
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Keeps MODOK's Level of Understanding at the specified value.");
 
 		ImGui::SeparatorText("Dormammu");
 		ImGui::Text("Dormammu's Spell Charges");
@@ -544,6 +562,8 @@ static void gui::TheCharacterOptionsTab()
 				SetDormSpellLevels();
 			}
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Sets Dormammu's Red Charges and locks it.\nSet to 0 for unmodified behavior.");
 
 		ImGui::Text("Power Of The Creator");
 		if (ImGui::SliderInt("Blue", &DormBlue, 0, 3))
@@ -554,7 +574,8 @@ static void gui::TheCharacterOptionsTab()
 				SetDormSpellLevels();
 			}
 		}
-
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Sets Dormammu's Blue Charges and locks it.\nSet to 0 for unmodified behavior.");
 
 		ImGui::SeparatorText("Deadpool");
 		//ImGui::Text("Deadpool Teleport");
@@ -565,6 +586,8 @@ static void gui::TheCharacterOptionsTab()
 				SetDeadpoolTeleport();
 			}
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Sets Deadpool's teleport counter. It\nbackfires after 2 successful teleports.");
 
 		if (ImGui::Checkbox("Lock Teleport Count", &FreezeDeadpoolTPCounter))
 		{
@@ -572,6 +595,8 @@ static void gui::TheCharacterOptionsTab()
 			{
 			}
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Keeps Deadpool's teleport counter at the specified value.");
 
 		ImGui::SeparatorText("Etc.");
 		//ImGui::Text("Endless Install Toggle");
@@ -582,6 +607,8 @@ static void gui::TheCharacterOptionsTab()
 				EndlessInstallBoolUpdate();
 			}
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Sets and locks the install timers to a\ncrazy high value to keep them going. Note: will only\nwork for default characters and not modded ones at the moment.");
 
 		ImGui::Separator();
 		ImGui::EndTabItem();
@@ -632,6 +659,8 @@ static void gui::TheExtraOptionsTab()
 				}
 			}
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Restarts training mode, but goes to the READY!!! state.");
 
 		if (ImGui::Button("Restart Training Mode"))
 		{
@@ -737,6 +766,8 @@ static void gui::TheExtraOptionsTab()
 		{
 
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Sets and locks P1's X Factor timer to crazy high value\nto keep it going perpetually.");
 
 		ImGui::SameLine();
 
@@ -744,6 +775,8 @@ static void gui::TheExtraOptionsTab()
 		{
 
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Sets and locks P2's X Factor timer to crazy high value\nto keep it going perpetually.");
 		ImGui::Separator();
 
 		ImGui::SeparatorText("Etc.");
@@ -765,7 +798,9 @@ static void gui::TheExtraOptionsTab()
 
 			SetGlobalPlayerSpeed(P1Char1Speed);
 		}
-		
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Sets the speed of all of Player 1's characters.\nWill effect the pitch of the characters' sounds.");
+
 		if (ImGui::DragFloat("Character Speed P2", &P2Char1Speed, 0.01f, 0.01666667f, 2.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
 		{
 
@@ -780,6 +815,8 @@ static void gui::TheExtraOptionsTab()
 
 			SetGlobalPlayerSpeed(P2Char1Speed);
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Sets the speed of all of Player 2's characters.\nWill effect the pitch of the characters' sounds.");
 
 		if (ImGui::Button("Normal Speed P1"))
 		{
@@ -852,6 +889,8 @@ static void gui::TheExtraOptionsTab()
 		{
 			LeftSideInputDisplay();
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Moves the input display to present inputs on the left side\nof the screen. Also displays them vertically.");
 
 		ImGui::Separator();
 #endif
@@ -874,17 +913,23 @@ static void gui::TheStatusOptionsTab()
 		{
 
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Be sure to turn Life Recovery off in the pause menu options\nfor this to take effect properly.");
 
 		//Toggle for Applying Health Settings to Red Health.
 		if (ImGui::Checkbox("Also Apply To P1's Red Health", &AlsoSetRedHealthP1))
 		{
 
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Applies specified HP values to red health of Player 1's team.");
 
 		if (ImGui::Checkbox("Also Apply To P2's Red Health", &AlsoSetRedHealthP2))
 		{
 
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Applies specified HP values to red health of Player 2's team.");
 
 		if (P1Char1Health)
 		{
@@ -1041,6 +1086,8 @@ static void gui::TheStatusOptionsTab()
 				SetMeters();
 			}
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Sets player 1's meter. Every level of meter is 10000.");
 		//}
 
 		//if (P2Meter)
@@ -1064,12 +1111,16 @@ static void gui::TheStatusOptionsTab()
 				SetMeters();
 			}
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Sets player 2's meter. Every level of meter is 10000.");
 		//}
 
 		if (ImGui::Checkbox("Lock P1 Meter", &LockP1Meter))
 		{
 
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Locks player 1's meter at the specified value.");
 
 		ImGui::SameLine();
 
@@ -1077,6 +1128,8 @@ static void gui::TheStatusOptionsTab()
 		{
 
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Locks player 2's meter at the specified value.");
 
 		ImGui::SeparatorText("Jamming Bomb/Reversed Controls");
 
@@ -1087,6 +1140,8 @@ static void gui::TheStatusOptionsTab()
 				JammingToggle();
 			}
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Reverses player 1's controls for this character,\ngiving them the Jamming Bomb effect.\nNote that no VFX is present when using this.");
 
 		if (ImGui::Checkbox("Player 1 Character 2", &P1C2Jammed))
 		{
@@ -1095,6 +1150,8 @@ static void gui::TheStatusOptionsTab()
 				JammingToggle();
 			}
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Reverses player 1's controls for this character,\ngiving them the Jamming Bomb effect.\nNote that no VFX is present when using this.");
 
 		if (ImGui::Checkbox("Player 1 Character 3", &P1C3Jammed))
 		{
@@ -1103,6 +1160,8 @@ static void gui::TheStatusOptionsTab()
 				JammingToggle();
 			}
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Reverses player 1's controls for this character,\ngiving them the Jamming Bomb effect.\nNote that no VFX is present when using this.");
 
 		if (ImGui::Checkbox("Player 2 Character 1", &P2C1Jammed))
 		{
@@ -1111,6 +1170,8 @@ static void gui::TheStatusOptionsTab()
 				JammingToggle();
 			}
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Reverses player 2's controls for this character,\ngiving them the Jamming Bomb effect.\nNote that no VFX is present when using this.");
 
 		if (ImGui::Checkbox("Player 2 Character 2", &P2C2Jammed))
 		{
@@ -1119,6 +1180,8 @@ static void gui::TheStatusOptionsTab()
 				JammingToggle();
 			}
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Reverses player 2's controls for this character,\ngiving them the Jamming Bomb effect.\nNote that no VFX is present when using this.");
 
 		if (ImGui::Checkbox("Player 2 Character 3", &P2C3Jammed))
 		{
@@ -1127,6 +1190,9 @@ static void gui::TheStatusOptionsTab()
 				JammingToggle();
 			}
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Reverses player 2's controls for this character,\ngiving them the Jamming Bomb effect.\nNote that no VFX is present when using this.");
+
 		ImGui::Separator();
 
 		ImGui::Text("More stuff coming soon!");
@@ -1148,11 +1214,15 @@ static void gui::TheIncomingStuffTab()
 		if (ImGui::SliderInt("Frames Until Death", &FrameDelayofDeath, 0, 300))
 		{
 		}
-		
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Delays the death on training mode restart by the speciifed\nframes. 60 frames in a second. Try this\nif you want to have a charged action when doing incomings.");
+
 		if (ImGui::SliderFloat("Position of KO", &DeathSiteX, -800.0f, 800.0f))
 		{
 
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Sets Position of the character before they die.");
 
 		if (ImGui::Checkbox("KO Player 1's Active Character At Training Mode Restart", &KOActiveCharacterAtStart))
 		{
@@ -1160,6 +1230,8 @@ static void gui::TheIncomingStuffTab()
 			{
 			}
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Sets Player 1's character to die upon Training Mode restart.");
 
 		if (ImGui::Checkbox("KO Player 2's Active Character At Training Mode Restart", &KOActiveOpponentAtStart))
 		{
@@ -1167,34 +1239,36 @@ static void gui::TheIncomingStuffTab()
 			{
 			}
 		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Sets Player 2's character to die upon Training mode restart.");
 
 		ImGui::SeparatorText("KO Toggles");
 
-		if (ImGui::Checkbox("Player 1 Character 1 Dead", &Player1Character1Dead))
+		if (ImGui::Checkbox("Player 1 C1", &Player1Character1Dead))
 		{
 			KOToggles();
 		}
 		ImGui::SameLine();
-		if (ImGui::Checkbox("Player 1 Character 2 Dead", &Player1Character2Dead))
+		if (ImGui::Checkbox("Player 1 C2", &Player1Character2Dead))
 		{
 			KOToggles();
 		}
 		ImGui::SameLine();
-		if (ImGui::Checkbox("Player 1 Character 3 Dead", &Player1Character3Dead))
+		if (ImGui::Checkbox("Player 1 C3", &Player1Character3Dead))
 		{
 			KOToggles();
 		}
-		if (ImGui::Checkbox("Player 2 Character 1 Dead", &Player2Character1Dead))
-		{
-			KOToggles();
-		}
-		ImGui::SameLine();
-		if (ImGui::Checkbox("Player 2 Character 2 Dead", &Player2Character2Dead))
+		if (ImGui::Checkbox("Player 2 C1", &Player2Character1Dead))
 		{
 			KOToggles();
 		}
 		ImGui::SameLine();
-		if (ImGui::Checkbox("Player 2 Character 3 Dead", &Player2Character3Dead))
+		if (ImGui::Checkbox("Player 2 C2", &Player2Character2Dead))
+		{
+			KOToggles();
+		}
+		ImGui::SameLine();
+		if (ImGui::Checkbox("Player 2 C3", &Player2Character3Dead))
 		{
 			KOToggles();
 		}
