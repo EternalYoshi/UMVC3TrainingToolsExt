@@ -375,7 +375,7 @@ static void gui::TheMenuBar()
 void gui::TheAboutWindow(bool* p_open)
 {
 	ImGui::SetNextWindowSize({ 400, 400 }, ImGuiCond_FirstUseEver);
-	if (!ImGui::Begin("UMVC3 Training Tools Mod V0.6", p_open))
+	if (!ImGui::Begin("UMVC3 Training Tools Mod V0.6X", p_open))
 	{
 		ImGui::End();
 		return;
@@ -411,7 +411,15 @@ static void gui::TheCharacterOptionsTab()
 				ImGui::SetTooltip("Sets Frank West's level. His Prestige Points will be\nset to the lowest amount required for that level.");
 		}
 
-		ImGui::Separator();
+#ifdef _DEBUG
+		/*
+		ImGui::SeparatorText("Vergil");
+		if (ImGui::Checkbox("Endless Spiral Swords", &VergilSpiralSwordsForever))
+		{
+
+		}
+		*/
+#endif
 
 		ImGui::SeparatorText("Phoenix Wright");
 
@@ -854,7 +862,7 @@ static void gui::TheExtraOptionsTab()
 
 		ImGui::SameLine();
 
-		if (ImGui::Button("Vale of Mist Slow Slow Speed P2"))
+		if (ImGui::Button("Vale of Mist Slow Speed P2"))
 		{
 			P2Char1Speed = 0.66666666667;
 			SetGlobalPlayerSpeed(P1Char1Speed);
@@ -1217,12 +1225,18 @@ static void gui::TheIncomingStuffTab()
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
 			ImGui::SetTooltip("Delays the death on training mode restart by the speciifed\nframes. 60 frames in a second. Try this\nif you want to have a charged action when doing incomings.");
 
-		if (ImGui::SliderFloat("Position of KO", &DeathSiteX, -800.0f, 800.0f))
+		if (ImGui::SliderFloat("Position of KO: X", &DeathSiteX, -800.0f, 800.0f))
 		{
 
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Sets Position of the character before they die.");
+			ImGui::SetTooltip("Sets horizotnal position of the character before they die.");
+		if (ImGui::SliderFloat("Position of KO: Y", &DeathSiteY, 0.0f, 2000.0f))
+		{
+
+		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip("Sets vertical position of the character before they die.");
 
 		if (ImGui::Checkbox("KO Player 1's Active Character At Training Mode Restart", &KOActiveCharacterAtStart))
 		{
@@ -2175,7 +2189,7 @@ void gui::Render() noexcept
 	ImGui::SetNextWindowPos({ 0,0 }, ImGuiCond_FirstUseEver);
 
 	ImGui::Begin(
-		"UMVC3 Training Tools Mod V0.6 By Eternal Yoshi",
+		"UMVC3 Training Tools Mod V0.6X By Eternal Yoshi",
 		&exit,
 		ImGuiWindowFlags_MenuBar |
 		ImGuiWindowFlags_NoResize |

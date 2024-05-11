@@ -381,6 +381,7 @@ inline uintptr_t Player1TeamTable;
 inline uintptr_t Player2TeamTable;
 inline uintptr_t InputDisplayDataPointer;
 inline bool MoveInputDisplay = false;
+inline bool VergilSpiralSwordsForever = false;
 
 inline std::string ThreeHookPath = "E:\\ULTIMATE MARVEL VS. CAPCOM 3\\Scripts\\ThreeHook.asi";
 
@@ -870,6 +871,42 @@ inline FighterInstall Jammed =
 	-0
 };
 
+inline FighterInstall VergilSwords =
+{
+	1084673544,//IdentifyingHashA
+	1,//IdentifyingHashA
+	0,//InstallID
+	34,//mType
+	0.0,//Duration
+	220,//PossibleRelatedAnmchrEntry
+	0,
+	0,
+	0,//mLifeAdd
+	0,
+	0,
+	0,
+	1.0,
+	0.0,//Meter Gain
+	1.0,
+	1.0,
+	1.0,
+	1.0,
+	-1.0,
+	-1,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	-1,
+	-0
+};
+
 inline std::vector<Hurtbox> P1C1Hurtboxes;
 inline std::vector<Hurtbox> P1C2Hurtboxes;
 inline std::vector<Hurtbox> P1C3Hurtboxes;
@@ -929,6 +966,10 @@ void SetDormSpellLevels();
 void EndlessInstallBoolUpdate();
 
 void SetDeadpoolTeleport();
+
+void VergilSpiralSwords();
+
+void TurnOnTheSwords();
 
 void ErrorOccured(DWORD errorMessageID);
 

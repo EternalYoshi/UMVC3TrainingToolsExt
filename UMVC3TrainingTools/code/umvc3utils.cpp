@@ -478,6 +478,11 @@ void TickUpdates()
 		Objection();
 	}
 
+	if(VergilSpiralSwordsForever == true)
+	{
+		VergilSpiralSwords();
+	}
+
 	if (LockMODOKLOU == true)
 	{
 		ChangeMODOKUnderstanding(MODOKLOU);
@@ -1699,6 +1704,109 @@ void SetDeadpoolTeleport()
 
 
 }
+
+void VergilSpiralSwords()
+{
+	int8_t SSOn = 1;
+	int8_t SSOff = 0;
+	GetPlayerData();
+	GetCharacterIDs();
+
+	if (P1Character1ID == 22)
+	{
+		if (VergilSpiralSwordsForever == true)
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x15F0), &VergilSwords, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f0), &SSOn, sizeof(SSOn), NULL))
+			{
+
+			}
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f1), &SSOn, sizeof(SSOn), NULL))
+			{
+
+			}
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f2), &SSOn, sizeof(SSOn), NULL))
+			{
+
+			}
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f3), &SSOn, sizeof(SSOn), NULL))
+			{
+
+			}
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f4), &SSOn, sizeof(SSOn), NULL))
+			{
+
+			}
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f5), &SSOn, sizeof(SSOn), NULL))
+			{
+
+			}
+		}
+		else
+		{
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x15F0), &EmptyInstall, sizeof(FighterInstall), NULL))
+			{
+
+			}
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f0), &SSOff, sizeof(SSOff), NULL))
+			{
+
+			}
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f1), &SSOff, sizeof(SSOff), NULL))
+			{
+
+			}
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f2), &SSOff, sizeof(SSOff), NULL))
+			{
+
+			}
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f3), &SSOff, sizeof(SSOff), NULL))
+			{
+
+			}
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f4), &SSOff, sizeof(SSOff), NULL))
+			{
+
+			}
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f5), &SSOff, sizeof(SSOff), NULL))
+			{
+
+			}
+
+		}
+	}
+
+	if (P1Character2ID == 22)
+	{
+
+	}
+
+	if (P1Character3ID == 22)
+	{
+
+	}
+
+	if (P2Character1ID == 22)
+	{
+
+	}
+
+	if (P2Character2ID == 22)
+	{
+
+	}
+
+	if (P2Character3ID == 22)
+	{
+
+	}
+
+}
+
+void TurnOnTheSwords(){}
 
 void ErrorOccured(DWORD errorMessageID)
 {
@@ -4076,82 +4184,234 @@ void TheKillingFloor()
 	int FlagA = 89;
 	int FlagB = 0;
 	int FlagC = 1050672;
-	//char FlagD = 89;
-	//char FlagE = 89;
+	int FlagD = 85;
+	int FlagE = 87;
+	int FlagF = 131104;
+	int FlagG = 73728;
+	int FlagH = 525313;
+	int FlagI = 131104;
+	int FlagJ = 73404422;
+	//char FlagK = 131104;
 
-	if (KOActiveCharacterAtStart)
+	if(DeathSiteY > 0)
 	{
-
-		//X Coordinate.
-		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x50), &DeathSiteX, sizeof(float), NULL))
+		if (KOActiveCharacterAtStart)
 		{
 
-		}
+			//X Coordinate.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x50), &DeathSiteX, sizeof(float), NULL))
+			{
 
-		//Action/Anm thing.
-		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1310), &FlagA, sizeof(int), NULL))
+			}
+			//Y Coordinate.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x54), &DeathSiteY, sizeof(float), NULL))
+			{
+
+			}
+
+			//Air/Ground State.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x14F4), &FlagF, sizeof(int), NULL))
+			{
+
+			}
+
+			//Something Part 1.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1504), &FlagG, sizeof(int), NULL))
+			{
+
+			}
+
+			//Something Part 2.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1508), &FlagH, sizeof(int), NULL))
+			{
+
+			}
+
+			Sleep(15);
+			//Sets Health and Red Health to 0.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1550), &FlagB, sizeof(int), NULL))
+			{
+
+			}
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1558), &FlagB, sizeof(int), NULL))
+			{
+
+			}
+
+			Sleep(15);
+
+			//Action/Anm thing.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1310), &FlagD, sizeof(int), NULL))
+			{
+
+			}
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1314), &FlagE, sizeof(int), NULL))
+			{
+
+			}
+
+			//TagState Flag Thing.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x14F0), &FlagC, sizeof(int), NULL))
+			{
+
+			}
+
+			//I dunno what this is.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x14F8), &FlagJ, sizeof(int), NULL))
+			{
+
+			}
+
+		}
+		if (KOActiveOpponentAtStart)
 		{
+			//X Coordinate.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x50), &DeathSiteX, sizeof(float), NULL))
+			{
+
+			}
+			//Y Coordinate.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x54), &DeathSiteY, sizeof(float), NULL))
+			{
+
+			}
+
+			//Air/Ground State.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x14F4), &FlagF, sizeof(int), NULL))
+			{
+
+			}
+
+			//Something Part 1.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1504), &FlagG, sizeof(int), NULL))
+			{
+
+			}
+
+			//Something Part 2.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1508), &FlagH, sizeof(int), NULL))
+			{
+
+			}
+
+			Sleep(16.67);
+			//Sets Health and Red Health to 0.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1550), &FlagB, sizeof(int), NULL))
+			{
+
+			}
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1558), &FlagB, sizeof(int), NULL))
+			{
+
+			}
+
+			Sleep(16.67);
+
+			//Action/Anm thing.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1310), &FlagD, sizeof(int), NULL))
+			{
+
+			}
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1314), &FlagE, sizeof(int), NULL))
+			{
+
+			}
+
+			//TagState Flag Thing.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x14F0), &FlagC, sizeof(int), NULL))
+			{
+
+			}
+
+			//I dunno what this is.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x14F8), &FlagJ, sizeof(int), NULL))
+			{
+
+			}
 
 		}
-		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1314), &FlagA, sizeof(int), NULL))
-		{
-
-		}
-
-		//Sets Health and Red Health to 0.
-		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1550), &FlagB, sizeof(int), NULL))
-		{
-
-		}
-		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1558), &FlagB, sizeof(int), NULL))
-		{
-
-		}
-
-		//TagState Flag Thing.
-		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x14F0), &FlagC, sizeof(int), NULL))
-		{
-
-		}
-
 	}
-	if (KOActiveOpponentAtStart)
+	else 
 	{
+		if (KOActiveCharacterAtStart)
+		{			
+			//Sets Health and Red Health to 0.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1550), &FlagB, sizeof(int), NULL))
+			{
 
-		//X Coordinate.
-		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x50), &DeathSiteX, sizeof(float), NULL))
-		{
+			}
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1558), &FlagB, sizeof(int), NULL))
+			{
+
+			}
+
+			Sleep(16.67);
+
+			//X Coordinate.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x50), &DeathSiteX, sizeof(float), NULL))
+			{
+
+			}
+
+			//Action/Anm thing.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1310), &FlagA, sizeof(int), NULL))
+			{
+
+			}
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1314), &FlagA, sizeof(int), NULL))
+			{
+
+			}
+
+
+
+			//TagState Flag Thing.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x14F0), &FlagC, sizeof(int), NULL))
+			{
+
+			}
 
 		}
-
-		//Action/Anm thing.
-		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1310), &FlagA, sizeof(int), NULL))
+		if (KOActiveOpponentAtStart)
 		{
+			//Sets Health and Red Health to 0.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1550), &FlagB, sizeof(int), NULL))
+			{
+
+			}
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1558), &FlagB, sizeof(int), NULL))
+			{
+
+			}			
+			
+			Sleep(16.67);
+
+			//X Coordinate.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x50), &DeathSiteX, sizeof(float), NULL))
+			{
+
+			}
+
+			//Action/Anm thing.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1310), &FlagA, sizeof(int), NULL))
+			{
+
+			}
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1314), &FlagA, sizeof(int), NULL))
+			{
+
+			}
+
+
+
+			//TagState Flag Thing.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x14F0), &FlagC, sizeof(int), NULL))
+			{
+
+			}
 
 		}
-		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1314), &FlagA, sizeof(int), NULL))
-		{
-
-		}
-
-		//Sets Health and Red Health to 0.
-		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1550), &FlagB, sizeof(int), NULL))
-		{
-
-		}
-		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1558), &FlagB, sizeof(int), NULL))
-		{
-
-		}
-
-		//TagState Flag Thing.
-		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x14F0), &FlagC, sizeof(int), NULL))
-		{
-
-		}
-
 	}
-
 
 }
 
@@ -4444,6 +4704,7 @@ void ResetSettings()
 	LockP2Meter = false;
 	AlsoSetRedHealthP1 = false;
 	AlsoSetRedHealthP2 = false;
+	VergilSpiralSwordsForever = false;	
 	ResetGameSpeed();
 	SetGlobalPlayerSpeed(1);
 	RemoveAllInstalls();
