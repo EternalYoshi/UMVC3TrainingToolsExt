@@ -54,6 +54,7 @@ inline int SaveStateSlot = 0;
 inline int DormRed = 0;
 inline int DormBlue = 0;
 inline bool DormSpellSet = false;
+inline bool VeilOfMistForever = false;
 inline bool EndlessInstalls = false;
 inline int DeadpoolTeleportCount = 0;
 inline bool FreezeDeadpoolTPCounter = false;
@@ -887,6 +888,42 @@ inline FighterInstall VergilSwords =
 	0,
 	1.0,
 	0.0,//Meter Gain
+	1.0,
+	1.0,
+	1.0,
+	1.0,
+	-1.0,
+	-1,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	0,
+	-1,
+	-0
+};
+
+inline FighterInstall VeilOfMist =
+{
+	1084673544,//IdentifyingHashA
+	1,//IdentifyingHashA
+	65537,//InstallID
+	20,//mType
+	0.0,//Duration
+	222,//PossibleRelatedAnmchrEntry
+	0,
+	128,
+	0,//mLifeAdd
+	0,
+	0,
+	0,
+	1.0,
+	1.0,//Meter Gain
 	1.0,
 	1.0,
 	1.0,
