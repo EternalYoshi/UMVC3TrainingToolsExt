@@ -347,90 +347,115 @@ void LeftSideInputDisplay()
 		uintptr_t TempC = 0;
 		uintptr_t TempD = 0;
 		uintptr_t TempE = 0;
-
+		uintptr_t TempF = 0;
+		uintptr_t TempG = 0;
 		float TempFloat = 0.0;
+		float TempFloatTwo = 0.7;
 		ReadProcessMemory(hProcess, (LPVOID*)0x140E1BC98, &TempA, sizeof(uintptr_t), 0);
 		ReadProcessMemory(hProcess, (LPVOID*)(TempA + 0x70), &TempB, sizeof(uintptr_t), 0);
 		ReadProcessMemory(hProcess, (LPVOID*)(TempB + 0x20), &TempC, sizeof(uintptr_t), 0);
 		ReadProcessMemory(hProcess, (LPVOID*)(TempC + 0x70), &TempD, sizeof(uintptr_t), 0);
 		//ReadProcessMemory(hProcess, (LPVOID*)(TempD), &TempE, sizeof(uintptr_t), 0);
 
-		InputDisplayDataPointer = TempD;
+		uBtKeyDisp = TempD;
 
-		if (TempA == 0 || TempB == 0 || TempC == 0 || InputDisplayDataPointer == 0)
+		if (TempA == 0 || TempB == 0 || TempC == 0 || uBtKeyDisp == 0)
 		{
 		}
 		else
 		{
 			//InputDisplayDataPointer stuff.
-			TempFloat = 12;
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(InputDisplayDataPointer + 0x70), &TempFloat, sizeof(float), NULL))
+			TempFloat = 15;
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x70), &TempFloat, sizeof(float), NULL))
 			{
 
 			}
 
-			TempFloat = 100;
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(InputDisplayDataPointer + 0x74), &TempFloat, sizeof(float), NULL))
+			TempFloat = 15;
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x74), &TempFloat, sizeof(float), NULL))
 			{
 
 			}
 
 			TempFloat = 0;
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(InputDisplayDataPointer + 0x78), &TempFloat, sizeof(float), NULL))
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x78), &TempFloat, sizeof(float), NULL))
 			{
 
 			}
 
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(InputDisplayDataPointer + 0x7C), &TempFloat, sizeof(float), NULL))
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x7C), &TempFloat, sizeof(float), NULL))
 			{
 
 			}
 
 			TempFloat = 0.00146484;
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(InputDisplayDataPointer + 0x80), &TempFloat, sizeof(float), NULL))
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x80), &TempFloat, sizeof(float), NULL))
 			{
 
 			}
 
-			TempFloat = 1;
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(InputDisplayDataPointer + 0x84), &TempFloat, sizeof(float), NULL))
+			TempFloat = 0.7;
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x84), &TempFloat, sizeof(float), NULL))
 			{
 
 			}
 
 			TempFloat = 0;
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(InputDisplayDataPointer + 0x88), &TempFloat, sizeof(float), NULL))
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x88), &TempFloat, sizeof(float), NULL))
 			{
 
 			}
 
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(InputDisplayDataPointer + 0x8C), &TempFloat, sizeof(float), NULL))
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x8C), &TempFloat, sizeof(float), NULL))
 			{
 
 			}
 
-			TempFloat = 1;
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(InputDisplayDataPointer + 0x90), &TempFloat, sizeof(float), NULL))
+			TempFloat = 0.7;
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x90), &TempFloat, sizeof(float), NULL))
 			{
 
 			}
 
 			TempFloat = 0.00146484;
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(InputDisplayDataPointer + 0x94), &TempFloat, sizeof(float), NULL))
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x94), &TempFloat, sizeof(float), NULL))
 			{
 
 			}
 
 			TempFloat = 0;
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(InputDisplayDataPointer + 0x98), &TempFloat, sizeof(float), NULL))
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x98), &TempFloat, sizeof(float), NULL))
 			{
 
 			}
 
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(InputDisplayDataPointer + 0x9C), &TempFloat, sizeof(float), NULL))
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x9C), &TempFloat, sizeof(float), NULL))
 			{
 
 			}
+		
+			//Part Two. This part gets the uBtKeyDispBtn table for scaling purposes. I wonder if I can do this without
+			//affecting perforamnce...
+			
+			ReadProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x50), &ButtonCount, sizeof(int), 0);
+			ReadProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x60), &uBtKeyDispBtnTable, sizeof(uBtKeyDispBtnTable), 0);
+			TempF = uBtKeyDispBtnTable;
+			for(int v = 0; v < ButtonCount; v++)
+			{
+				ReadProcessMemory(hProcess, (LPVOID*)(TempF), &TempG, sizeof(TempG), 0);
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(TempG + 0x60), &TempFloatTwo, sizeof(TempFloatTwo), NULL))
+				{
+
+				}
+
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(TempG + 0x64), &TempFloatTwo, sizeof(TempFloatTwo), NULL))
+				{
+
+				}
+
+				TempF = TempF + 0x08;
+			}
+
 		}
 	}
 

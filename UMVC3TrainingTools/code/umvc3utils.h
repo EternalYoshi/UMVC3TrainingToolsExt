@@ -380,7 +380,9 @@ inline uintptr_t Player1ActiveCharacter;
 inline uintptr_t Player2ActiveCharacter;
 inline uintptr_t Player1TeamTable;
 inline uintptr_t Player2TeamTable;
-inline uintptr_t InputDisplayDataPointer;
+inline uintptr_t uBtKeyDisp;
+inline int ButtonCount;
+inline uintptr_t uBtKeyDispBtnTable;
 inline bool MoveInputDisplay = false;
 inline bool VergilSpiralSwordsForever = false;
 
