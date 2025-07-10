@@ -165,10 +165,10 @@ DWORD ProtectedMultiWrite(DWORD64 AddressToWrite, int length, HANDLE hProcess, B
 bool CheckTheMode()
 {
 	//Reads The Needed Pointer.
-	ReadProcessMemory(hProcess, (LPVOID*)0x140d50e58, &StrangeTable, sizeof(uintptr_t), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)0x140d50e58, &sBattleSetting, sizeof(uintptr_t), 0);
 
 	//Reads the match/menu flag.
-	ReadProcessMemory(hProcess, (LPVOID*)(StrangeTable + 0x34C), &GameMode, sizeof(int), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(sBattleSetting + 0x34C), &GameMode, sizeof(int), 0);
 
 	if (GameMode == 5)
 	{
@@ -187,20 +187,20 @@ void GetMainPointers()
 	{
 
 		//Reads The Needed Pointers.
-		ReadProcessMemory(hProcess, (LPVOID*)0x140d533e0, &mysterytable, sizeof(uintptr_t), 0);
-		ReadProcessMemory(hProcess, (LPVOID*)0x140d47e68, &block2, sizeof(uintptr_t), 0);
-		ReadProcessMemory(hProcess, (LPVOID*)0x140d50e58, &ptable, sizeof(uintptr_t), 0);
-		team1ptr = block2 + 0x350;
-		team2ptr = block2 + 0x610;
+		ReadProcessMemory(hProcess, (LPVOID*)0x140d533e0, &gSound, sizeof(uintptr_t), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)0x140d47e68, &sAction, sizeof(uintptr_t), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)0x140d50e58, &sBattleSetting, sizeof(uintptr_t), 0);
+		team1ptr = sAction + 0x350;
+		team2ptr = sAction + 0x610;
 
 		//Gets better Pointers.
-		ReadProcessMemory(hProcess, (LPVOID*)0x140D44A70, &TysonTable, sizeof(uintptr_t), 0);
-		ReadProcessMemory(hProcess, (LPVOID*)(TysonTable + 0x58), &Player1CharNodeTree, sizeof(uintptr_t), 0);
-		ReadProcessMemory(hProcess, (LPVOID*)(TysonTable + 0x328), &Player2CharNodeTree, sizeof(uintptr_t), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)0x140D44A70, &sCharacter, sizeof(uintptr_t), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(sCharacter + 0x58), &Player1CharNodeTree, sizeof(uintptr_t), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(sCharacter + 0x328), &Player2CharNodeTree, sizeof(uintptr_t), 0);
 
 		//Gets More Pointers.
-		ReadProcessMemory(hProcess, (LPVOID*)(block2 + 0x350), &Player1TeamTable, sizeof(uintptr_t), 0);
-		ReadProcessMemory(hProcess, (LPVOID*)(block2 + 0x610), &Player2TeamTable, sizeof(uintptr_t), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(sAction + 0x350), &Player1TeamTable, sizeof(uintptr_t), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(sAction + 0x610), &Player2TeamTable, sizeof(uintptr_t), 0);
 
 	}
 }
@@ -211,12 +211,12 @@ void GetCharacterIDs()
 	if (GameMode == 5)
 	{
 
-		ReadProcessMemory(hProcess, (LPVOID*)(ptable + 0x44), &P1Character1ID, sizeof(int), 0);
-		ReadProcessMemory(hProcess, (LPVOID*)(ptable + 0x44 + 0x58), &P1Character2ID, sizeof(int), 0);
-		ReadProcessMemory(hProcess, (LPVOID*)(ptable + 0x44 + 0x58 + 0x58), &P1Character3ID, sizeof(int), 0);
-		ReadProcessMemory(hProcess, (LPVOID*)(ptable + 0x44 + 0x58 + 0x58 + 0x58), &P2Character1ID, sizeof(int), 0);
-		ReadProcessMemory(hProcess, (LPVOID*)(ptable + 0x44 + 0x58 + 0x58 + 0x58 + 0x58), &P2Character2ID, sizeof(int), 0);
-		ReadProcessMemory(hProcess, (LPVOID*)(ptable + 0x44 + 0x58 + 0x58 + 0x58 + 0x58 + 0x58), &P2Character3ID, sizeof(int), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(sBattleSetting + 0x44), &P1Character1ID, sizeof(int), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(sBattleSetting + 0x44 + 0x58), &P1Character2ID, sizeof(int), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(sBattleSetting + 0x44 + 0x58 + 0x58), &P1Character3ID, sizeof(int), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(sBattleSetting + 0x44 + 0x58 + 0x58 + 0x58), &P2Character1ID, sizeof(int), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(sBattleSetting + 0x44 + 0x58 + 0x58 + 0x58 + 0x58), &P2Character2ID, sizeof(int), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(sBattleSetting + 0x44 + 0x58 + 0x58 + 0x58 + 0x58 + 0x58), &P2Character3ID, sizeof(int), 0);
 
 	}
 }
@@ -248,9 +248,6 @@ void GetPlayerData()
 
 		ReadProcessMemory(hProcess, (LPVOID*)(Player1TeamTable + 0x48), &Player1ActiveCharacter, sizeof(int), 0);
 		ReadProcessMemory(hProcess, (LPVOID*)(Player2TeamTable + 0x48), &Player2ActiveCharacter, sizeof(int), 0);
-
-
-
 
 		/*
 		if (scriptableFighters[0].name == nullptr) {
@@ -295,7 +292,7 @@ void RestartWithChanges()
 	{
 		PopTheBird();
 	}
-	if(LockEvidence == true)
+	if (LockEvidence == true)
 	{
 		ChangeWrightEvidence();
 	}
@@ -337,6 +334,24 @@ void EndlessXFactorUpdate()
 
 }
 
+//Checks for valid vtable address at start of struct to hopefully stop crashing/running when input display is either off or not present.
+bool InputDisplayValidator()
+{
+
+	long vftaddress = 0;
+	ReadProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp), &vftaddress, sizeof(vftaddress), 0);
+
+	if (vftaddress == 5380359088)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+	return false;
+}
+
 void LeftSideInputDisplay()
 {
 	if (MoveInputDisplay == true)
@@ -359,104 +374,109 @@ void LeftSideInputDisplay()
 
 		uBtKeyDisp = TempD;
 
-		if (TempA == 0 || TempB == 0 || TempC == 0 || uBtKeyDisp == 0)
+		if (InputDisplayValidator())
 		{
-		}
-		else
-		{
-			//InputDisplayDataPointer stuff.
-			TempFloat = 15;
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x70), &TempFloat, sizeof(float), NULL))
+			if (TempA == 0 || TempB == 0 || TempC == 0 || uBtKeyDisp == 0)
 			{
-
 			}
-
-			TempFloat = 15;
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x74), &TempFloat, sizeof(float), NULL))
+			else
 			{
-
-			}
-
-			TempFloat = 0;
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x78), &TempFloat, sizeof(float), NULL))
-			{
-
-			}
-
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x7C), &TempFloat, sizeof(float), NULL))
-			{
-
-			}
-
-			TempFloat = 0.00146484;
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x80), &TempFloat, sizeof(float), NULL))
-			{
-
-			}
-
-			TempFloat = 0.7;
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x84), &TempFloat, sizeof(float), NULL))
-			{
-
-			}
-
-			TempFloat = 0;
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x88), &TempFloat, sizeof(float), NULL))
-			{
-
-			}
-
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x8C), &TempFloat, sizeof(float), NULL))
-			{
-
-			}
-
-			TempFloat = 0.7;
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x90), &TempFloat, sizeof(float), NULL))
-			{
-
-			}
-
-			TempFloat = 0.00146484;
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x94), &TempFloat, sizeof(float), NULL))
-			{
-
-			}
-
-			TempFloat = 0;
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x98), &TempFloat, sizeof(float), NULL))
-			{
-
-			}
-
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x9C), &TempFloat, sizeof(float), NULL))
-			{
-
-			}
-		
-			//Part Two. This part gets the uBtKeyDispBtn table for scaling purposes. I wonder if I can do this without
-			//affecting perforamnce...
-			
-			ReadProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x50), &ButtonCount, sizeof(int), 0);
-			ReadProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x60), &uBtKeyDispBtnTable, sizeof(uBtKeyDispBtnTable), 0);
-			TempF = uBtKeyDispBtnTable;
-			for(int v = 0; v < ButtonCount; v++)
-			{
-				ReadProcessMemory(hProcess, (LPVOID*)(TempF), &TempG, sizeof(TempG), 0);
-				if (!WriteProcessMemory(hProcess, (LPVOID*)(TempG + 0x60), &TempFloatTwo, sizeof(TempFloatTwo), NULL))
+				//InputDisplayDataPointer stuff.
+				TempFloat = 15;
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x70), &TempFloat, sizeof(float), NULL))
 				{
 
 				}
 
-				if (!WriteProcessMemory(hProcess, (LPVOID*)(TempG + 0x64), &TempFloatTwo, sizeof(TempFloatTwo), NULL))
+				TempFloat = 15;
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x74), &TempFloat, sizeof(float), NULL))
 				{
 
 				}
 
-				TempF = TempF + 0x08;
+				TempFloat = 0;
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x78), &TempFloat, sizeof(float), NULL))
+				{
+
+				}
+
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x7C), &TempFloat, sizeof(float), NULL))
+				{
+
+				}
+
+				TempFloat = 0.00146484;
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x80), &TempFloat, sizeof(float), NULL))
+				{
+
+				}
+
+				TempFloat = 0.7;
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x84), &TempFloat, sizeof(float), NULL))
+				{
+
+				}
+
+				TempFloat = 0;
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x88), &TempFloat, sizeof(float), NULL))
+				{
+
+				}
+
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x8C), &TempFloat, sizeof(float), NULL))
+				{
+
+				}
+
+				TempFloat = 0.7;
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x90), &TempFloat, sizeof(float), NULL))
+				{
+
+				}
+
+				TempFloat = 0.00146484;
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x94), &TempFloat, sizeof(float), NULL))
+				{
+
+				}
+
+				TempFloat = 0;
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x98), &TempFloat, sizeof(float), NULL))
+				{
+
+				}
+
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x9C), &TempFloat, sizeof(float), NULL))
+				{
+
+				}
+
+				//Part Two. This part gets the uBtKeyDispBtn table for scaling purposes. I wonder if I can do this without
+				//affecting perforamnce...
+
+				ReadProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x50), &ButtonCount, sizeof(int), 0);
+				ReadProcessMemory(hProcess, (LPVOID*)(uBtKeyDisp + 0x60), &uBtKeyDispBtnTable, sizeof(uBtKeyDispBtnTable), 0);
+				TempF = uBtKeyDispBtnTable;
+				for (int v = 0; v < ButtonCount; v++)
+				{
+					ReadProcessMemory(hProcess, (LPVOID*)(TempF), &TempG, sizeof(TempG), 0);
+					if (!WriteProcessMemory(hProcess, (LPVOID*)(TempG + 0x60), &TempFloatTwo, sizeof(TempFloatTwo), NULL))
+					{
+
+					}
+
+					if (!WriteProcessMemory(hProcess, (LPVOID*)(TempG + 0x64), &TempFloatTwo, sizeof(TempFloatTwo), NULL))
+					{
+
+					}
+
+					TempF = TempF + 0x08;
+				}
+
 			}
 
 		}
+
 	}
 
 }
@@ -503,7 +523,7 @@ void TickUpdates()
 		Objection();
 	}
 
-	if(VergilSpiralSwordsForever == true)
+	if (VergilSpiralSwordsForever == true)
 	{
 		VergilSpiralSwords();
 	}
@@ -536,12 +556,14 @@ void TickUpdates()
 		JammingToggle();
 	}
 
-	if(LockEvidence == true)
+	if (LockEvidence == true)
 	{
 		ChangeWrightEvidence();
 	}
 
 	LeftSideInputDisplay();
+
+	GetShots();
 
 }
 
@@ -1011,7 +1033,7 @@ void Objection()
 			{
 
 			}
-			
+
 		}
 	}
 	if (P1Character2ID == 23)
@@ -1831,7 +1853,7 @@ void VergilSpiralSwords()
 
 }
 
-void TurnOnTheSwords(){}
+void TurnOnTheSwords() {}
 
 void ErrorOccured(DWORD errorMessageID)
 {
@@ -3514,11 +3536,551 @@ void SetMeters()
 
 }
 
+void GetShots()
+{
+
+	ReadProcessMemory(hProcess, (LPVOID*)0x140D47F98, &sShotList, sizeof(uintptr_t), 0);
+	//ReadProcessMemory(hProcess, (LPVOID*)0x140D47FA8, &sShotListEnd, sizeof(uintptr_t), 0);
+	//ReadProcessMemory(hProcess, (LPVOID*)0x140D47FA0, &sTargetNode, sizeof(uintptr_t), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)0x140D47FA0, &P1Shots, sizeof(uintptr_t), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)0x140D47FC8, &P2Shots, sizeof(uintptr_t), 0);
+	//ReadProcessMemory(hProcess, (LPVOID*)0x140D47F90, &sShotList, sizeof(uintptr_t), 0);
+	//ReadProcessMemory(hProcess, (LPVOID*)(sShotList + 0x18), &sShotListEnd, sizeof(uintptr_t), 0);
+	//ReadProcessMemory(hProcess, (LPVOID*)(sShotList + 0x10), &sTargetNode, sizeof(uintptr_t), 0);
+
+
+	//uintptr_t d = 0;
+	//int c = 0;
+	//while (sTargetNode != sShotListEnd)
+	//{
+
+	//	//d = sTargetNode;
+	//	ReadProcessMemory(hProcess, (LPVOID*)(sTargetNode +0x08), &sTargetNode, sizeof(uintptr_t), 0);
+	//	c++;
+	//}
+
+	//ShotCount = c;
+
+
+
+
+}
+
 void GetDebugData()
 {
 
 	//Attempts to get Player 1 Character 1's hurtbox/hurtsphere coordinates.
 
+
+}
+
+static std::string HashToTypeName(uintptr_t Hash)
+{
+
+	switch (Hash)
+	{
+
+	//Ryu Shots.
+	case 0x140ad4eb0:
+		return "uShotLaserReflectSinkuHadouken";
+
+	case 0x140ad5330:
+		return "uShotLaserSinkuHadouken";
+
+	case 0x140ad5780:
+		return "uShotVulcanHadouken";
+
+	//Chun-Li Shots.
+
+	case 0x140a9ff60:
+		return "uShotVulcanKikouken";
+
+	case 0x140a9faf0:
+		return "uShotShieldKikousyou";
+
+	//Gouki A.K.A. Akuma Shots.
+	case 0x140ab4640:
+		return "uShotVulcanGouHadouken";
+
+	case 0x140ab41b0:
+		return "uShotLaserMessatsuGouHadou";
+
+	case 0x140ab4a90:
+		return "uShotVulcanTenmaGouZanku";
+
+	//Chris Shots.
+	case 0x140a9b050:
+		return "uShotLaserSatelliteLaser";
+
+	case 0x140a9b4c0:
+		return "uShotMissileGrenadeLauncher";
+
+	case 0x140a9b920:
+		return "uShotShieldFlameGun";
+
+	case 0x140a9bd70:
+		return "uShotVulcanFireGrenadeBomb";
+
+	case 0x140a9c210:
+		return "uShotVulcanFireGrenadeExplode";
+
+	case 0x140a9c670:
+		return "uShotVulcanFireGrenadeGroundFlame";
+
+	case 0x140a9cad0:
+		return "uShotVulcanGrenadeLauncherExplode";
+
+	case 0x140a9cf30:
+		return "uShotVulcanHandGrenadeBomb";
+
+	case 0x140a9d380:
+		return "uShotVulcanHandGrenadeExplode";
+
+	case 0x140a9d7e0:
+		return "uShotVulcanHandGun";
+
+	case 0x140a9dc30:
+		return "uShotVulcanLandMine";
+
+	case 0x140a9e0a0:
+		return "uShotVulcanLandMineExplode";
+
+	case 0x140a9e4f0:
+		return "uShotVulcanMachineGun";
+
+	case 0x140a9e940:
+		return "uShotVulcanMagnumGun";
+
+	case 0x140a9ed90:
+		return "uShotVulcanRocketLauncher";
+
+	case 0x140a9f210:
+		return "uShotVulcanSatelliteLaserLock";
+
+	case 0x140a9f6a0:
+		return "uShotVulcanShotGun";
+
+	//Wesker's Samurai Edge.
+	case 0x140ae5b40:
+		return "uShotVulcanWeskerHandGun";
+
+	//Viewtiful Joe's Shots.
+	case 0x140ae4990:
+		return "uShotVulcanBoomerang";
+
+	case 0x140ae4e10:
+		return "uShotVulcanShockingPinkBomb";
+
+	case 0x140ae5290:
+		return "uShotVulcanShockingPinkExplode";
+
+	case 0x140ae56f0:
+		return "uShotVulcanSixCannon";
+
+	//Dante's Shots.		
+	case 0x140aa10d0:
+		return "uShotLaserCrystal";
+
+	case 0x140aa1540:
+		return "uShotLaserMillionCarat";
+
+	case 0x140aa19b0:
+		return "uShotLaserThunderBolt";
+
+	case 0x140aa1e30:
+		return "uShotLaserTwister";
+
+	case 0x140aa2280:
+		return "uShotMissileHysteric";
+
+	case 0x140aa26f0:
+		return "uShotOptionGrapple";
+
+	case 0x140aa2b60:
+		return "uShotShieldJamSession";
+
+	case 0x140aa2fd0:
+		return "uShotShieldTempest";
+
+	case 0x140aa3420:
+		return "uShotVulcanAcidRain";
+
+	case 0x140aa3890:
+		return "uShotVulcanAirPlay";
+
+	case 0x140aa3cf0:
+		return "uShotVulcanBulletDanceFinish";
+
+	case 0x140aa4150:
+		return "uShotVulcanDrive";
+
+	case 0x140aa45a0:
+		return "uShotVulcanEbonyAndIvory";
+
+	case 0x140aa49f0:
+		return "uShotVulcanFireWorks";
+
+	case 0x140aa4e40:
+		return "uShotVulcanMultiLock";
+
+	case 0x140aa5290:
+		return "uShotVulcanDualShot";
+
+	//Trish.
+
+	case 0x140adfaa0:
+		return "uShotMissileTrishBullet";
+
+	case 0x140adff10:
+		return "uShotOptionSpadaBoomerang";
+
+	case 0x140ae03a0:
+		return "uShotVulcanBarrier";
+
+	case 0x140ae07f0:
+		return "uShotVulcanBarrierSpread";
+
+	case 0x140ae0c40:
+		return "uShotVulcanEnergyBolt";
+
+	//Frank.
+
+	case 0x140ab06e0:
+		return "uShotLaserLikeAMegaman";//Unused.
+
+	case 0x140ab0b50:
+		return "uShotShieldWeaponCartSpread";
+
+	case 0x140ab0ff0:
+		return "uShotShieldWildPitchHit";
+
+	case 0x140ab1460:
+		return "uShotVulcanThrowWeapon";
+
+	case 0x140ab18b0:
+		return "uShotVulcanThrowWeaponB";
+
+	case 0x140ab1d20:
+		return "uShotVulcanWeaponCart";
+
+	case 0x140ab2330:
+		return "uShotVulcanWeaponCartSpread";
+
+	case 0x140ab2780:
+		return "uShotVulcanWildPitch";
+
+	//Spencer.
+	case 0x140ad91f0:
+		return "uShotOptionAttackWire";
+
+	case 0x140ad96a0:
+		return "uShotOptionSwingWire";
+
+	case 0x140ad9b00:
+		return "uShotVulcanFurisosoguShi";//Bionic Bomber...?
+
+	case 0x140ad9f50:
+		return "uShotVulcanSwingWire";
+
+	//Arthur.
+
+	case 0x140a97a90:
+		return "uShotMissileArrow";
+
+	case 0x140a97f20:
+		return "uShotOptionSickleBoomerang";
+
+	case 0x140a983c0:
+		return "uShotShieldKnightShield";
+
+	case 0x140a98840:
+		return "uShotVulcanAxe";
+
+	case 0x140a98ca0:
+		return "uShotVulcanBraceletOfGoddess";
+
+	case 0x140a99100:
+		return "uShotVulcanCrossSword";
+
+	case 0x140a995a0:
+		return "uShotVulcanGreatSorcery";
+
+	case 0x140a99a20:
+		return "uShotVulcanJavelin";
+
+	case 0x140a99e90:
+		return "uShotVulcanKnife";
+
+	case 0x140a9a2f0:
+		return "uShotVulcanTorch";
+
+	case 0x140a9a750:
+		return "uShotVulcanTorchFirePillar";
+
+	//Amaterasu.
+
+	case 0x140a94a10:
+		return "uShotVulcanBakuen";
+
+	case 0x140a94e80:
+		return "uShotVulcanExtentThunder";
+
+	case 0x140a952e0:
+		return "uShotVulcanHyoran";
+
+	case 0x140a95760:
+		return "uShotVulcanMagatama";
+
+	case 0x140a95be0:
+		return "uShotVulcanOneSpark";
+
+	case 0x140a96070:
+		return "uShotVulcanOneSparkZan";
+
+	case 0x140a964c0:
+		return "uShotVulcanRaikou";
+
+	case 0x140a96910:
+		return "uShotVulcanRaikouSub";
+
+	case 0x140a96d60:
+		return "uShotVulcanTekadama";
+
+	case 0x140a971c0:
+		return "uShotVulcanTekadamaExplode";
+
+	case 0x140a97620:
+		return "uShotVulcanTsutamaki";
+
+	//Zero.
+
+	case 0x140ae5fb0:
+		return "uShotLaserRaikousen";
+
+	case 0x140ae6420:
+		return "uShotLaserRekkouha";
+
+	case 0x140ae6870:
+		return "uShotVulcanGenmuZero";
+
+	case 0x140ae6cc0:
+		return "uShotVulcanHadangeki";
+
+	case 0x140ae7110:
+		return "uShotVulcanZeroBuster";
+
+
+	//Tron Bonne.
+
+	case 0x140ae1090:
+		return "uShotVulcanChushokuRash";
+
+	case 0x140ae1530:
+		return "uShotVulcanKingKobun";
+
+	case 0x140ae19a0:
+		return "uShotVulcanKobunLauncher";
+
+	case 0x140ae1df0:
+		return "uShotVulcanRockThrow";
+ 
+	case 0x140ae2260:
+		return "uShotVulcanShikiDan";
+
+	case 0x140ae26b0:
+		return "uShotVulcanShikiDanKobun";
+
+	//Morrigan.
+
+	case 0x140ac5860:
+		return "uShotOptionSoulFistAbsorb";
+
+	case 0x140ac5d10:
+		return "uShotVulcanFinishingShower";
+
+	case 0x140ac61b0:
+		return "uShotVulcanShilhouetteBlade";
+
+	case 0x140ac6600:
+		return "uShotVulcanSoulFist";
+
+	//Hsien-Ko/Lei-Lei.
+
+	case 0x140abf2e0:
+		return "uShotVulcanAnkihouBomb";
+
+	case 0x140abf790:
+		return "uShotVulcanAnkihouBombExplode";
+
+	case 0x140abfbf0:
+		return "uShotVulcanAnkihouKobun";
+
+	case 0x140ac00c0:
+		return "uShotVulcanAnkihouRolling";
+
+	case 0x140ac0570:
+		return "uShotVulcanHenkyouKi";
+
+	case 0x140ac09c0:
+		return "uShotVulcanTenraiha";
+
+	case 0x140ac0e20:
+		return "uShotVulcanZireitou";
+
+
+	//Felicia.
+
+	case 0x140aafdc0:
+		return "uShotVulcanPleaseHelpMe";
+
+	case 0x140ab0270:
+		return "uShotVulcanSandSplash";
+
+	//Crimson Viper.
+
+	case 0x140aa03b0:
+		return "uShotLaserOpticBlast";
+
+	case 0x140aa0830:
+		return "uShotVulcanBurningKick";
+
+	case 0x140aa0c80:
+		return "uShotVulcanSeismoHammer";
+
+	//Haggar.
+
+	case 0x140ab4ee0:
+		return "uShotVulcanBodyPressFinish";
+
+	case 0x140ab5350:
+		return "uShotVulcanIronPipeRolling";
+
+	//Jill.
+	case 0x140abee70:
+		return "uShotVulcanJillMachineGun";
+
+
+	//Strider Hiryu.
+
+	case 0x140ab9110:
+		return "uShotShieldFormationD";
+
+	case 0x140ab95c0:
+		return "uShotShieldOuroboros";
+
+	case 0x140ab9a70:
+		return "uShotShieldOuroborosExit";
+
+	case 0x140ab9ec0:
+		return "uShotVulcanFormationATiger";
+
+	case 0x140aba350:
+		return "uShotVulcanFormationBHawk";
+
+	case 0x140aba7c0:
+		return "uShotVulcanFormationCBom";
+
+	case 0x140abac50:
+		return "uShotVulcanFormationCExplode";
+
+	case 0x140abb0c0:
+		return "uShotVulcanFormationCSpread";
+
+	case 0x140abb550:
+		return "uShotVulcanFormationDSpread";
+
+	case 0x140abb9c0:
+		return "uShotVulcanLegionHawk";
+
+	case 0x140abbe10:
+		return "uShotVulcanLegionTiger";
+
+	case 0x140abc260:
+		return "uShotVulcanOuroborosShot";
+
+	//Vergil Shots.
+	case 0x140ae33f0:
+		return "uShotShieldSpiralSword";
+
+	case 0x140ae3840:
+		return "uShotShieldStormSword";
+
+	case 0x140ae2f90:
+		return "uShotShieldRaidSword";
+
+	case 0x140ae4540:
+		return "uShotVulcanStormSwordSpread";
+
+	case 0x140ae2b00:
+		return "uShotOptionRoundTrip";
+
+	case 0x140ae3ca0:
+		return "uShotVulcanJigenZan";// AKA Judgment Cut.
+
+	case 0x140ae40f0:
+		return "uShotVulcanRapidSlash";
+
+
+	//Mr. Wright.
+
+
+	//Red Arremer AKA Firebrand.
+
+
+	//Nemesis.
+
+
+	//Spider-Man.
+
+
+	//Captain America's Shield Slash.
+	case 0x140a9aba0:
+		return "uShotOptionShieldSlash";
+
+	//Wolverine does not have any shot files.
+	// 
+	//Magneto Shots.
+	case 0x140ac1b30:
+		return "uShotMissileGravitySqueeze";
+
+	case 0x140ac1f90:
+		return "uShotVulcanHyperGravitation";
+
+	case 0x140ac23f0:
+		return "uShotVulcanMagneticBlast";
+
+	case 0x140ac2840:
+		return "uShotVulcanMagneticTempst";
+
+	case 0x140ac2ca0:
+		return "uShotVulcanMagnetoAtkSitM";
+
+
+		
+	//Taskmaster Shots.
+	case 0x140add7c0:
+		return "uShotVulcanArrowRain";
+
+	case 0x140addc30:
+		return "uShotVulcanArrowShot";
+
+	case 0x140ade080:
+		return "uShotVulcanBullet";
+
+
+
+
+
+
+
+
+	//case "":
+	//	return "";
+
+
+	default:
+		return "?????";
+	}
 
 }
 
@@ -3531,12 +4093,21 @@ void GetHurtboxData()
 	uintptr_t ttt;
 	uintptr_t tttt;
 	uintptr_t v;
+	uintptr_t w = 0;
+	uintptr_t ww;
+	uintptr_t g = 0;
+	uintptr_t gg;
+	uintptr_t pp = 0;
+	uintptr_t ppp;
+	uintptr_t qq;
 	P1C1HurtboxCount = 0;
 	P1C2HurtboxCount = 0;
 	P1C3HurtboxCount = 0;
 	P2C1HurtboxCount = 0;
 	P2C2HurtboxCount = 0;
 	P2C3HurtboxCount = 0;
+	P1ProjectileCount = 0;
+	P2ProjectileCount = 0;
 	ReadProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x4E10), &t, sizeof(uintptr_t), 0);
 	ReadProcessMemory(hProcess, (LPVOID*)(t + 0x30), &tt, sizeof(uintptr_t), 0);
 	tttt = tt;
@@ -3885,6 +4456,107 @@ void GetHurtboxData()
 
 #pragma endregion
 
+	//For Shot files.
+	//Player 1 Shots. Let's try to iterate through this properly.
+
+	w = 0;
+	g = 0;
+
+
+	ww = 0x140D47F98;
+	while (w != -1 && w != 0x140D47F98)
+	{
+
+		ReadProcessMemory(hProcess, (LPVOID*)((ww + 0x8)), &w, sizeof(uintptr_t), 0);
+		if (w != -1)
+		{
+			ww = w;
+		}
+		if (w != -1 && w != 0x140D47F98)
+		{
+			P1ProjectileCount++;
+		}
+
+	}
+
+	//Player 2 Shots. Let's try to iterate through this properly.
+	gg = 0x140D47F98;
+	while (g != -1 && g != 0x140d47fc0)
+	{
+
+		ReadProcessMemory(hProcess, (LPVOID*)((gg + 0x30)), &g, sizeof(uintptr_t), 0);
+		if (g != -1)
+		{
+			gg = g;
+		}
+		if (g != -1 && g != 0x140d47fc0)
+		{
+			P2ProjectileCount++;
+		}
+
+	}
+
+	pp = 0;
+
+	ActiveShots.clear();
+	//ActiveShots.resize((P1ProjectileCount + P2ProjectileCount));
+	ActiveShots.resize((static_cast<std::vector<ProjectileData, std::allocator<ProjectileData>>::size_type>(P1ProjectileCount) + P2ProjectileCount));
+
+
+	ppp = 0x140D47F98;
+	for (int j = 0; j < P1ProjectileCount; j++)
+	{
+		if (pp != -1 && pp != 0x140D47F98)
+		{
+			ReadProcessMemory(hProcess, (LPVOID*)((ppp + 0x8)), &pp, sizeof(uintptr_t), 0);
+			if (pp != -1)
+			{
+				ppp = pp;
+			}
+			qq = (pp - 0x1450);
+			ReadProcessMemory(hProcess, (LPVOID*)(qq), &ActiveShots[j].ShotVTAddress, sizeof(uintptr_t), 0);
+			ActiveShots[j].ProjName = HashToTypeName(ActiveShots[j].ShotVTAddress);
+
+			ReadProcessMemory(hProcess, (LPVOID*)((qq + 0x50)), &ActiveShots[j].PossibleAbsPos.X, sizeof(float), 0);
+			ReadProcessMemory(hProcess, (LPVOID*)((qq + 0x54)), &ActiveShots[j].PossibleAbsPos.Y, sizeof(float), 0);
+			ReadProcessMemory(hProcess, (LPVOID*)((qq + 0x58)), &ActiveShots[j].PossibleAbsPos.Z, sizeof(float), 0);
+
+			ReadProcessMemory(hProcess, (LPVOID*)((qq + 0x60)), &ActiveShots[j].PossibleQuat.X, sizeof(float), 0);
+			ReadProcessMemory(hProcess, (LPVOID*)((qq + 0x64)), &ActiveShots[j].PossibleQuat.Y, sizeof(float), 0);
+			ReadProcessMemory(hProcess, (LPVOID*)((qq + 0x68)), &ActiveShots[j].PossibleQuat.Z, sizeof(float), 0);
+			ReadProcessMemory(hProcess, (LPVOID*)((qq + 0x6C)), &ActiveShots[j].PossibleQuat.W, sizeof(float), 0);
+
+			ReadProcessMemory(hProcess, (LPVOID*)((qq + 0x70)), &ActiveShots[j].PossibleScale.X, sizeof(float), 0);
+			ReadProcessMemory(hProcess, (LPVOID*)((qq + 0x74)), &ActiveShots[j].PossibleScale.Y, sizeof(float), 0);
+			ReadProcessMemory(hProcess, (LPVOID*)((qq + 0x78)), &ActiveShots[j].PossibleScale.Z, sizeof(float), 0);
+
+		}
+	}
+
+	/*
+	//Player 1 Shots. Let's try to iterate through this properly.
+	ww = 0x140D47F98;
+	while (w != -1 && w != 0x140D47F98)
+	{
+
+		ReadProcessMemory(hProcess, (LPVOID*)((ww + 0x8)), &w, sizeof(uintptr_t), 0);
+		if (w != -1)
+		{
+			ww = w;
+		}
+		if (w != -1 && w != 0x140D47F98)
+		{
+			P1ProjectileCount++;
+		}
+
+	}
+	*/
+
+
+	for (int j = 0; j < P2ProjectileCount; j++)
+	{
+
+	}
 
 
 }
@@ -3897,6 +4569,8 @@ void GetHitboxDataPart1()
 	uintptr_t uuu;
 	uintptr_t uuuu;
 	uintptr_t w;
+	uintptr_t pp = 0;
+	uintptr_t ppp;
 	P1C1HitboxCount = 0;
 	P1C2HitboxCount = 0;
 	P1C3HitboxCount = 0;
@@ -4085,6 +4759,53 @@ void GetHitboxDataPart1()
 	}
 #pragma endregion
 
+	////For Shot files.
+	////Player 1 Shots. Let's try to iterate through this properly.
+
+	//w = 0;
+	//uintptr_t ww;
+	//uintptr_t g = 0;
+	//uintptr_t gg;
+
+	//ww = 0x140D47F98;
+	//while (w != -1 && w != 0x140D47F98)
+	//{
+
+	//	ReadProcessMemory(hProcess, (LPVOID*)((ww + 0x8)), &w, sizeof(uintptr_t), 0);
+	//	if (w != -1)
+	//	{
+	//		ww = w;
+	//	}
+	//	if (w != -1 && w != 0x140D47F98)
+	//	{
+	//		P1ProjectileCount++;
+	//	}
+
+	//}
+
+	////Player 2 Shots. Let's try to iterate through this properly.
+	//gg = 0x140D47F98;
+	//while (g != -1 && g != 0x140D47F98)
+	//{
+
+	//	ReadProcessMemory(hProcess, (LPVOID*)((gg + 0x30)), &g, sizeof(uintptr_t), 0);
+	//	if (g != -1)
+	//	{
+	//		gg = g;
+	//	}
+	//	if (g != -1 && g != 0x140D47F98)
+	//	{
+	//		P2ProjectileCount++;
+	//	}
+
+	//}
+	//
+	//pp = 0;
+	//
+	//ActiveShots.clear();
+	////ActiveShots.resize((P1ProjectileCount + P2ProjectileCount));
+	//ActiveShots.resize((static_cast<std::vector<ProjectileData, std::allocator<ProjectileData>>::size_type>(P1ProjectileCount) + P2ProjectileCount));
+
 }
 
 void RemoveAllInstalls()
@@ -4218,7 +4939,7 @@ void TheKillingFloor()
 	int FlagJ = 73404422;
 	//char FlagK = 131104;
 
-	if(DeathSiteY > 0)
+	if (DeathSiteY > 0)
 	{
 		if (KOActiveCharacterAtStart)
 		{
@@ -4356,10 +5077,10 @@ void TheKillingFloor()
 
 		}
 	}
-	else 
+	else
 	{
 		if (KOActiveCharacterAtStart)
-		{			
+		{
 			//Sets Health and Red Health to 0.
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1550), &FlagB, sizeof(int), NULL))
 			{
@@ -4407,8 +5128,8 @@ void TheKillingFloor()
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1558), &FlagB, sizeof(int), NULL))
 			{
 
-			}			
-			
+			}
+
 			Sleep(16.67);
 
 			//X Coordinate.
@@ -4588,6 +5309,59 @@ void KOToggles()
 
 }
 
+void GetHitstunTimers()
+{
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x63EC), &P1C1GroundHitstunTimer, sizeof(float), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x63F0), &P1C1AirHitstunTimer, sizeof(float), 0);
+
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x63EC), &P1C2GroundHitstunTimer, sizeof(float), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x63F0), &P1C2AirHitstunTimer, sizeof(float), 0);
+
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x63EC), &P1C3GroundHitstunTimer, sizeof(float), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x63F0), &P1C3AirHitstunTimer, sizeof(float), 0);
+
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x63EC), &P2C1GroundHitstunTimer, sizeof(float), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x63F0), &P2C1AirHitstunTimer, sizeof(float), 0);
+
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x63EC), &P2C2GroundHitstunTimer, sizeof(float), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x63F0), &P2C2AirHitstunTimer, sizeof(float), 0);
+
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x63EC), &P2C3GroundHitstunTimer, sizeof(float), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x63F0), &P2C3AirHitstunTimer, sizeof(float), 0);
+	//inline float P1C1GroundHitstunTimer;
+	//inline float P1C1AirHitstunTimer;
+	//inline float P1C2GroundHitstunTimer;
+	//inline float P1C2AirHitstunTimer;
+	//inline float P1C3GroundHitstunTimer;
+	//inline float P1C3AirHitstunTimer;
+	//inline float P2C1GroundHitstunTimer;
+	//inline float P2C1AirHitstunTimer;
+	//inline float P2C2GroundHitstunTimer;
+	//inline float P2C2AirHitstunTimer;
+	//inline float P2C3GroundHitstunTimer;
+	//inline float P2C3AirHitstunTimer;
+}
+
+void WackyStuff()
+{
+	uintptr_t LayerA = 0;
+	uintptr_t LayerB = 0;
+	ReadProcessMemory(hProcess, (LPVOID*)0x140E17698, &LayerA, sizeof(uintptr_t), 0);
+
+	ReadProcessMemory(hProcess, (LPVOID*)(LayerA + 0x88), &LayerB, sizeof(uintptr_t), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(LayerB), &DebugPointerOfSorts, sizeof(uintptr_t), 0);
+
+	if (DebugPointerOfSorts == 0x140b1f450)
+	{
+		float NoTime = 0;
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(LayerB + 0x40), &NoTime, sizeof(float), NULL))
+		{
+
+		}
+	}
+
+}
+
 //Sets all settings back to default.
 void ResetSettings()
 {
@@ -4729,8 +5503,32 @@ void ResetSettings()
 	LockP2Meter = false;
 	AlsoSetRedHealthP1 = false;
 	AlsoSetRedHealthP2 = false;
-	VergilSpiralSwordsForever = false;	
+	VergilSpiralSwordsForever = false;
 	ResetGameSpeed();
 	SetGlobalPlayerSpeed(1);
 	RemoveAllInstalls();
 }
+
+//uintptr_t GetModuleBaseAddress(DWORD procId, const wchar_t* modName)
+//{
+//	uintptr_t modBaseAddr = 0;
+//	HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, procId);
+//	if (hSnap != INVALID_HANDLE_VALUE)
+//	{
+//		MODULEENTRY32 modEntry;
+//		modEntry.dwSize = sizeof(modEntry);
+//		if (Module32First(hSnap, &modEntry))
+//		{
+//			do
+//			{
+//				if (!_wcsicmp(modEntry.szModule, modName))
+//				{
+//					modBaseAddr = (uintptr_t)modEntry.modBaseAddr;
+//					break;
+//				}
+//			} while (Module32Next(hSnap, &modEntry));
+//		}
+//	}
+//	CloseHandle(hSnap);
+//	return modBaseAddr;
+//}

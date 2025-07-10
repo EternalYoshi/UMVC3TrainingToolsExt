@@ -19,7 +19,7 @@
 #include "..\utils\Trampoline.h"
 #include "..\utils\addr.h"
 #include "..\utils\MemoryMgr.h"
-#include "..\MemoryMgr.h"
+//#include "..\MemoryMgr.h"
 #include "..\minhook\include\MinHook.h"
 #include <thread>
 
@@ -67,12 +67,12 @@ LRESULT CALLBACK WindowProcess(HWND window, UINT message, WPARAM wideParameter, 
 		PostQuitMessage(0);
 	}return 0;
 
-		//Sets Click Points.
+				   //Sets Click Points.
 	case WM_LBUTTONDOWN: {
 		gui::position = MAKEPOINTS(longParameter);
 	}return 0;
 
-		//Mouse movements.
+					   //Mouse movements.
 	case WM_MOUSEMOVE: {
 		if (wideParameter == MK_LBUTTON)
 		{
@@ -212,12 +212,17 @@ void gui::CreateImGui() noexcept
 	ImGui_ImplWin32_Init(window);
 	ImGui_ImplDX9_Init(device);
 
-
-	io.Fonts->AddFontDefault();
-	//mainfont = io.Fonts->AddFontFromFileTTF("Resources\\fonts\\FOT-NewRodinPro-DB.otf", 11.5f, NULL, io.Fonts->GetGlyphRangesJapanese());
+	//io.Fonts->AddFontDefault();
+	//mainfont = io.Fonts->AddFontFromFileTTF("Resources\\fonts\\FOT-NewRodinPro-DB.otf", 15.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
 	//IM_ASSERT(mainfont != NULL);
 	//ImFont* secfont = io.Fonts->AddFontFromFileTTF("E:\\DLs\\Fontworks\\Japanese\\Gothic (Black)\\FOT-NewRodinPro-B.otf", 18.5f, NULL, io.Fonts->GetGlyphRangesJapanese());
 	//IM_ASSERT(secfont != NULL);
+	ImFont* pFontA = io.Fonts->AddFontFromFileTTF("Resources\\fonts\\DroidSans.ttf", 17.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
+	IM_ASSERT(pFontA != NULL);
+	ImFont* pFontB = io.Fonts->AddFontFromFileTTF("Resources\\fonts\\FOT-NewRodinPro-DB.otf", 15.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
+	IM_ASSERT(pFontB != NULL);
+	//ImFont* pFont = io.Fonts->AddFontFromFileTTF("Resources\\fonts\\FOT-NewRodinPro-DB.otf", 15.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
+
 
 }
 
@@ -375,12 +380,12 @@ static void gui::TheMenuBar()
 void gui::TheAboutWindow(bool* p_open)
 {
 	ImGui::SetNextWindowSize({ 400, 400 }, ImGuiCond_FirstUseEver);
-	if (!ImGui::Begin("UMVC3 Training Tools Mod V0.6X", p_open))
+	if (!ImGui::Begin("UMVC3 Training Tools Mod V0.7X", p_open))
 	{
 		ImGui::End();
 		return;
 	}
-	ImGui::Text("2023, 2024 By Eternal Yoshi");
+	ImGui::Text("2023, 2024, 2025 By Eternal Yoshi");
 	ImGui::Separator();
 	ImGui::Text("Thanks To SanHKHaan, Sheep, Techs, & Gneiss for finding\nthe pointers and memeory offsets that made this \npossible,and Ermmaccer for the original UMVC3Hook.\n");
 	ImGui::Separator();
@@ -638,7 +643,7 @@ static void gui::TheExtraOptionsTab()
 			{
 				//*(unsigned char*)(block2 + 0x118) = 3;
 				int RestartValue = 1;
-				if (!WriteProcessMemory(hProcess, (LPVOID*)(block2 + 0x118), &RestartValue, sizeof(int), NULL))
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(sAction + 0x118), &RestartValue, sizeof(int), NULL))
 				{
 
 				}
@@ -657,7 +662,7 @@ static void gui::TheExtraOptionsTab()
 			{
 				//*(unsigned char*)(block2 + 0x118) = 3;
 				int RestartValue = 2;
-				if (!WriteProcessMemory(hProcess, (LPVOID*)(block2 + 0x118), &RestartValue, sizeof(int), NULL))
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(sAction + 0x118), &RestartValue, sizeof(int), NULL))
 				{
 
 				}
@@ -675,7 +680,7 @@ static void gui::TheExtraOptionsTab()
 			if (CheckTheMode() == true)
 			{
 				int RestartValue = 3;
-				if (!WriteProcessMemory(hProcess, (LPVOID*)(block2 + 0x118), &RestartValue, sizeof(int), NULL))
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(sAction + 0x118), &RestartValue, sizeof(int), NULL))
 				{
 
 				}
@@ -1217,7 +1222,7 @@ static void gui::TheIncomingStuffTab()
 	{
 		ImGui::Text("Experimental! Be Smart about using these.");
 		ImGui::Separator();
-		
+
 		ImGui::Text("Time Delay(Frames)");
 		if (ImGui::SliderInt("Frames Until Death", &FrameDelayofDeath, 0, 300))
 		{
@@ -1323,7 +1328,7 @@ static void gui::TheRecordPlaybackTab()
 		typedef void(*StopPlaybackP1)(int);
 		typedef void(*StopPlaybackP2)(int);
 		typedef void(*StopPlaybackBoth)(int);
-		//typedef void(*DeployTheHooks)();
+		typedef void(*DeployTheHooks)();
 		typedef void(*ChangeRecordingSlot)(int);
 
 		if (ccheck != NULL)
@@ -1347,7 +1352,7 @@ static void gui::TheRecordPlaybackTab()
 			StopPlaybackP2 SPBP2 = (StopPlaybackP2)GetProcAddress((HMODULE)ccheck, "StopPlaybackP2");
 			StopPlaybackBoth SPBP12 = (StopPlaybackBoth)GetProcAddress((HMODULE)ccheck, "StopPlaybackBoth");
 			ChangeRecordingSlot CRS = (ChangeRecordingSlot)GetProcAddress((HMODULE)ccheck, "ChangeRecordingSlot");
-			//DeployTheHooks dhook = (DeployTheHooks)GetProcAddress((HMODULE)ccheck, "DeployTheHooks");
+			DeployTheHooks dhook = (DeployTheHooks)GetProcAddress((HMODULE)ccheck, "DeployTheHooks");
 
 			//dhook();
 
@@ -1499,6 +1504,8 @@ static void gui::TheDebugStuffTab()
 		GetPlayerData();
 		GetHurtboxData();
 		GetHitboxDataPart1();
+		GetHitstunTimers();
+
 		ImGui::Text("Remember! These Parameters will only take\neffect when this window is open.");
 		ImGui::Separator();
 
@@ -1513,7 +1520,10 @@ static void gui::TheDebugStuffTab()
 		{
 			std::cout << "could not load the dynamic library" << std::endl;
 		}
-
+		ImGui::SeparatorText("Module Base");
+		uintptr_t moduleBaseInternal = (uintptr_t)GetModuleHandle(_T("umvc3.exe"));
+		ImGui::Text("ModuleBase External = : %x", moduleBaseInternal);
+		ImGui::Separator();
 		//typedef int(__stdcall* CheckCon)();
 
 		//TestEx = 
@@ -1553,6 +1563,44 @@ static void gui::TheDebugStuffTab()
 
 
 		ImGui::Separator();
+		if (ImGui::TreeNode("Hitstun Stuff"))
+		{
+#pragma region Hitstun Stuff
+
+			ImGui::SeparatorText("Hitstun Timers");
+			ImGui::Text("Player 1 Character 1");
+			ImGui::Text("GroundHitstunTimer: %f", P1C1GroundHitstunTimer);
+			ImGui::Text("AirHitstunTimer: %f", P1C1AirHitstunTimer);
+
+			ImGui::Text("Player 1 Character 2");
+			ImGui::Text("GroundHitstunTimer: %f", P1C2GroundHitstunTimer);
+			ImGui::Text("AirHitstunTimer: %f", P1C2AirHitstunTimer);
+
+			ImGui::Text("Player 1 Character 3");
+			ImGui::Text("GroundHitstunTimer: %f", P1C3GroundHitstunTimer);
+			ImGui::Text("AirHitstunTimer: %f", P1C3AirHitstunTimer);
+
+			ImGui::Text("Player 2 Character 1");
+			ImGui::Text("GroundHitstunTimer: %f", P2C1GroundHitstunTimer);
+			ImGui::Text("AirHitstunTimer: %f", P2C1AirHitstunTimer);
+
+			ImGui::Text("Player 2 Character 2");
+			ImGui::Text("GroundHitstunTimer: %f", P2C2GroundHitstunTimer);
+			ImGui::Text("AirHitstunTimer: %f", P2C2AirHitstunTimer);
+
+			ImGui::Text("Player 2 Character 3");
+			ImGui::Text("GroundHitstunTimer: %f", P2C3GroundHitstunTimer);
+			ImGui::Text("AirHitstunTimer: %f", P2C3AirHitstunTimer);
+
+
+#pragma endregion
+			ImGui::TreePop();
+		}
+
+		ImGui::Separator();
+
+		//if (ImGui::TreeNode("Collision Stuff"))
+		//{
 
 #pragma region Hurtbox Data and Coordinates
 
@@ -1567,6 +1615,120 @@ static void gui::TheDebugStuffTab()
 		uintptr_t v;
 		//std::list<uintptr_t>HurtboxPointers;
 		int HurtboxCount = 0;
+		//140D47F98
+
+		ImGui::Separator();
+
+		ImGui::Text("Shot List Stuff");
+
+		ImGui::Text("sShotList: %x", sShotList);
+		ImGui::Text("P1ShotList: %x", P1Shots);
+		ImGui::Text("P2ShotList: %x", P2Shots);
+		ImGui::Text("P1ShotList: %x", P1ProjectileCount);
+		ImGui::Text("P1ShotList: %x", P2ProjectileCount);
+
+		int ShotTotal = P1ProjectileCount + P2ProjectileCount;
+		static ImGuiTableFlags flags = ImGuiTableFlags_ScrollX | ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable;
+		ImVec2 outer_size = ImVec2(0.0f, ImGui::GetTextLineHeightWithSpacing() * 8);
+		if (ImGui::BeginTable("Shot List", 12, flags, outer_size))
+		{
+			ImGui::TableSetupScrollFreeze(1, 1);
+			ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_NoHide); // Make the first column not hideable to match our use of TableSetupScrollFreeze()
+			ImGui::TableSetupColumn("VTable");
+			ImGui::TableSetupColumn("Pos X");
+			ImGui::TableSetupColumn("Pos Y");
+			ImGui::TableSetupColumn("Pos Z");
+			ImGui::TableSetupColumn("Quat X");
+			ImGui::TableSetupColumn("Quat Y");
+			ImGui::TableSetupColumn("Quat Z");
+			ImGui::TableSetupColumn("Quat W");
+			ImGui::TableSetupColumn("Size X");
+			ImGui::TableSetupColumn("Size Y");
+			ImGui::TableSetupColumn("Size Z");
+
+			ImGui::TableHeadersRow();
+			ImGuiListClipper clipper;
+			clipper.Begin(ShotTotal);
+			while (clipper.Step())
+			{
+				for (int row = clipper.DisplayStart; row < clipper.DisplayEnd; row++)
+				{
+					ImGui::TableNextRow();
+					for (int column = 0; column < 12; column++)
+					{
+
+						if (!ImGui::TableSetColumnIndex(column) && column > 0)
+							continue;
+						if (column == 0)
+							ImGui::Text("%s", ActiveShots[row].ProjName.c_str());
+						else if (column == 1)
+							ImGui::Text("%x", ActiveShots[row].ShotVTAddress);
+						else if (column == 2)
+							ImGui::Text("%f", ActiveShots[row].PossibleAbsPos.X);
+						else if (column == 3)
+							ImGui::Text("%f", ActiveShots[row].PossibleAbsPos.Y);
+						else if (column == 4)
+							ImGui::Text("%f", ActiveShots[row].PossibleAbsPos.Z);
+						else if (column == 5)
+							ImGui::Text("%f", ActiveShots[row].PossibleQuat.X);
+						else if (column == 6)
+							ImGui::Text("%f", ActiveShots[row].PossibleQuat.Y);
+						else if (column == 7)
+							ImGui::Text("%f", ActiveShots[row].PossibleQuat.Z);
+						else if (column == 8)
+							ImGui::Text("%f", ActiveShots[row].PossibleQuat.W);
+						else if (column == 9)
+							ImGui::Text("%f", ActiveShots[row].PossibleScale.X);
+						else if (column == 10)
+							ImGui::Text("%f", ActiveShots[row].PossibleScale.Y);
+						else if (column == 11)
+							ImGui::Text("%f", ActiveShots[row].PossibleScale.Z);
+						else continue;
+					}
+				}
+			}
+			ImGui::EndTable();
+
+
+		}
+		//ImGui::Text("Shot Count: %i", ShotCount);
+		/*
+				if (ShotTotal > 0) {
+				for (int n = 0; n < ShotTotal; n++)
+				{
+					ImGui::Text("Shot File: %x", ActiveShots[n].ShotVTAddress);
+					ImGui::Text("Shot Name %s", ActiveShots[n].ProjName.c_str());
+					ImGui::Text("Possible Position");
+					ImGui::SameLine();
+					ImGui::Text("X: %f", ActiveShots[n].PossibleAbsPos.X);
+					ImGui::SameLine();
+					ImGui::Text("Y: %f", ActiveShots[n].PossibleAbsPos.Y);
+					ImGui::SameLine();
+					ImGui::Text("Z: %f", ActiveShots[n].PossibleAbsPos.Z);
+					ImGui::Text("Rotation (Quaternion)");
+					ImGui::SameLine();
+					ImGui::Text("X: %f", ActiveShots[n].PossibleQuat.X);
+					ImGui::SameLine();
+					ImGui::Text("Y: %f", ActiveShots[n].PossibleQuat.Y);
+					ImGui::SameLine();
+					ImGui::Text("Z: %f", ActiveShots[n].PossibleQuat.Z);
+					ImGui::SameLine();
+					ImGui::Text("W: %f", ActiveShots[n].PossibleQuat.W);
+					ImGui::Text("Possible Scale");
+					ImGui::SameLine();
+					ImGui::Text("X: %f", ActiveShots[n].PossibleScale.X);
+					ImGui::SameLine();
+					ImGui::Text("Y: %f", ActiveShots[n].PossibleScale.Y);
+					ImGui::SameLine();
+					ImGui::Text("Z: %f", ActiveShots[n].PossibleScale.Z);
+				}
+			}
+
+			*/
+
+		ImGui::Separator();
+
+
 
 #pragma region P1C1
 
@@ -1810,342 +1972,346 @@ static void gui::TheDebugStuffTab()
 
 #pragma endregion
 
+		//	ImGui::TreePop();
+		//}
 
-
+		if (ImGui::TreeNode("Horizontal scrolling"))
+		{
 #pragma region GetInstallID
 
-		GetActiveInstallData();
+			GetActiveInstallData();
 
-		//Gets install IDs and Stuff.
-		ImGui::SeparatorText("Character Install State IDs");
+			//Gets install IDs and Stuff.
+			ImGui::SeparatorText("Character Install State IDs");
 
-		ImGui::Text("Player 1 Character 1:");
-		ImGui::SameLine();
-		ImGui::Text("%i", P1Character1ID);
+			ImGui::Text("Player 1 Character 1:");
+			ImGui::SameLine();
+			ImGui::Text("%i", P1Character1ID);
 
-		ImGui::Text("Slot 1 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C1InstallID1);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C1InstallType1);
+			ImGui::Text("Slot 1 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C1InstallID1);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C1InstallType1);
 
-		ImGui::Text("Slot 2 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C1InstallID2);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C1InstallType2);
+			ImGui::Text("Slot 2 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C1InstallID2);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C1InstallType2);
 
-		ImGui::Text("Slot 3 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C1InstallID3);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C1InstallType3);
+			ImGui::Text("Slot 3 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C1InstallID3);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C1InstallType3);
 
-		ImGui::Text("Slot 4 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C1InstallID4);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C1InstallType4);
+			ImGui::Text("Slot 4 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C1InstallID4);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C1InstallType4);
 
-		ImGui::Text("Slot 5 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C1InstallID5);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C1InstallType5);
+			ImGui::Text("Slot 5 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C1InstallID5);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C1InstallType5);
 
-		ImGui::Text("Player 1 Character 2:");
-		ImGui::SameLine();
-		ImGui::Text("%i", P1Character2ID);
+			ImGui::Text("Player 1 Character 2:");
+			ImGui::SameLine();
+			ImGui::Text("%i", P1Character2ID);
 
-		ImGui::Text("Slot 1 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C2InstallID1);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C2InstallType1);
+			ImGui::Text("Slot 1 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C2InstallID1);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C2InstallType1);
 
-		ImGui::Text("Slot 2 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C2InstallID2);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C2InstallType2);
+			ImGui::Text("Slot 2 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C2InstallID2);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C2InstallType2);
 
-		ImGui::Text("Slot 3 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C2InstallID3);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C2InstallType3);
+			ImGui::Text("Slot 3 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C2InstallID3);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C2InstallType3);
 
-		ImGui::Text("Slot 4 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C2InstallID4);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C2InstallType4);
+			ImGui::Text("Slot 4 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C2InstallID4);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C2InstallType4);
 
-		ImGui::Text("Slot 5 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C2InstallID5);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C2InstallType5);
+			ImGui::Text("Slot 5 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C2InstallID5);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C2InstallType5);
 
-		ImGui::Text("Player 1 Character 3:");
-		ImGui::SameLine();
-		ImGui::Text("%i", P1Character3ID);
+			ImGui::Text("Player 1 Character 3:");
+			ImGui::SameLine();
+			ImGui::Text("%i", P1Character3ID);
 
-		ImGui::Text("Slot 1 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C3InstallID1);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C3InstallType1);
+			ImGui::Text("Slot 1 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C3InstallID1);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C3InstallType1);
 
-		ImGui::Text("Slot 2 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C3InstallID2);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C3InstallType2);
+			ImGui::Text("Slot 2 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C3InstallID2);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C3InstallType2);
 
-		ImGui::Text("Slot 3 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C3InstallID3);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C3InstallType3);
+			ImGui::Text("Slot 3 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C3InstallID3);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C3InstallType3);
 
-		ImGui::Text("Slot 4 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C3InstallID4);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C3InstallType4);
+			ImGui::Text("Slot 4 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C3InstallID4);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C3InstallType4);
 
-		ImGui::Text("Slot 5 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C3InstallID5);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P1C3InstallType5);
+			ImGui::Text("Slot 5 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C3InstallID5);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P1C3InstallType5);
 
-		ImGui::Text("Player 2 Character 1:");
-		ImGui::SameLine();
-		ImGui::Text("%i", P2Character1ID);
+			ImGui::Text("Player 2 Character 1:");
+			ImGui::SameLine();
+			ImGui::Text("%i", P2Character1ID);
 
-		ImGui::Text("Slot 1 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C1InstallID1);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C1InstallType1);
+			ImGui::Text("Slot 1 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C1InstallID1);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C1InstallType1);
 
-		ImGui::Text("Slot 2 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C1InstallID2);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C1InstallType2);
+			ImGui::Text("Slot 2 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C1InstallID2);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C1InstallType2);
 
-		ImGui::Text("Slot 3 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C1InstallID3);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C1InstallType3);
+			ImGui::Text("Slot 3 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C1InstallID3);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C1InstallType3);
 
-		ImGui::Text("Slot 4 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C1InstallID4);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C1InstallType4);
+			ImGui::Text("Slot 4 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C1InstallID4);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C1InstallType4);
 
-		ImGui::Text("Slot 5 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C1InstallID5);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C1InstallType5);
+			ImGui::Text("Slot 5 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C1InstallID5);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C1InstallType5);
 
-		ImGui::Text("Player 2 Character 2:");
-		ImGui::SameLine();
-		ImGui::Text("%i", P2Character2ID);
+			ImGui::Text("Player 2 Character 2:");
+			ImGui::SameLine();
+			ImGui::Text("%i", P2Character2ID);
 
-		ImGui::Text("Slot 1 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C2InstallID1);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C2InstallType1);
+			ImGui::Text("Slot 1 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C2InstallID1);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C2InstallType1);
 
-		ImGui::Text("Slot 2 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C2InstallID2);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C2InstallType2);
+			ImGui::Text("Slot 2 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C2InstallID2);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C2InstallType2);
 
-		ImGui::Text("Slot 3 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C2InstallID3);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C2InstallType3);
+			ImGui::Text("Slot 3 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C2InstallID3);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C2InstallType3);
 
-		ImGui::Text("Slot 4 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C2InstallID4);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C2InstallType4);
+			ImGui::Text("Slot 4 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C2InstallID4);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C2InstallType4);
 
-		ImGui::Text("Slot 5 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C2InstallID5);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C2InstallType5);
+			ImGui::Text("Slot 5 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C2InstallID5);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C2InstallType5);
 
-		ImGui::Text("Player 1 Character 3:");
-		ImGui::SameLine();
-		ImGui::Text("%i", P2Character3ID);
+			ImGui::Text("Player 1 Character 3:");
+			ImGui::SameLine();
+			ImGui::Text("%i", P2Character3ID);
 
-		ImGui::Text("Slot 1 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C3InstallID1);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C3InstallType1);
+			ImGui::Text("Slot 1 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C3InstallID1);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C3InstallType1);
 
-		ImGui::Text("Slot 2 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C3InstallID2);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C3InstallType2);
+			ImGui::Text("Slot 2 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C3InstallID2);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C3InstallType2);
 
-		ImGui::Text("Slot 3 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C3InstallID3);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C3InstallType3);
+			ImGui::Text("Slot 3 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C3InstallID3);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C3InstallType3);
 
-		ImGui::Text("Slot 4 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C3InstallID4);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C3InstallType4);
+			ImGui::Text("Slot 4 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C3InstallID4);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C3InstallType4);
 
-		ImGui::Text("Slot 5 - ");
-		ImGui::SameLine();
-		ImGui::Text("Install ID: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C3InstallID5);
-		ImGui::SameLine();
-		ImGui::Text(" Type: ");
-		ImGui::SameLine();
-		ImGui::Text("%x", P2C3InstallType5);
+			ImGui::Text("Slot 5 - ");
+			ImGui::SameLine();
+			ImGui::Text("Install ID: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C3InstallID5);
+			ImGui::SameLine();
+			ImGui::Text(" Type: ");
+			ImGui::SameLine();
+			ImGui::Text("%x", P2C3InstallType5);
 
 
 #pragma endregion
-
+			ImGui::TreePop();
+		}
 		/*
 		for (size_t i = 0; i < 6; i++)
 		{
@@ -2182,6 +2348,127 @@ static void gui::TheDebugStuffTab()
 
 }
 
+static void gui::TheExtratDataTab()
+{
+	if (ImGui::BeginTabItem("Data"))
+	{
+		GetMainPointers();
+		GetPlayerData();
+		GetHurtboxData();
+		GetHitboxDataPart1();
+		GetHitstunTimers();
+
+		ImGui::SeparatorText("Hitstun Timers");
+
+		if (ImGui::TreeNode("Hitstun Stuff - Click to show/hide"))
+		{
+#pragma region Hitstun Stuff
+
+			//Makes the text larger.
+			ImGui::PushFont(NULL, 20.0f);
+
+
+
+			static ImGuiTableFlags flags = ImGuiTableFlags_SizingFixedFit | ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders | ImGuiTableFlags_Resizable | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable;
+
+			ImGuiStyle& style = ImGui::GetStyle();
+			ImGui::PushStyleVarY(ImGuiStyleVar_FramePadding, (float)(int)(style.FramePadding.y * 0.60f));
+			ImGui::PushStyleVarY(ImGuiStyleVar_ItemSpacing, (float)(int)(style.ItemSpacing.y * 0.60f));
+
+			ImGui::PopStyleVar(2);
+
+			if (ImGui::BeginTable("table1", 3, flags))
+			{
+				ImGui::TableSetupColumn("Player", ImGuiTableColumnFlags_WidthFixed);
+				ImGui::TableSetupColumn("Ground", ImGuiTableColumnFlags_WidthFixed);
+				ImGui::TableSetupColumn("Air", ImGuiTableColumnFlags_WidthStretch);
+				ImGui::TableHeadersRow();
+
+				ImGui::TableNextRow();
+				ImGui::TableSetColumnIndex(0);
+				ImGui::Text("Player 1 Character 1");
+				ImGui::TableSetColumnIndex(1);
+				ImGui::Text("%f", P1C1GroundHitstunTimer);
+				ImGui::TableSetColumnIndex(2);
+				ImGui::Text("%f", P1C1AirHitstunTimer);
+
+				ImGui::TableNextRow();
+				ImGui::TableSetColumnIndex(0);
+				ImGui::Text("Player 1 Character 2");
+				ImGui::TableSetColumnIndex(1);
+				ImGui::Text("%f", P1C2GroundHitstunTimer);
+				ImGui::TableSetColumnIndex(2);
+				ImGui::Text("%f", P1C2AirHitstunTimer);
+
+				ImGui::TableNextRow();
+				ImGui::TableSetColumnIndex(0);
+				ImGui::Text("Player 1 Character 3");
+				ImGui::TableSetColumnIndex(1);
+				ImGui::Text("%f", P1C3GroundHitstunTimer);
+				ImGui::TableSetColumnIndex(2);
+				ImGui::Text("%f", P1C3AirHitstunTimer);
+
+				ImGui::TableNextRow();
+				ImGui::TableSetColumnIndex(0);
+				ImGui::Text("Player 2 Character 1");
+				ImGui::TableSetColumnIndex(1);
+				ImGui::Text("%f", P2C1GroundHitstunTimer);
+				ImGui::TableSetColumnIndex(2);
+				ImGui::Text("%f", P2C1AirHitstunTimer);
+
+				ImGui::TableNextRow();
+				ImGui::TableSetColumnIndex(0);
+				ImGui::Text("Player 2 Character 2");
+				ImGui::TableSetColumnIndex(1);
+				ImGui::Text("%f", P2C2GroundHitstunTimer);
+				ImGui::TableSetColumnIndex(2);
+				ImGui::Text("%f", P2C2AirHitstunTimer);
+
+				ImGui::TableNextRow();
+				ImGui::TableSetColumnIndex(0);
+				ImGui::Text("Player 2 Character 3");
+				ImGui::TableSetColumnIndex(1);
+				ImGui::Text("%f", P2C3GroundHitstunTimer);
+				ImGui::TableSetColumnIndex(2);
+				ImGui::Text("%f", P2C3AirHitstunTimer);
+				ImGui::EndTable();
+			}
+
+			//ImGui::Text("Player 1 Character 1");
+			//ImGui::Text("GroundHitstunTimer: %f", P1C1GroundHitstunTimer);
+			//ImGui::Text("AirHitstunTimer: %f", P1C1AirHitstunTimer);
+
+			//ImGui::Text("Player 1 Character 2");
+			//ImGui::Text("GroundHitstunTimer: %f", P1C2GroundHitstunTimer);
+			//ImGui::Text("AirHitstunTimer: %f", P1C2AirHitstunTimer);
+
+			//ImGui::Text("Player 1 Character 3");
+			//ImGui::Text("GroundHitstunTimer: %f", P1C3GroundHitstunTimer);
+			//ImGui::Text("AirHitstunTimer: %f", P1C3AirHitstunTimer);
+
+			//ImGui::Text("Player 2 Character 1");
+			//ImGui::Text("GroundHitstunTimer: %f", P2C1GroundHitstunTimer);
+			//ImGui::Text("AirHitstunTimer: %f", P2C1AirHitstunTimer);
+
+			//ImGui::Text("Player 2 Character 2");
+			//ImGui::Text("GroundHitstunTimer: %f", P2C2GroundHitstunTimer);
+			//ImGui::Text("AirHitstunTimer: %f", P2C2AirHitstunTimer);
+
+			//ImGui::Text("Player 2 Character 3");
+			//ImGui::Text("GroundHitstunTimer: %f", P2C3GroundHitstunTimer);
+			//ImGui::Text("AirHitstunTimer: %f", P2C3AirHitstunTimer);
+
+			ImGui::PopFont();
+
+#pragma endregion
+			ImGui::TreePop();
+		}
+
+
+		ImGui::EndTabItem();
+	}
+}
+
 void gui::Render() noexcept
 {
 	ImGui::SetWindowPos({ 0,0 });
@@ -2189,10 +2476,10 @@ void gui::Render() noexcept
 	ImGui::SetNextWindowPos({ 0,0 }, ImGuiCond_FirstUseEver);
 
 	ImGui::Begin(
-		"UMVC3 Training Tools Mod V0.6X By Eternal Yoshi",
+		"UMVC3 Training Tools Mod V0.7X By Eternal Yoshi",
 		&exit,
 		ImGuiWindowFlags_MenuBar |
-		ImGuiWindowFlags_NoResize |
+
 		ImGuiWindowFlags_NoSavedSettings |
 		ImGuiWindowFlags_NoCollapse |
 		ImGuiWindowFlags_NoMove
@@ -2219,12 +2506,12 @@ void gui::Render() noexcept
 		ImGui::Text("If you can read this then the tool recognizes Marvel 3 is open.");
 		ImGui::Text("The version open is valid too.");
 		ImGui::PopStyleColor();
+		WackyStuff();
 
 		if (CheckTheMode() == true)
 		{
 			GetMainPointers();
 			CheckIfInMatch();
-
 			if (InMatch)
 			{
 				TickUpdates();
@@ -2232,7 +2519,7 @@ void gui::Render() noexcept
 
 				if (ImGui::BeginTabBar("##tabs"))
 				{
-					ReadProcessMemory(hProcess, (LPVOID*)(block2 + 0x118), &val, sizeof(val), 0);
+					ReadProcessMemory(hProcess, (LPVOID*)(sAction + 0x118), &val, sizeof(val), 0);
 
 					if (val != 0)
 					{
@@ -2309,6 +2596,7 @@ void gui::Render() noexcept
 					TheExtraOptionsTab();
 					TheStatusOptionsTab();
 					TheCharacterOptionsTab();
+					TheExtratDataTab();
 #ifdef _DEBUG
 
 					TheRecordPlaybackTab();

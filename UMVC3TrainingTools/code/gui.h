@@ -54,6 +54,7 @@ namespace gui
 	static void TheRecordPlaybackTab();
 	static void TheDebugStuffTab();
 	static void TheIncomingStuffTab();
+	static void TheExtratDataTab();
 	static bool Hooked = false;
 	static bool InMatch = false;
 	static int GameModeRef = 0;

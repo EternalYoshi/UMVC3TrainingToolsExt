@@ -72,9 +72,6 @@
     <ClInclude Include="sigscan.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MemoryMgr.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="mem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -182,17 +179,24 @@
     <ClCompile Include="code\umvc3utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="code\HashDecoder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Font Include="Resources\fonts\FOT-NewRodinPro-B.otf">
       <Filter>Resource Files</Filter>
     </Font>
     <Font Include="Resources\fonts\FOT-NewRodinProN-DB.otf" />
+    <Font Include="Resources\fonts\FOT-NewRodinPro-DB.otf" />
+    <Font Include="Resources\fonts\DroidSans.ttf" />
+    <Font Include="Resources\fonts\DroidSans-Bold.ttf" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="imgui\LICENSE.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="Resources\fonts\Apache License.txt" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="UMVC3TrainingTools.rc">

@@ -4,16 +4,17 @@
 #include <vector>
 #include <list>
 #include <string>
+#include <tchar.h>
 //#include "proc.h"
 
 inline HANDLE HProc = 0;
 inline bool ValidVer;
 inline int GameMode;
-inline uintptr_t StrangeTable;
-inline uintptr_t mysterytable;
-inline uintptr_t block2;
-inline uintptr_t ptable;
-inline uintptr_t TysonTable;
+inline uintptr_t sBattleSetting;
+inline uintptr_t gSound;
+inline uintptr_t sAction;
+//inline uintptr_t sBattleSetting;
+inline uintptr_t sCharacter;
 inline uintptr_t Player1CharNodeTree;
 inline uintptr_t Player2CharNodeTree;
 inline uintptr_t BaseFighterUpdateMethod = 0x14004bd30;
@@ -345,6 +346,10 @@ inline int P2C1HitboxCount;
 inline int P2C2HitboxCount;
 inline int P2C3HitboxCount;
 
+inline int P1ProjectileCount;
+inline int P2ProjectileCount;
+
+
 inline std::vector<uintptr_t> P1C1HurtboxPointers;
 inline std::vector<uintptr_t> P1C2HurtboxPointers;
 inline std::vector<uintptr_t> P1C3HurtboxPointers;
@@ -386,10 +391,32 @@ inline uintptr_t uBtKeyDispBtnTable;
 inline bool MoveInputDisplay = false;
 inline bool VergilSpiralSwordsForever = false;
 
+inline uintptr_t sShotList;
+inline uintptr_t sShotListEnd;
+inline uintptr_t sTargetNode;
+inline uintptr_t sTargetShot;
+inline uintptr_t P1Shots;
+inline uintptr_t P2Shots;
+inline int ShotCount;
+
+inline float P1C1GroundHitstunTimer;
+inline float P1C1AirHitstunTimer;
+inline float P1C2GroundHitstunTimer;
+inline float P1C2AirHitstunTimer;
+inline float P1C3GroundHitstunTimer;
+inline float P1C3AirHitstunTimer;
+inline float P2C1GroundHitstunTimer;
+inline float P2C1AirHitstunTimer;
+inline float P2C2GroundHitstunTimer;
+inline float P2C2AirHitstunTimer;
+inline float P2C3GroundHitstunTimer;
+inline float P2C3AirHitstunTimer;
+
+inline uintptr_t DebugPointerOfSorts;
+
 inline std::string ThreeHookPath = "E:\\ULTIMATE MARVEL VS. CAPCOM 3\\Scripts\\ThreeHook.asi";
 
-
-
+//inline uintptr_t moduleBaseInternal = (uintptr_t)GetModuleHandle(_T("umvc3.exe"));
 
 struct vector {
 	float X;
@@ -960,6 +987,21 @@ inline std::vector<Hitbox> P2C1Hitboxes;
 inline std::vector<Hitbox> P2C2Hitboxes;
 inline std::vector<Hitbox> P2C3Hitboxes;
 
+struct ProjectileData
+{
+	uintptr_t ShotVTAddress;
+	std::string ProjName;
+	struct cHitPrimCapsule Hitbox;
+	struct cHitPrimCapsule Hurtbox;
+	vector PossibleAbsPos;
+	vector4 PossibleQuat;
+	vector PossibleScale;
+};
+
+inline std::vector<ProjectileData> ActiveShots;
+
+//inline std::vector<ProjectileData> ProjHurtbox;
+
 DWORD SingleWrite(DWORD64 AddressToWrite, int length, HANDLE hProcess, BYTE ByteToWrite, DWORD errorMessageID, LPSTR messageBuffer);
 
 DWORD MultiWrite(DWORD64 AddressToWrite, int length, HANDLE hProcess, BYTE ByteToWrite[], DWORD errorMessageID, LPSTR messageBuffer);
@@ -979,6 +1021,8 @@ void GetPlayerData();
 void EndlessXFactorUpdate();
 
 void RestartWithChanges();
+
+bool InputDisplayValidator();
 
 void LeftSideInputDisplay();
 
@@ -1028,6 +1072,8 @@ void GetActiveInstallData();
 
 void SetMeters();
 
+void GetShots();
+
 void GetHurtboxData();
 
 void GetHitboxDataPart1();
@@ -1044,3 +1090,7 @@ void DeathDelay();
 void KOToggles();
 
 void ResetSettings();
+
+void GetHitstunTimers();
+
+void WackyStuff();
