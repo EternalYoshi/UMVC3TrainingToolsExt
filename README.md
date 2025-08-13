@@ -1,6 +1,7 @@
 A tool designed to incrase and improve quality of life of Ultimate Marvel vs Capcom 3's training mode.
-This tool adds more options that weren't present before.
-There's 3 pages right now.
+This tool adds more options to practice and setup situations that weren't present before.
+The recent build uses Mid 2025 revisions Imgui & Sokol with a D3D11 backend.
+Soon there will be more than 3 pages.
 
 Explanations:
 ================================================================================================================================
@@ -65,6 +66,6 @@ MODOK's head flame won't update visuals when setting Level of Understanding.
 The Endless Install/X Factor locks the timers at a silly high value, so turning it off WILL allow the timer to decrement, but the timer
 is so large it may be wiser to just restart training mode.
 
-Thanks to HKHaan, Sheep, Techs, and Ermaccer for their contributions that made this and the original git of this version possible.
+Thanks to HKHaan, Sheep, Techs, anotak, and Ermaccer for their contributions that made this and all previous incarnations of this possible.
 
 Features will be added to the next release when they are confirmed working problem free.
