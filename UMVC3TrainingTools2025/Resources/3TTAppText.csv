@@ -1,0 +1,11 @@
+ID,English
+NOT_ACTIVATED1,Nothing Doing until you open the game.
+NOT_ACTIVATED2,"If the game is open and nothing is happening,\nthen it could be possible\nyou are using an invalid version."
+ACTIVATED_TRUE,If you can read this then the tool recognizes Marvel 3 is open.
+ACTIVATED_TRUE2,The version open is valid too.
+ACTIVATED_NOTINMATCH,Choose the characters and get into a match.
+ACTIVATED_INMAINMENU,Get to Training Mode so this tool can do its thing.
+MENU_FILE,File
+FILE_RESETSETTINGS,Reset Settings To Default
+MENU_MISC,Misc
+MISC_ABOUT,About

@@ -5070,9 +5070,9 @@ static void KOToggles()
 	if (Player1Character1Dead == true)
 	{
 		//Checks if character is already dead.
-		if(CheckIfDead(P1Character1Data))
+		if (CheckIfDead(P1Character1Data))
 		{
-		
+
 		}
 		else
 		{
@@ -5101,7 +5101,7 @@ static void KOToggles()
 		{
 
 		}
-		else 
+		else
 		{
 			//Sets Health and Red Health to 0.
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x1550), &FlagB, sizeof(int), NULL))
@@ -5128,7 +5128,7 @@ static void KOToggles()
 		{
 
 		}
-		else 
+		else
 		{
 			//Sets Health and Red Health to 0.
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x1550), &FlagB, sizeof(int), NULL))
@@ -5398,146 +5398,149 @@ static void TickUpdates()
 //Sets all settings back to default.
 static void ResetSettings()
 {
-	GetMainPointers();
-	GetPlayerData();
-	GetCharacterIDs();
-	p1Pos = -125.0f;
-	p2Pos = 125.0f;
-	MODOKLOU = 1;
-	FrankLevel = 1;
-	PrestigePoints = 0.0;
-	WrightEvidenceA = -1;
-	WrightEvidenceB = -1;
-	WrightEvidenceC = -1;
-	SaveStateSlot = 0;
-	DormRed = 0;
-	DormBlue = 0;
-	DormSpellSet = false;
-	EndlessInstalls = false;
-	DeadpoolTeleportCount = 0;
-	FreezeDeadpoolTPCounter = false;
-	P1Character1Dead = false;
-	P1Character2Dead = false;
-	P1Character3Dead = false;
-	P2Character1Dead = false;
-	P2Character2Dead = false;
-	P2Character3Dead = false;
-	EndlessXFactor = false;
-	EndlessXFactorP1 = false;
-	EndlessXFactorP2 = false;
-	SpecialFeature = false;
-	HitboxDisplay = false;
-	SetIndividualHP = false;
-	AlsoSetRedHealth = false;
-	P1Char1Health = 1.0;
-	P1Char1RedHealth = 1.0;
-	P1Char2Health = 1.0;
-	P1Char2RedHealth = 1.0;
-	P1Char3Health = 1.0;
-	P1Char3RedHealth = 1.0;
-	P2Char1Health = 1.0;
-	P2Char1RedHealth = 1.0;
-	P2Char2Health = 1.0;
-	P2Char2RedHealth = 1.0;
-	P2Char3Health = 1.0;
-	P2Char3RedHealth = 1.0;
-	P1Char1HealthNew = 1.0;
-	P1Char2HealthNew = 1.0;
-	P1Char3HealthNew = 1.0;
-	P2Char1HealthNew = 1.0;
-	P2Char2HealthNew = 1.0;
-	P2Char3HealthNew = 1.0;
-	P1Char1Slow = false;
-	P1Char2Slow = false;
-	P1Char3Slow = false;
-	P2Char1Slow = false;
-	P2Char2Slow = false;
-	P2Char3Slow = false;
-	DarkPhoenix = false;
-	Turnabout = false;
-	LockMODOKLOU = false;
-	P1C1MaxHP = 0;
-	P1C2MaxHP = 0;
-	P1C3MaxHP = 0;
-	P2C1MaxHP = 0;
-	P2C2MaxHP = 0;
-	P2C3MaxHP = 0;
-	CharacterSpeed = 1.0;
-	ModifyGameSpeed = false;
-	GameSpeed = 1.0;
-	QuickRestartType = 3;
-	selected_item = "Nothing";
-	selected_itemTwo = "Nothing";
-	selected_itemThree = "Nothing";
-	P1C1Slot2Free = false;
-	P1C1Slot3Free = false;
-	P1C1Slot4Free = false;
-	P1C1Slot5Free = false;
-	P1C2Slot2Free = false;
-	P1C2Slot3Free = false;
-	P1C2Slot4Free = false;
-	P1C2Slot5Free = false;
-	P1C3Slot2Free = false;
-	P1C3Slot3Free = false;
-	P1C3Slot4Free = false;
-	P1C3Slot5Free = false;
-	P2C1Slot2Free = false;
-	P2C1Slot3Free = false;
-	P2C1Slot4Free = false;
-	P2C1Slot5Free = false;
-	P2C2Slot2Free = false;
-	P2C2Slot3Free = false;
-	P2C2Slot4Free = false;
-	P2C2Slot5Free = false;
-	P2C3Slot2Free = false;
-	P2C3Slot3Free = false;
-	P2C3Slot4Free = false;
-	P2C3Slot5Free = false;
-	P1C1Jammed = false;
-	P1C2Jammed = false;
-	P1C3Jammed = false;
-	P2C1Jammed = false;
-	P2C2Jammed = false;
-	P2C3Jammed = false;
-	P1C1JammedAlready = false;
-	P1C2JammedAlready = false;
-	P1C3JammedAlready = false;
-	P2C1JammedAlready = false;
-	P2C2JammedAlready = false;
-	P2C3JammedAlready = false;
-	P1Meter = 10000;
-	P2Meter = 10000;
-	P1C1JammedSlot = 0;
-	P1C2JammedSlot = 0;
-	P1C3JammedSlot = 0;
-	P2C1JammedSlot = 0;
-	P2C2JammedSlot = 0;
-	P2C3JammedSlot = 0;
-	KOActiveCharacterAtStart = false;
-	KOActiveOpponentAtStart = false;
-	FrameDelayofDeath = 0;
-	DeathSiteX = 0.0;
-	DeathSiteY = 0.0;
-	Player1Character1Dead = false;
-	Player1Character2Dead = false;
-	Player1Character3Dead = false;
-	Player2Character1Dead = false;
-	Player2Character2Dead = false;
-	Player2Character3Dead = false;
-	P1Char1Speed = 1.0;
-	P1Char2Speed = 1.0;
-	P1Char3Speed = 1.0;
-	P2Char1Speed = 1.0;
-	P2Char2Speed = 1.0;
-	P2Char3Speed = 1.0;
-	MoveInputDisplay = false;
-	LockEvidence = false;
-	LockP1Meter = false;
-	LockP2Meter = false;
-	AlsoSetRedHealthP1 = false;
-	AlsoSetRedHealthP2 = false;
-	VergilSpiralSwordsForever = false;
-	ResetGameSpeed();
-	SetGlobalPlayerSpeed(1);
-	RemoveAllInstalls();
+	if (Player1CharNodeTree == 0 && Player2CharNodeTree == 0 && GameMode != 5)
+	{
+		GetMainPointers();
+		GetPlayerData();
+		GetCharacterIDs();
+		p1Pos = -125.0f;
+		p2Pos = 125.0f;
+		MODOKLOU = 1;
+		FrankLevel = 1;
+		PrestigePoints = 0.0;
+		WrightEvidenceA = -1;
+		WrightEvidenceB = -1;
+		WrightEvidenceC = -1;
+		SaveStateSlot = 0;
+		DormRed = 0;
+		DormBlue = 0;
+		DormSpellSet = false;
+		EndlessInstalls = false;
+		DeadpoolTeleportCount = 0;
+		FreezeDeadpoolTPCounter = false;
+		P1Character1Dead = false;
+		P1Character2Dead = false;
+		P1Character3Dead = false;
+		P2Character1Dead = false;
+		P2Character2Dead = false;
+		P2Character3Dead = false;
+		EndlessXFactor = false;
+		EndlessXFactorP1 = false;
+		EndlessXFactorP2 = false;
+		SpecialFeature = false;
+		HitboxDisplay = false;
+		SetIndividualHP = false;
+		AlsoSetRedHealth = false;
+		P1Char1Health = 1.0;
+		P1Char1RedHealth = 1.0;
+		P1Char2Health = 1.0;
+		P1Char2RedHealth = 1.0;
+		P1Char3Health = 1.0;
+		P1Char3RedHealth = 1.0;
+		P2Char1Health = 1.0;
+		P2Char1RedHealth = 1.0;
+		P2Char2Health = 1.0;
+		P2Char2RedHealth = 1.0;
+		P2Char3Health = 1.0;
+		P2Char3RedHealth = 1.0;
+		P1Char1HealthNew = 1.0;
+		P1Char2HealthNew = 1.0;
+		P1Char3HealthNew = 1.0;
+		P2Char1HealthNew = 1.0;
+		P2Char2HealthNew = 1.0;
+		P2Char3HealthNew = 1.0;
+		P1Char1Slow = false;
+		P1Char2Slow = false;
+		P1Char3Slow = false;
+		P2Char1Slow = false;
+		P2Char2Slow = false;
+		P2Char3Slow = false;
+		DarkPhoenix = false;
+		Turnabout = false;
+		LockMODOKLOU = false;
+		P1C1MaxHP = 0;
+		P1C2MaxHP = 0;
+		P1C3MaxHP = 0;
+		P2C1MaxHP = 0;
+		P2C2MaxHP = 0;
+		P2C3MaxHP = 0;
+		CharacterSpeed = 1.0;
+		ModifyGameSpeed = false;
+		GameSpeed = 1.0;
+		QuickRestartType = 3;
+		selected_item = "Nothing";
+		selected_itemTwo = "Nothing";
+		selected_itemThree = "Nothing";
+		P1C1Slot2Free = false;
+		P1C1Slot3Free = false;
+		P1C1Slot4Free = false;
+		P1C1Slot5Free = false;
+		P1C2Slot2Free = false;
+		P1C2Slot3Free = false;
+		P1C2Slot4Free = false;
+		P1C2Slot5Free = false;
+		P1C3Slot2Free = false;
+		P1C3Slot3Free = false;
+		P1C3Slot4Free = false;
+		P1C3Slot5Free = false;
+		P2C1Slot2Free = false;
+		P2C1Slot3Free = false;
+		P2C1Slot4Free = false;
+		P2C1Slot5Free = false;
+		P2C2Slot2Free = false;
+		P2C2Slot3Free = false;
+		P2C2Slot4Free = false;
+		P2C2Slot5Free = false;
+		P2C3Slot2Free = false;
+		P2C3Slot3Free = false;
+		P2C3Slot4Free = false;
+		P2C3Slot5Free = false;
+		P1C1Jammed = false;
+		P1C2Jammed = false;
+		P1C3Jammed = false;
+		P2C1Jammed = false;
+		P2C2Jammed = false;
+		P2C3Jammed = false;
+		P1C1JammedAlready = false;
+		P1C2JammedAlready = false;
+		P1C3JammedAlready = false;
+		P2C1JammedAlready = false;
+		P2C2JammedAlready = false;
+		P2C3JammedAlready = false;
+		P1Meter = 10000;
+		P2Meter = 10000;
+		P1C1JammedSlot = 0;
+		P1C2JammedSlot = 0;
+		P1C3JammedSlot = 0;
+		P2C1JammedSlot = 0;
+		P2C2JammedSlot = 0;
+		P2C3JammedSlot = 0;
+		KOActiveCharacterAtStart = false;
+		KOActiveOpponentAtStart = false;
+		FrameDelayofDeath = 0;
+		DeathSiteX = 0.0;
+		DeathSiteY = 0.0;
+		Player1Character1Dead = false;
+		Player1Character2Dead = false;
+		Player1Character3Dead = false;
+		Player2Character1Dead = false;
+		Player2Character2Dead = false;
+		Player2Character3Dead = false;
+		P1Char1Speed = 1.0;
+		P1Char2Speed = 1.0;
+		P1Char3Speed = 1.0;
+		P2Char1Speed = 1.0;
+		P2Char2Speed = 1.0;
+		P2Char3Speed = 1.0;
+		MoveInputDisplay = false;
+		LockEvidence = false;
+		LockP1Meter = false;
+		LockP2Meter = false;
+		AlsoSetRedHealthP1 = false;
+		AlsoSetRedHealthP2 = false;
+		VergilSpiralSwordsForever = false;
+		ResetGameSpeed();
+		SetGlobalPlayerSpeed(1);
+		RemoveAllInstalls();
+	}
 }

@@ -24,8 +24,27 @@
 #include "code/proc.h"
 #include "code/proc.cpp"
 #include <filesystem>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <unordered_map>
 
-//#include <io.h>
+/*std::ifstream inFile;
+inFile.open("");*/
+
+//For the CSV File.
+std::ifstream CSVFile;
+std::unordered_map<int, std::string> localizedStrings;
+static std::string getLocalizedString(int id) {
+	return localizedStrings[id];
+}
+
+#define LOCSTR(token) hash(#token)
+
+//static constexpr int hash(const char* string) {
+//	return string % 0xFFFF; // replace with a real hash function though
+//}
+
 static HINSTANCE ccheck = LoadLibrary(const_cast<char*>(ThreeHookPath.c_str()));
 
 bool ShowAboutWindow = false;
@@ -61,6 +80,10 @@ static void init(void) {
 	std::string MainFontPath = BaseProjectPath.string()  + "\\Resources\\DroidSans.ttf";
     ImFont* font1 = io.Fonts->AddFontFromFileTTF(MainFontPath.c_str(), 17.0f);
 
+	//For the.csv file.
+	std::string CSVPath = BaseProjectPath.string() + "\\Resources\\3TTAppText.csv";
+	CSVFile.open(CSVPath);
+
     ImGuiStyle& style = ImGui::GetStyle();
     ImVec4* colors = style.Colors;
 
@@ -73,7 +96,7 @@ static void init(void) {
 #pragma region MenuTabs
 //ImGui menu stuff begins here.
 
-void CheckIfInMatch()
+static void CheckIfInMatch()
 {
 
     if (Player1CharNodeTree == 0 && Player2CharNodeTree == 0)
@@ -172,7 +195,10 @@ static void TheMenuBar()
 
             if (ImGui::MenuItem(("Reset Settings To Default")))
             {
-                ResetSettings();
+				if (Hooked)
+				{
+					ResetSettings();
+				}
             }
 
             ImGui::EndMenu();
@@ -1026,15 +1052,18 @@ static void TheIncomingStuffTab()
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
 			ImGui::SetTooltip("Delays the death on training mode restart by the speciifed\nframes. 60 frames in a second. Try this\nif you want to have a charged action when doing incomings.");
 
-		if (ImGui::SliderFloat("Position of KO: X", &DeathSiteX, -800.0f, 800.0f))
+		if (ImGui::DragFloat("Position of KO: X", &DeathSiteX, 1.0f, -800.0f, 800.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
 		{
-
+			if (DeathSiteX < -800) { DeathSiteX = -800; }
+			if (DeathSiteX > 800) { DeathSiteX = 800; }
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
 			ImGui::SetTooltip("Sets horizotnal position of the character before they die.");
-		if (ImGui::SliderFloat("Position of KO: Y", &DeathSiteY, 0.0f, 2000.0f))
-		{
 
+		if (ImGui::DragFloat("Position of KO: Y", &DeathSiteY, 1.0f, 0.0f, 3000.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
+		{
+			if (DeathSiteY < 0) { DeathSiteY = 0; }
+			if (DeathSiteY > 3000) { DeathSiteY = 3000; }
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
 			ImGui::SetTooltip("Sets vertical position of the character before they die.");
