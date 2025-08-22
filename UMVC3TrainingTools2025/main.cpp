@@ -28,18 +28,24 @@
 #include <fstream>
 #include <sstream>
 #include <unordered_map>
+#include "code/Localizer.h"
 
 /*std::ifstream inFile;
 inFile.open("");*/
 
 //For the CSV File.
-std::ifstream CSVFile;
-std::unordered_map<int, std::string> localizedStrings;
-static std::string getLocalizedString(int id) {
-	return localizedStrings[id];
-}
+//std::ifstream CSVFile;
+std::string CSVPath;
+LocalizationMap LocalMap;
+std::string DefaultLanguage = "English";
+std::string UserLangauge = "";
+//LocalizationManager localMan;
+//std::unordered_map<int, std::string> localizedStrings;
+//static std::string getLocalizedString(int id) {
+//	return localizedStrings[id];
+//}
 
-#define LOCSTR(token) hash(#token)
+//#define LOCSTR(token) hash(#token)
 
 //static constexpr int hash(const char* string) {
 //	return string % 0xFFFF; // replace with a real hash function though
@@ -54,41 +60,59 @@ int GameModeRef = 0;
 int RecordingSlot = 1;
 
 static struct {
-    uint64_t last_time;
+	uint64_t last_time;
 } state;
 static sg_pass default_pass;
 
 static void init(void) {
 
-    sg_desc desc = {};
-    desc.environment = sglue_environment();
-    
-    sg_setup(&desc);
-    if (!sg_isvalid()) {
-        fprintf(stderr, "Failed to create Sokol GFX context!\n");
-        exit(-1);
-    }
-    stm_setup();
-    simgui_desc_t simgui_desc = {};
-    simgui_desc.no_default_font = true;
-    simgui_setup(&simgui_desc);
+	sg_desc desc = {};
+	desc.environment = sglue_environment();
 
-    ImGuiIO& io = ImGui::GetIO();
+	sg_setup(&desc);
+	if (!sg_isvalid()) {
+		fprintf(stderr, "Failed to create Sokol GFX context!\n");
+		exit(-1);
+	}
+	stm_setup();
+	simgui_desc_t simgui_desc = {};
+	simgui_desc.no_default_font = true;
+	simgui_setup(&simgui_desc);
+
+	ImGuiIO& io = ImGui::GetIO();
 
 	//Gets the base project path, the adds the rest of the font path to load it properly. Thanks Remy Lebeau.
 	std::filesystem::path BaseProjectPath = std::filesystem::current_path();
-	std::string MainFontPath = BaseProjectPath.string()  + "\\Resources\\DroidSans.ttf";
-    ImFont* font1 = io.Fonts->AddFontFromFileTTF(MainFontPath.c_str(), 17.0f);
+	std::string MainFontPath = BaseProjectPath.string() + "\\Resources\\DroidSans.ttf";
+	ImFont* font1 = io.Fonts->AddFontFromFileTTF(MainFontPath.c_str(), 17.0f);
 
 	//For the.csv file.
-	std::string CSVPath = BaseProjectPath.string() + "\\Resources\\3TTAppText.csv";
-	CSVFile.open(CSVPath);
+	CSVPath = BaseProjectPath.string() + "\\Resources\\3TTAppText.csv";
+	//Check if it exists.
+	if(std::filesystem::exists(CSVPath))
+	{
+		LocalMap = loadLocalizationCSV(CSVPath);
 
-    ImGuiStyle& style = ImGui::GetStyle();
-    ImVec4* colors = style.Colors;
+		//Gets the User's Language.
+		std::string UIUserLangauge = getUserUILanguage();
+		std::string ShortLang = UIUserLangauge.substr(0, 2);
+		//switch(ShortLang)
+		//{
+		//default:
+		//	break;
+		//}
 
-    //colors[ImGuiCol_WindowBg] = ImVec4(0.11f, 0.15f, 0.17f, 1.00f);
-    //colors[ImGuiCol_MenuBarBg] = ImVec4(0.0f, 0.0f, 0.0f, 1.00f);
+	}
+	else{
+		fprintf(stderr, "Unable to open 3TTAppText.csv!\n");
+		exit(-1);
+	}
+
+	ImGuiStyle& style = ImGui::GetStyle();
+	ImVec4* colors = style.Colors;
+
+	//colors[ImGuiCol_WindowBg] = ImVec4(0.11f, 0.15f, 0.17f, 1.00f);
+	//colors[ImGuiCol_MenuBarBg] = ImVec4(0.0f, 0.0f, 0.0f, 1.00f);
 
 
 }
@@ -99,161 +123,162 @@ static void init(void) {
 static void CheckIfInMatch()
 {
 
-    if (Player1CharNodeTree == 0 && Player2CharNodeTree == 0)
-    {
-        InMatch = false;
-    }
-    else
-    {
-        InMatch = true;
-    }
+	if (Player1CharNodeTree == 0 && Player2CharNodeTree == 0)
+	{
+		InMatch = false;
+	}
+	else
+	{
+		InMatch = true;
+	}
 }
 
 void TheAboutWindow(bool* p_open)
 {
-    ImGui::SetNextWindowPos(ImVec2(0, 25));
-    ImGui::SetNextWindowSize(ImVec2((float)sapp_width(), ((float)sapp_height() - 100)));
-    if (!ImGui::Begin("UMVC3 Training Tools Mod V0.8 Beta", p_open,ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
-    {
-        ImGui::End();
-        return;
-    }
-    ImGui::Text("2023 - 2025 By Eternal Yoshi");
-    ImGui::Separator();
-    ImGui::Text("Thanks To SanHKHaan, Sheep, Techs, anotak, & Gneiss\n for finding the pointers and memeory offsets that\nmade this possible, and Ermmaccer for the\noriginal UMVC3Hook.\n");
-    ImGui::Separator();
-    ImGui::Text("In case it isn't obvious, this tool is NOT designed to\nenable cheating in online multiplayer and\nis intended to only function in Training Mode.");
+	ImGui::SetNextWindowPos(ImVec2(0, 25));
+	ImGui::SetNextWindowSize(ImVec2((float)sapp_width(), ((float)sapp_height() - 100)));
+	if (!ImGui::Begin("UMVC3 Training Tools Mod V0.8 Beta", p_open, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
+	{
+		ImGui::End();
+		return;
+	}
+	ImGui::Text("2023 - 2025 By Eternal Yoshi");
+	ImGui::Separator();
+	ImGui::Text("Thanks To SanHKHaan, Sheep, Techs, anotak, & Gneiss\n for finding the pointers and memeory offsets that\nmade this possible, and Ermmaccer for the\noriginal UMVC3Hook.\n");
+	ImGui::Separator();
+	ImGui::Text("In case it isn't obvious, this tool is NOT designed to\nenable cheating in online multiplayer and\nis intended to only function in Training Mode.");
 
-    if (ImGui::Button("OK"))
-        ShowAboutWindow = false;
+	if (ImGui::Button("OK"))
+		ShowAboutWindow = false;
 
-    ImGui::End();
+	ImGui::End();
 
 }
 
 //My attempt to port hooking code starts here.
 static void CastTheHook()
 {
-    ProcID = GetProcId(L"umvc3.exe");
-    hProcess = OpenProcess(PROCESS_ALL_ACCESS, NULL, ProcID);
-    if (!hProcess)
-    {
-        DWORD ex = GetLastError();
-    }
+	ProcID = GetProcId(L"umvc3.exe");
+	hProcess = OpenProcess(PROCESS_ALL_ACCESS, NULL, ProcID);
+	if (!hProcess)
+	{
+		DWORD ex = GetLastError();
+	}
 
-    if (ProcID != 0)
-    {
-        ModuleBase = GetModuleBaseAddress(ProcID);
-        ValidVer = CheckGame();
-        if (ValidVer)Hooked = true;
-    }
-    else
-    {
-        Hooked = false;
-    }
-    HProc = hProcess;
+	if (ProcID != 0)
+	{
+		ModuleBase = GetModuleBaseAddress(ProcID);
+		ValidVer = CheckGame();
+		if (ValidVer)Hooked = true;
+	}
+	else
+	{
+		Hooked = false;
+	}
+	HProc = hProcess;
 }
 
 static void TheMenuBar()
 {
-    if (ShowAboutWindow) TheAboutWindow(&ShowAboutWindow);
+	if (ShowAboutWindow) TheAboutWindow(&ShowAboutWindow);
 
-    if (ImGui::BeginMenuBar())
-    {
-        if (ImGui::BeginMenu("File"))
-        {
+	if (ImGui::BeginMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
 
 #ifdef _DEBUG
-            //if (ImGui::MenuItem(("Find ThreeHook"), "CTRL+O"))
-            //{
-            //    std::string ChosenFile = "";
-            //    OPENFILENAME ofn = { sizeof(OPENFILENAME) };
-            //    char szFile[_MAX_PATH] = "ThreeHook";
-            //    const char szExt[] = ".asi\0"; // extra '\0' for lpstrFilter
-            //    ofn.hwndOwner = GetConsoleWindow();
-            //    ofn.lpstrFile = szFile; // <--------------------- initial file name
-            //    ofn.nMaxFile = sizeof(szFile) / sizeof(szFile[0]);
-            //    ofn.lpstrFilter = ofn.lpstrDefExt = szExt;
-            //    ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
-            //    if (GetOpenFileName(&ofn))
-            //    {
-            //        ChosenFile = ofn.lpstrFile;
-            //        ThreeHookPath = ChosenFile;
-            //        ccheck = LoadLibrary(const_cast<char*>(ThreeHookPath.c_str()));
-            //        if (ccheck)
-            //        {
-            //            typedef void(*DeployTheHooks)();
-            //            DeployTheHooks dhook = (DeployTheHooks)GetProcAddress((HMODULE)ccheck, "DeployTheHooks");
-            //            dhook();
-            //        }
+			//if (ImGui::MenuItem(("Find ThreeHook"), "CTRL+O"))
+			//{
+			//    std::string ChosenFile = "";
+			//    OPENFILENAME ofn = { sizeof(OPENFILENAME) };
+			//    char szFile[_MAX_PATH] = "ThreeHook";
+			//    const char szExt[] = ".asi\0"; // extra '\0' for lpstrFilter
+			//    ofn.hwndOwner = GetConsoleWindow();
+			//    ofn.lpstrFile = szFile; // <--------------------- initial file name
+			//    ofn.nMaxFile = sizeof(szFile) / sizeof(szFile[0]);
+			//    ofn.lpstrFilter = ofn.lpstrDefExt = szExt;
+			//    ofn.Flags = OFN_SHOWHELP | OFN_OVERWRITEPROMPT;
+			//    if (GetOpenFileName(&ofn))
+			//    {
+			//        ChosenFile = ofn.lpstrFile;
+			//        ThreeHookPath = ChosenFile;
+			//        ccheck = LoadLibrary(const_cast<char*>(ThreeHookPath.c_str()));
+			//        if (ccheck)
+			//        {
+			//            typedef void(*DeployTheHooks)();
+			//            DeployTheHooks dhook = (DeployTheHooks)GetProcAddress((HMODULE)ccheck, "DeployTheHooks");
+			//            dhook();
+			//        }
 
 
 
-            //    }
-            //}
+			//    }
+			//}
 #endif
 
-            if (ImGui::MenuItem(("Reset Settings To Default")))
-            {
+			if (ImGui::MenuItem(("Reset Settings To Default")))
+			{
 				if (Hooked)
 				{
 					ResetSettings();
 				}
-            }
+			}
 
-            ImGui::EndMenu();
-        }
+			ImGui::EndMenu();
+		}
 
-        if (ImGui::BeginMenu("Misc"))
-        {
+		if (ImGui::BeginMenu("Misc"))
+		{
 
-            ImGui::MenuItem("About", NULL, &ShowAboutWindow);
+			ImGui::MenuItem("About", NULL, &ShowAboutWindow);
 
-            ImGui::EndMenu();
-        }
+			ImGui::EndMenu();
+		}
 
-        ImGui::EndMenuBar();
-    }
+		ImGui::EndMenuBar();
+	}
 
 }
 
 static void TheCharacterOptionsTab()
 {
 	GetMainPointers();
-	if (ImGui::BeginTabItem("Character"))
+	if (ImGui::BeginTabItem((getLocalizedString(LocalMap, "P3_CHARACTER", DefaultLanguage)).c_str()))
 	{
 
-		ImGui::Text("Remember! These Parameters will only take\neffect in training mode.");
+		ImGui::Text((getLocalizedString(LocalMap, "P3_REMEMBER", DefaultLanguage)).c_str());
 
-		ImGui::SeparatorText("Frank West");
+		ImGui::SeparatorText((getLocalizedString(LocalMap, "P3_FRANK", DefaultLanguage)).c_str());
 
 		if (FrankLevel)
 		{
-			ImGui::Text("Frank West's Level");
+			ImGui::Text((getLocalizedString(LocalMap, "P3_FRANKLEVEL", DefaultLanguage)).c_str());
 			if (ImGui::SliderInt("Lv", &FrankLevel, 1, 5))
 			{
 				ChangeFrankLevel(FrankLevel);
 			}
 			if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-				ImGui::SetTooltip("Sets Frank West's level. His Prestige Points will be\nset to the lowest amount required for that level.");
+				ImGui::SetTooltip((getLocalizedString(LocalMap, "P3_FRANKLEVELD", DefaultLanguage)).c_str());
 		}
+
 
 #ifdef _DEBUG
-		/*
-		ImGui::SeparatorText("Vergil");
-		if (ImGui::Checkbox("Endless Spiral Swords", &VergilSpiralSwordsForever))
-		{
 
-		}
-		*/
+		//ImGui::SeparatorText("Vergil");
+		//if (ImGui::Checkbox("Endless Spiral Swords", &VergilSpiralSwordsForever))
+		//{
+
+		//}
 #endif
 
-		ImGui::SeparatorText("Phoenix Wright");
 
-		ImGui::Text("Mr. Wright's Evidence");
+		ImGui::SeparatorText((getLocalizedString(LocalMap, "P3_MRWRIGHT", DefaultLanguage)).c_str());
+
+		ImGui::Text((getLocalizedString(LocalMap, "P3_MRWRIGHTEVIDENCE", DefaultLanguage)).c_str());
 		if (WrightEvidenceA || WrightEvidenceB || WrightEvidenceC)
 		{
-			ImGui::Text("Evidence Slot 1");
+			ImGui::Text((getLocalizedString(LocalMap, "P3_MRWRIGHTEVIDENCE1", DefaultLanguage)).c_str());
 
 			if (ImGui::BeginCombo("##WrightEvidencecombo", selected_item))
 			{
@@ -276,9 +301,9 @@ static void TheCharacterOptionsTab()
 				ImGui::EndCombo();
 			}
 			if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-				ImGui::SetTooltip("Sets Mr. Wright's Evidence for this slot.");
+				ImGui::SetTooltip((getLocalizedString(LocalMap, "P3_MRWRIGHTEVIDENCED", DefaultLanguage)).c_str());
 
-			ImGui::Text("Evidence Slot 2");
+			ImGui::Text((getLocalizedString(LocalMap, "P3_MRWRIGHTEVIDENCE2", DefaultLanguage)).c_str());
 
 			if (ImGui::BeginCombo("##WrightEvidencecombo2", selected_itemTwo))
 			{
@@ -301,9 +326,9 @@ static void TheCharacterOptionsTab()
 				ImGui::EndCombo();
 			}
 			if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-				ImGui::SetTooltip("Sets Mr. Wright's Evidence for this slot.");
+				ImGui::SetTooltip((getLocalizedString(LocalMap, "P3_MRWRIGHTEVIDENCED", DefaultLanguage)).c_str());
 
-			ImGui::Text("Evidence Slot 3");
+			ImGui::Text((getLocalizedString(LocalMap, "P3_MRWRIGHTEVIDENCE3", DefaultLanguage)).c_str());
 
 			if (ImGui::BeginCombo("##WrightEvidencecombo3", selected_itemThree))
 			{
@@ -326,19 +351,19 @@ static void TheCharacterOptionsTab()
 				ImGui::EndCombo();
 			}
 			if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-				ImGui::SetTooltip("Sets Mr. Wright's Evidence for this slot.");
+				ImGui::SetTooltip((getLocalizedString(LocalMap, "P3_MRWRIGHTEVIDENCED", DefaultLanguage)).c_str());
 		}
 
-		if (ImGui::Checkbox("Lock Evidence", &LockEvidence))
+		if (ImGui::Checkbox((getLocalizedString(LocalMap, "P3_MRWRIGHTLOCKEVIDENCE", DefaultLanguage)).c_str(), &LockEvidence))
 		{
 
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Prevents the selected Evidence from being discarded when\nrestarting Training Mode, exiting Turnabout Mode, and discarding.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P3_MRWRIGHTLOCKEVIDENCED", DefaultLanguage)).c_str());
 
 
 		//ImGui::Text("Turnabout Toggle");
-		if (ImGui::Checkbox("Turnabout Toggle", &Turnabout))
+		if (ImGui::Checkbox((getLocalizedString(LocalMap, "P3_MRWRIGHTTURNABOUTT", DefaultLanguage)).c_str(), &Turnabout))
 		{
 			if (CheckTheMode() == true)
 			{
@@ -346,11 +371,11 @@ static void TheCharacterOptionsTab()
 			}
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Activates/Deactivates Turnabout Mode with no time limit, regardless\nof Evidence. Note that the glow isn't present but the\nmode still functions.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P3_MRWRIGHTTURNABOUTTD", DefaultLanguage)).c_str());
 
-		ImGui::SeparatorText("Phoenix/Jean");
+		ImGui::SeparatorText((getLocalizedString(LocalMap, "P3_JEAN", DefaultLanguage)).c_str());
 		//ImGui::Text("Dark Phoenix Toggle");
-		if (ImGui::Checkbox("Dark Phoenix Toggle", &DarkPhoenix))
+		if (ImGui::Checkbox((getLocalizedString(LocalMap, "P3_JEANDARKPHOENIX", DefaultLanguage)).c_str(), &DarkPhoenix))
 		{
 			if (CheckTheMode() == true)
 			{
@@ -358,12 +383,12 @@ static void TheCharacterOptionsTab()
 			}
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Activates Dark Phoenix, regardless of meter and health state.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P3_JEANDARKPHOENIXD", DefaultLanguage)).c_str());
 
-		ImGui::SeparatorText("MODOK");
+		ImGui::SeparatorText((getLocalizedString(LocalMap, "P3_MODOK", DefaultLanguage)).c_str());
 		if (MODOKLOU)
 		{
-			ImGui::Text("MODOK Level of Understanding");
+			ImGui::Text((getLocalizedString(LocalMap, "P3_MODOKLOU", DefaultLanguage)).c_str());
 			if (ImGui::SliderInt("LOU", &MODOKLOU, 1, 10))
 			{
 				if (CheckTheMode() == true)
@@ -373,9 +398,9 @@ static void TheCharacterOptionsTab()
 			}
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Sets MODOK's level of understanding. The flame on his head\nwon't update until at least 1 LOU point is used.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P3_MODOKLOUD", DefaultLanguage)).c_str());
 
-		if (ImGui::Checkbox("Lock Understanding", &LockMODOKLOU))
+		if (ImGui::Checkbox((getLocalizedString(LocalMap, "P3_MODOKLOCKU", DefaultLanguage)).c_str(), &LockMODOKLOU))
 		{
 			if (CheckTheMode() == true)
 			{
@@ -383,13 +408,13 @@ static void TheCharacterOptionsTab()
 			}
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Keeps MODOK's Level of Understanding at the specified value.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P3_MODOKLOCKUD", DefaultLanguage)).c_str());
 
-		ImGui::SeparatorText("Dormammu");
-		ImGui::Text("Dormammu's Spell Charges");
+		ImGui::SeparatorText((getLocalizedString(LocalMap, "P3_DORMAMMU", DefaultLanguage)).c_str());
+		ImGui::Text((getLocalizedString(LocalMap, "P3_DORMAMMUSPELL", DefaultLanguage)).c_str());
 
-		ImGui::Text("Power Of The Destructor");
-		if (ImGui::SliderInt("Red", &DormRed, 0, 3))
+		ImGui::Text((getLocalizedString(LocalMap, "P3_DORMAMMUSPELLRED", DefaultLanguage)).c_str());
+		if (ImGui::SliderInt((getLocalizedString(LocalMap, "P3_DORMRED", DefaultLanguage)).c_str(), &DormRed, 0, 3))
 		{
 			if (CheckTheMode() == true)
 			{
@@ -398,10 +423,10 @@ static void TheCharacterOptionsTab()
 			}
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Sets Dormammu's Red Charges and locks it.\nSet to 0 for unmodified behavior.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P3_DORMAMMUSPELLREDD", DefaultLanguage)).c_str());
 
-		ImGui::Text("Power Of The Creator");
-		if (ImGui::SliderInt("Blue", &DormBlue, 0, 3))
+		ImGui::Text((getLocalizedString(LocalMap, "P3_DORMAMMUSPELLBLUE", DefaultLanguage)).c_str());
+		if (ImGui::SliderInt((getLocalizedString(LocalMap, "P3_DORMBLUE", DefaultLanguage)).c_str(), &DormBlue, 0, 3))
 		{
 			if (CheckTheMode() == true)
 			{
@@ -410,11 +435,11 @@ static void TheCharacterOptionsTab()
 			}
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Sets Dormammu's Blue Charges and locks it.\nSet to 0 for unmodified behavior.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P3_DORMAMMUSPELLBLUED", DefaultLanguage)).c_str());
 
-		ImGui::SeparatorText("Deadpool");
+		ImGui::SeparatorText((getLocalizedString(LocalMap, "P3_DEADPOOL", DefaultLanguage)).c_str());
 		//ImGui::Text("Deadpool Teleport");
-		if (ImGui::SliderInt("Teleport Count", &DeadpoolTeleportCount, 0, 2))
+		if (ImGui::SliderInt((getLocalizedString(LocalMap, "P3_DEADPOOLTELEPORTCOUNT", DefaultLanguage)).c_str(), &DeadpoolTeleportCount, 0, 2))
 		{
 			if (CheckTheMode() == true)
 			{
@@ -422,20 +447,20 @@ static void TheCharacterOptionsTab()
 			}
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Sets Deadpool's teleport counter. It\nbackfires after 2 successful teleports.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P3_DEADPOOLTELEPORTCOUNTD", DefaultLanguage)).c_str());
 
-		if (ImGui::Checkbox("Lock Teleport Count", &FreezeDeadpoolTPCounter))
+		if (ImGui::Checkbox((getLocalizedString(LocalMap, "P3_DEADPOOLTELEPORTLOCK", DefaultLanguage)).c_str(), &FreezeDeadpoolTPCounter))
 		{
 			if (CheckTheMode() == true)
 			{
 			}
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Keeps Deadpool's teleport counter at the specified value.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P3_DEADPOOLTELEPORTLOCKD", DefaultLanguage)).c_str());
 
-		ImGui::SeparatorText("Etc.");
+		ImGui::SeparatorText((getLocalizedString(LocalMap, "P3_ETC", DefaultLanguage)).c_str());
 		//ImGui::Text("Endless Install Toggle");
-		if (ImGui::Checkbox("Endless Install Toggle", &EndlessInstalls))
+		if (ImGui::Checkbox((getLocalizedString(LocalMap, "P3_ENDLESSINSTALLS", DefaultLanguage)).c_str(), &EndlessInstalls))
 		{
 			if (CheckTheMode() == true)
 			{
@@ -443,7 +468,7 @@ static void TheCharacterOptionsTab()
 			}
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Sets and locks the install timers to a\ncrazy high value to keep them going. Note: will only\nwork for default characters and not modded ones at the moment.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P3_ENDLESSINSTALLSD", DefaultLanguage)).c_str());
 
 		ImGui::Separator();
 		ImGui::EndTabItem();
@@ -455,11 +480,12 @@ static void TheCharacterOptionsTab()
 static void TheExtraOptionsTab()
 {
 	GetMainPointers();
-	if (ImGui::BeginTabItem("Extra"))
+	//if (ImGui::BeginTabItem("Extra"))
+	if (ImGui::BeginTabItem((getLocalizedString(LocalMap, "P1_EXTRA", DefaultLanguage)).c_str()))
 	{
 		ImGui::Separator();
 
-		if (ImGui::Button("Restart To Intros"))
+		if (ImGui::Button((getLocalizedString(LocalMap, "P1_RESTARTINTRO", DefaultLanguage)).c_str()))
 		{
 			if (CheckTheMode() == true)
 			{
@@ -476,9 +502,9 @@ static void TheExtraOptionsTab()
 			}
 		}
 
-		ImGui::Text("Note: Pressing the above button multiple times will result\n in the intro replaying after FIGHT!!!");
+		ImGui::Text((getLocalizedString(LocalMap, "P1_RESTARTINTROD", DefaultLanguage)).c_str());
 
-		if (ImGui::Button("Restart To Ready"))
+		if (ImGui::Button((getLocalizedString(LocalMap, "P1_RESTARTREADY", DefaultLanguage)).c_str()))
 		{
 			if (CheckTheMode() == true)
 			{
@@ -495,9 +521,9 @@ static void TheExtraOptionsTab()
 			}
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Restarts training mode, but goes to the READY!!! state.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P1_RESTARTREADYD", DefaultLanguage)).c_str());
 
-		if (ImGui::Button("Restart Training Mode"))
+		if (ImGui::Button((getLocalizedString(LocalMap, "P1_RESTARTTRAINING", DefaultLanguage)).c_str()))
 		{
 			if (CheckTheMode() == true)
 			{
@@ -513,10 +539,10 @@ static void TheExtraOptionsTab()
 			}
 		}
 
-		ImGui::SeparatorText("Positioning");
+		ImGui::SeparatorText((getLocalizedString(LocalMap, "P1_POSITIONING", DefaultLanguage)).c_str());
 
-		ImGui::Text("Player 1 Position");
-		if (ImGui::DragFloat("P1 X Position", &p1Pos, 1.0f, -800.0f, 800.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
+		ImGui::Text((getLocalizedString(LocalMap, "P1_PLAYER1POSITION", DefaultLanguage)).c_str());
+		if (ImGui::DragFloat(((getLocalizedString(LocalMap, "P1_PLAYER1XPOSITION", DefaultLanguage)).c_str()), &p1Pos, 1.0f, -800.0f, 800.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
 		{
 			if (p1Pos > 800)
 			{
@@ -528,8 +554,8 @@ static void TheExtraOptionsTab()
 			}
 		}
 
-		ImGui::Text("Player 2 Position");
-		if (ImGui::DragFloat("P2 X Position", &p2Pos, 1.0f, -800.0f, 800.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
+		ImGui::Text((getLocalizedString(LocalMap, "P1_PLAYER2POSITION", DefaultLanguage)).c_str());
+		if (ImGui::DragFloat(((getLocalizedString(LocalMap, "P1_PLAYER2XPOSITION", DefaultLanguage)).c_str()), &p2Pos, 1.0f, -800.0f, 800.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
 		{
 			if (p2Pos > 800)
 			{
@@ -541,8 +567,8 @@ static void TheExtraOptionsTab()
 			}
 		}
 
-		ImGui::Text("Position Presets");
-		if (ImGui::Button("Default"))
+		ImGui::Text((getLocalizedString(LocalMap, "P1_POSITIONPRESETS", DefaultLanguage)).c_str());
+		if (ImGui::Button((getLocalizedString(LocalMap, "P1_POSDEFAULT", DefaultLanguage)).c_str()))
 		{
 
 			p1Pos = -125.0f;
@@ -551,7 +577,7 @@ static void TheExtraOptionsTab()
 
 		}
 		ImGui::SameLine();
-		if (ImGui::Button("Default P2 Side"))
+		if (ImGui::Button((getLocalizedString(LocalMap, "P1_POSDEFAULT2P", DefaultLanguage)).c_str()))
 		{
 
 			p1Pos = 125.0f;
@@ -559,7 +585,7 @@ static void TheExtraOptionsTab()
 
 
 		}
-		if (ImGui::Button("Left Corner"))
+		if (ImGui::Button((getLocalizedString(LocalMap, "P1_POSLEFT", DefaultLanguage)).c_str()))
 		{
 
 			p1Pos = -750.0f;
@@ -568,7 +594,7 @@ static void TheExtraOptionsTab()
 
 		}
 		ImGui::SameLine();
-		if (ImGui::Button("Left Corner P2 Side"))
+		if (ImGui::Button((getLocalizedString(LocalMap, "P1_POSLEFT2P", DefaultLanguage)).c_str()))
 		{
 
 			p1Pos = -800.0f;
@@ -577,7 +603,7 @@ static void TheExtraOptionsTab()
 
 		}
 
-		if (ImGui::Button("Right Corner"))
+		if (ImGui::Button((getLocalizedString(LocalMap, "P1_POSRIGHT", DefaultLanguage)).c_str()))
 		{
 
 			p1Pos = 750.0f;
@@ -586,7 +612,7 @@ static void TheExtraOptionsTab()
 
 		}
 		ImGui::SameLine();
-		if (ImGui::Button("Right Corner P2 Side"))
+		if (ImGui::Button((getLocalizedString(LocalMap, "P1_POSRIGHT2P", DefaultLanguage)).c_str()))
 		{
 
 			p1Pos = 800.0f;
@@ -595,31 +621,38 @@ static void TheExtraOptionsTab()
 
 		}
 
-		ImGui::SeparatorText("Etc");
+		ImGui::SeparatorText((getLocalizedString(LocalMap, "P1_ETC", DefaultLanguage)).c_str());
 
-		if (ImGui::Checkbox("Endless X-Factor P1", &EndlessXFactorP1))
+		if (ImGui::Checkbox(((getLocalizedString(LocalMap, "P1_ENDLESSX1P", DefaultLanguage)).c_str()), &EndlessXFactorP1))
 		{
 
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Sets and locks P1's X Factor timer to crazy high value\nto keep it going perpetually.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P1_ENDLESSX1PD", DefaultLanguage)).c_str());
 
 		ImGui::SameLine();
 
-		if (ImGui::Checkbox("Endless X-Factor P2", &EndlessXFactorP2))
+		if (ImGui::Checkbox(((getLocalizedString(LocalMap, "P1_ENDLESSX2P", DefaultLanguage)).c_str()), &EndlessXFactorP2))
 		{
 
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Sets and locks P2's X Factor timer to crazy high value\nto keep it going perpetually.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P1_ENDLESSX2PD", DefaultLanguage)).c_str());
 		ImGui::Separator();
 
-		ImGui::SeparatorText("Etc.");
+		//ImGui::SeparatorText("Etc.");
+
+		if (ImGui::Checkbox(((getLocalizedString(LocalMap, "P1_MOVEINPUTSTOLEFT", DefaultLanguage)).c_str()), &MoveInputDisplay))
+		{
+			LeftSideInputDisplay();
+		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P1_MOVEINPUTSTOLEFTD", DefaultLanguage)).c_str());
 
 		ImGui::Separator();
 
 		//ImGui::Text("Game Speed");
-		if (ImGui::DragFloat("Character Speed P1", &P1Char1Speed, 0.01f, 0.01666667f, 2.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
+		if (ImGui::DragFloat(((getLocalizedString(LocalMap, "P1_CHARACTERSPEEDP1", DefaultLanguage)).c_str()), &P1Char1Speed, 0.01f, 0.01666667f, 2.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
 		{
 
 			if (P1Char1Speed > 2.0)
@@ -634,9 +667,9 @@ static void TheExtraOptionsTab()
 			SetGlobalPlayerSpeed(P1Char1Speed);
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Sets the speed of all of Player 1's characters.\nWill effect the pitch of the characters' sounds.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P1_CHARACTERSPEEDP1D", DefaultLanguage)).c_str());
 
-		if (ImGui::DragFloat("Character Speed P2", &P2Char1Speed, 0.01f, 0.01666667f, 2.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
+		if (ImGui::DragFloat(((getLocalizedString(LocalMap, "P1_CHARACTERSPEEDP2", DefaultLanguage)).c_str()), &P2Char1Speed, 0.01f, 0.01666667f, 2.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
 		{
 
 			if (P2Char1Speed > 2.0)
@@ -651,9 +684,9 @@ static void TheExtraOptionsTab()
 			SetGlobalPlayerSpeed(P2Char1Speed);
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Sets the speed of all of Player 2's characters.\nWill effect the pitch of the characters' sounds.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P1_CHARACTERSPEEDP2D", DefaultLanguage)).c_str());
 
-		if (ImGui::Button("Normal Speed P1"))
+		if (ImGui::Button((getLocalizedString(LocalMap, "P1_NORMALSPEEDP1", DefaultLanguage)).c_str()))
 		{
 			P1Char1Speed = 1;
 			SetGlobalPlayerSpeed(P1Char1Speed);
@@ -661,13 +694,13 @@ static void TheExtraOptionsTab()
 
 		ImGui::SameLine();
 
-		if (ImGui::Button("Normal Speed P2"))
+		if (ImGui::Button((getLocalizedString(LocalMap, "P1_NORMALSPEEDP2", DefaultLanguage)).c_str()))
 		{
 			P2Char1Speed = 1;
 			SetGlobalPlayerSpeed(P1Char1Speed);
 		}
 
-		if (ImGui::Button("VJoe Slow Speed P1"))
+		if (ImGui::Button((getLocalizedString(LocalMap, "P1_VJOESLOWSPEEDP1", DefaultLanguage)).c_str()))
 		{
 			P1Char1Speed = 0.75;
 			SetGlobalPlayerSpeed(P1Char1Speed);
@@ -675,13 +708,13 @@ static void TheExtraOptionsTab()
 
 		ImGui::SameLine();
 
-		if (ImGui::Button("VJoe Slow Speed P2"))
+		if (ImGui::Button((getLocalizedString(LocalMap, "P1_VJOESLOWSPEEDP2", DefaultLanguage)).c_str()))
 		{
 			P2Char1Speed = 0.75;
 			SetGlobalPlayerSpeed(P1Char1Speed);
 		}
 
-		if (ImGui::Button("Vale of Mist Slow Speed P1"))
+		if (ImGui::Button((getLocalizedString(LocalMap, "P1_VALEOFMISTSPEEDP1", DefaultLanguage)).c_str()))
 		{
 			P1Char1Speed = 0.66666666667;
 			SetGlobalPlayerSpeed(P1Char1Speed);
@@ -689,7 +722,7 @@ static void TheExtraOptionsTab()
 
 		ImGui::SameLine();
 
-		if (ImGui::Button("Vale of Mist Slow Speed P2"))
+		if (ImGui::Button((getLocalizedString(LocalMap, "P1_VALEOFMISTSPEEDP2", DefaultLanguage)).c_str()))
 		{
 			P2Char1Speed = 0.66666666667;
 			SetGlobalPlayerSpeed(P1Char1Speed);
@@ -716,19 +749,10 @@ static void TheExtraOptionsTab()
 		}
 		*/
 
-		ImGui::Separator();
-
-
-		if (ImGui::Checkbox("Move Inputs to Left Side of Screen", &MoveInputDisplay))
-		{
-			LeftSideInputDisplay();
-		}
-		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Moves the input display to present inputs on the left side\nof the screen. Also displays them vertically.");
 
 		ImGui::Separator();
 
-		ImGui::Text("More features coming soon!");
+		ImGui::Text((getLocalizedString(LocalMap, "P1_MORESOON", DefaultLanguage)).c_str());
 
 		ImGui::EndTabItem();
 	}
@@ -738,36 +762,36 @@ static void TheStatusOptionsTab()
 {
 	GetMainPointers();
 	//Player and Status Related  Settings such as Health.
-	if (ImGui::BeginTabItem("Status"))
+	if (ImGui::BeginTabItem((getLocalizedString(LocalMap,"P2_STATUS", DefaultLanguage)).c_str()))
 	{
-		ImGui::SeparatorText("Character HP");
+		ImGui::SeparatorText((getLocalizedString(LocalMap, "P2_CHARACTERHP", DefaultLanguage)).c_str());
 
 		//Toggle for using individual character health.
-		if (ImGui::Checkbox("Set Individual Character Health(Applies during restarts).", &SetIndividualHP))
+		if (ImGui::Checkbox((getLocalizedString(LocalMap, "P2_SETINDIVIDUALHP", DefaultLanguage)).c_str(), &SetIndividualHP))
 		{
 
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Be sure to turn Life Recovery off in the pause menu options\nfor this to take effect properly.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P2_SETINDIVIDUALHPD", DefaultLanguage)).c_str());
 
 		//Toggle for Applying Health Settings to Red Health.
-		if (ImGui::Checkbox("Also Apply To P1's Red Health", &AlsoSetRedHealthP1))
+		if (ImGui::Checkbox((getLocalizedString(LocalMap, "P2_APPLYREDHPP1", DefaultLanguage)).c_str(), &AlsoSetRedHealthP1))
 		{
 
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Applies specified HP values to red health of Player 1's team.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P2_APPLYREDHPP1D", DefaultLanguage)).c_str());
 
-		if (ImGui::Checkbox("Also Apply To P2's Red Health", &AlsoSetRedHealthP2))
+		if (ImGui::Checkbox((getLocalizedString(LocalMap, "P2_APPLYREDHPP2", DefaultLanguage)).c_str(), &AlsoSetRedHealthP2))
 		{
 
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Applies specified HP values to red health of Player 2's team.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P2_APPLYREDHPP2D", DefaultLanguage)).c_str());
 
 		if (P1Char1Health)
 		{
-			ImGui::Text("Player 1 Character 1 Health");
+			ImGui::Text((getLocalizedString(LocalMap, "P2_HEALTHP1C1", DefaultLanguage)).c_str());
 			if (ImGui::DragFloat("P1C1 HP %", &P1Char1Health, 0.003f, 0.001f, 1.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
 			{
 
@@ -790,7 +814,7 @@ static void TheStatusOptionsTab()
 
 		if (P1Char2Health)
 		{
-			ImGui::Text("Player 1 Character 2 Health");
+			ImGui::Text((getLocalizedString(LocalMap, "P2_HEALTHP1C2", DefaultLanguage)).c_str());
 			if (ImGui::DragFloat("P1C2 HP %", &P1Char2Health, 0.003f, 0.001f, 1.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
 			{
 
@@ -812,7 +836,7 @@ static void TheStatusOptionsTab()
 
 		if (P1Char3Health)
 		{
-			ImGui::Text("Player 1 Character 3 Health");
+			ImGui::Text((getLocalizedString(LocalMap, "P2_HEALTHP1C3", DefaultLanguage)).c_str());
 			if (ImGui::DragFloat("P1C3 HP %", &P1Char3Health, 0.003f, 0.001f, 1.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
 			{
 
@@ -834,7 +858,7 @@ static void TheStatusOptionsTab()
 
 		if (P2Char1Health)
 		{
-			ImGui::Text("Player 2 Character 1 Health");
+			ImGui::Text((getLocalizedString(LocalMap, "P2_HEALTHP2C1", DefaultLanguage)).c_str());
 			if (ImGui::DragFloat("P2C1 HP %", &P2Char1Health, 0.003f, 0.001f, 1.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
 			{
 
@@ -856,7 +880,7 @@ static void TheStatusOptionsTab()
 
 		if (P2Char2Health)
 		{
-			ImGui::Text("Player 2 Character 2 Health");
+			ImGui::Text((getLocalizedString(LocalMap, "P2_HEALTHP2C2", DefaultLanguage)).c_str());
 			if (ImGui::DragFloat("P2C2 HP %", &P2Char2Health, 0.003f, 0.001f, 1.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
 			{
 
@@ -878,7 +902,7 @@ static void TheStatusOptionsTab()
 
 		if (P2Char3Health)
 		{
-			ImGui::Text("Player 2 Character 3 Health");
+			ImGui::Text((getLocalizedString(LocalMap, "P2_HEALTHP2C3", DefaultLanguage)).c_str());
 			if (ImGui::DragFloat("P2C3 HP %", &P2Char3Health, 0.003f, 0.001f, 1.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
 			{
 
@@ -898,12 +922,12 @@ static void TheStatusOptionsTab()
 			}
 		}
 
-		ImGui::SeparatorText("Hyper Meter");
+		ImGui::SeparatorText((getLocalizedString(LocalMap, "P2_HYPERMETER", DefaultLanguage)).c_str());
 
 		//if (P1Meter)
 		//{
-		ImGui::Text("Player 1 Meter");
-		if (ImGui::DragInt("P1 Meter", &P1Meter, 100.0f, 0, 50000, "%d"))
+		ImGui::Text((getLocalizedString(LocalMap, "P2_PLAYER1METER", DefaultLanguage)).c_str());
+		if (ImGui::DragInt((getLocalizedString(LocalMap, "P2_P1METER", DefaultLanguage)).c_str(), &P1Meter, 100.0f, 0, 50000, "%d"))
 		{
 			if (CheckTheMode() == true)
 			{
@@ -921,13 +945,13 @@ static void TheStatusOptionsTab()
 			}
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Sets player 1's meter. Every level of meter is 10000.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P2_P1METERD", DefaultLanguage)).c_str());
 		//}
 
 		//if (P2Meter)
 		//{
-		ImGui::Text("Player 2 Meter");
-		if (ImGui::DragInt("P2 Meter", &P2Meter, 100.0f, 0, 50000, "%d"))
+		ImGui::Text((getLocalizedString(LocalMap, "P2_PLAYER2METER", DefaultLanguage)).c_str());
+		if (ImGui::DragInt((getLocalizedString(LocalMap, "P2_P2METER", DefaultLanguage)).c_str(), &P2Meter, 100.0f, 0, 50000, "%d"))
 		{
 			if (CheckTheMode() == true)
 			{
@@ -946,38 +970,28 @@ static void TheStatusOptionsTab()
 			}
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Sets player 2's meter. Every level of meter is 10000.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P2_P2METERD", DefaultLanguage)).c_str());
 		//}
 
-		if (ImGui::Checkbox("Lock P1 Meter", &LockP1Meter))
+		if (ImGui::Checkbox((getLocalizedString(LocalMap, "P2_METERLOCKP1", DefaultLanguage)).c_str(), &LockP1Meter))
 		{
 
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Locks player 1's meter at the specified value.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P2_METERLOCKP1D", DefaultLanguage)).c_str());
 
 		ImGui::SameLine();
 
-		if (ImGui::Checkbox("Lock P2 Meter", &LockP2Meter))
+		if (ImGui::Checkbox((getLocalizedString(LocalMap, "P2_METERLOCKP2", DefaultLanguage)).c_str(), &LockP2Meter))
 		{
 
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Locks player 2's meter at the specified value.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P2_METERLOCKP2D", DefaultLanguage)).c_str());
 
-		ImGui::SeparatorText("Jamming Bomb/Reversed Controls");
+		ImGui::SeparatorText((getLocalizedString(LocalMap, "P2_JAMMINGBOMB", DefaultLanguage)).c_str());
 
-		if (ImGui::Checkbox("Player 1 Character 1", &P1C1Jammed))
-		{
-			if (CheckTheMode() == true)
-			{
-				JammingToggle();
-			}
-		}
-		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Reverses player 1's controls for this character,\ngiving them the Jamming Bomb effect.\nNote that no VFX is present when using this.");
-
-		if (ImGui::Checkbox("Player 1 Character 2", &P1C2Jammed))
+		if (ImGui::Checkbox((getLocalizedString(LocalMap, "P2_JAMP1C1", DefaultLanguage)).c_str(), &P1C1Jammed))
 		{
 			if (CheckTheMode() == true)
 			{
@@ -985,9 +999,9 @@ static void TheStatusOptionsTab()
 			}
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Reverses player 1's controls for this character,\ngiving them the Jamming Bomb effect.\nNote that no VFX is present when using this.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P2_JAMD", DefaultLanguage)).c_str());
 
-		if (ImGui::Checkbox("Player 1 Character 3", &P1C3Jammed))
+		if (ImGui::Checkbox((getLocalizedString(LocalMap, "P2_JAMP1C2", DefaultLanguage)).c_str(), &P1C2Jammed))
 		{
 			if (CheckTheMode() == true)
 			{
@@ -995,9 +1009,9 @@ static void TheStatusOptionsTab()
 			}
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Reverses player 1's controls for this character,\ngiving them the Jamming Bomb effect.\nNote that no VFX is present when using this.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P2_JAMD", DefaultLanguage)).c_str());
 
-		if (ImGui::Checkbox("Player 2 Character 1", &P2C1Jammed))
+		if (ImGui::Checkbox((getLocalizedString(LocalMap, "P2_JAMP1C3", DefaultLanguage)).c_str(), &P1C3Jammed))
 		{
 			if (CheckTheMode() == true)
 			{
@@ -1005,9 +1019,9 @@ static void TheStatusOptionsTab()
 			}
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Reverses player 2's controls for this character,\ngiving them the Jamming Bomb effect.\nNote that no VFX is present when using this.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P2_JAMD", DefaultLanguage)).c_str());
 
-		if (ImGui::Checkbox("Player 2 Character 2", &P2C2Jammed))
+		if (ImGui::Checkbox((getLocalizedString(LocalMap, "P2_JAMP2C1", DefaultLanguage)).c_str(), &P2C1Jammed))
 		{
 			if (CheckTheMode() == true)
 			{
@@ -1015,9 +1029,9 @@ static void TheStatusOptionsTab()
 			}
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Reverses player 2's controls for this character,\ngiving them the Jamming Bomb effect.\nNote that no VFX is present when using this.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P2_JAMD", DefaultLanguage)).c_str());
 
-		if (ImGui::Checkbox("Player 2 Character 3", &P2C3Jammed))
+		if (ImGui::Checkbox((getLocalizedString(LocalMap, "P2_JAMP2C2", DefaultLanguage)).c_str(), &P2C2Jammed))
 		{
 			if (CheckTheMode() == true)
 			{
@@ -1025,11 +1039,21 @@ static void TheStatusOptionsTab()
 			}
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Reverses player 2's controls for this character,\ngiving them the Jamming Bomb effect.\nNote that no VFX is present when using this.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P2_JAMD", DefaultLanguage)).c_str());
+
+		if (ImGui::Checkbox((getLocalizedString(LocalMap, "P2_JAMP2C3", DefaultLanguage)).c_str(), &P2C3Jammed))
+		{
+			if (CheckTheMode() == true)
+			{
+				JammingToggle();
+			}
+		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P2_JAMD", DefaultLanguage)).c_str());
 
 		ImGui::Separator();
 
-		ImGui::Text("More stuff coming soon!");
+		ImGui::Text((getLocalizedString(LocalMap, "P1_MORESOON", DefaultLanguage)).c_str());
 
 		ImGui::EndTabItem();
 
@@ -1039,84 +1063,113 @@ static void TheStatusOptionsTab()
 static void TheIncomingStuffTab()
 {
 	GetMainPointers();
-	if (ImGui::BeginTabItem("Incoming"))
+	if (ImGui::BeginTabItem((getLocalizedString(LocalMap, "P5_INCOMING", DefaultLanguage)).c_str()))
 	{
-		ImGui::Text("Experimental! Be Smart about using these.");
-		ImGui::Text("Be sure to set Life Recovery to Off in the Pause Menu\nfor these to work properly.");
+		ImGui::Text((getLocalizedString(LocalMap, "P5_INCOMINGW", DefaultLanguage)).c_str());
+		ImGui::Text((getLocalizedString(LocalMap, "P5_INCOMINGD", DefaultLanguage)).c_str());
 		ImGui::Separator();
 
-		ImGui::Text("Time Delay(Frames)");
-		if (ImGui::SliderInt("Frames Until Death", &FrameDelayofDeath, 0, 300))
+		ImGui::Text((getLocalizedString(LocalMap, "P5_INCOMINGTD", DefaultLanguage)).c_str());
+		if (ImGui::SliderInt((getLocalizedString(LocalMap, "P5_INCOMINGFRAMES", DefaultLanguage)).c_str(), &FrameDelayofDeath, 0, 300))
 		{
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Delays the death on training mode restart by the speciifed\nframes. 60 frames in a second. Try this\nif you want to have a charged action when doing incomings.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P5_INCOMINGFRAMESD", DefaultLanguage)).c_str());
 
-		if (ImGui::DragFloat("Position of KO: X", &DeathSiteX, 1.0f, -800.0f, 800.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
+		if (ImGui::DragFloat((getLocalizedString(LocalMap, "P5_INCOMINGKOPOSX", DefaultLanguage)).c_str(), &DeathSiteX, 1.0f, -800.0f, 800.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
 		{
 			if (DeathSiteX < -800) { DeathSiteX = -800; }
 			if (DeathSiteX > 800) { DeathSiteX = 800; }
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Sets horizotnal position of the character before they die.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P5_INCOMINGKOPOSXD", DefaultLanguage)).c_str());
 
-		if (ImGui::DragFloat("Position of KO: Y", &DeathSiteY, 1.0f, 0.0f, 3000.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
+		if (ImGui::DragFloat((getLocalizedString(LocalMap, "P5_INCOMINGKOPOSY", DefaultLanguage)).c_str(), &DeathSiteY, 1.0f, 0.0f, 3000.0f, "%.3f", ImGuiInputTextFlags_CharsDecimal))
 		{
 			if (DeathSiteY < 0) { DeathSiteY = 0; }
 			if (DeathSiteY > 3000) { DeathSiteY = 3000; }
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Sets vertical position of the character before they die.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P5_INCOMINGKOPOSYD", DefaultLanguage)).c_str());
+		ImGui::Separator();
 
-		if (ImGui::Checkbox("KO Player 1's Active Character At Training Mode Restart", &KOActiveCharacterAtStart))
+		if (ImGui::Button((getLocalizedString(LocalMap, "P5_INCOMINGSYNCP1SPOS", DefaultLanguage)).c_str()))
+		{
+			DeathSiteX = p1Pos;
+			DeathSiteY = 0;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button((getLocalizedString(LocalMap, "P5_INCOMINGSYNCP2SPOS", DefaultLanguage)).c_str()))
+		{
+			DeathSiteX = p2Pos;
+			DeathSiteY = 0;
+		}
+		ImGui::Separator();
+		ImGui::Text((getLocalizedString(LocalMap, "P5_INCOMINGDEATHPOSPRESETS", DefaultLanguage)).c_str());
+		if (ImGui::Button((getLocalizedString(LocalMap, "P5_INCOMINGPOSCENTER", DefaultLanguage)).c_str()))
+		{
+			DeathSiteX = 0;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button((getLocalizedString(LocalMap, "P5_INCOMINGPOSLCORNER", DefaultLanguage)).c_str()))
+		{
+			DeathSiteX = -800;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button((getLocalizedString(LocalMap, "P5_INCOMINGPOSRCORNER", DefaultLanguage)).c_str()))
+		{
+			DeathSiteX = 800;
+		}
+		ImGui::Separator();
+		if (ImGui::Checkbox((getLocalizedString(LocalMap, "P5_KOACTIVECHARACTERP1", DefaultLanguage)).c_str(), &KOActiveCharacterAtStart))
 		{
 			if (CheckTheMode() == true)
 			{
 			}
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Sets Player 1's character to die upon Training Mode restart.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P5_KOACTIVECHARACTERP1D", DefaultLanguage)).c_str());
 
-		if (ImGui::Checkbox("KO Player 2's Active Character At Training Mode Restart", &KOActiveOpponentAtStart))
+		if (ImGui::Checkbox((getLocalizedString(LocalMap, "P5_KOACTIVECHARACTERP2", DefaultLanguage)).c_str(), &KOActiveOpponentAtStart))
 		{
 			if (CheckTheMode() == true)
 			{
 			}
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
-			ImGui::SetTooltip("Sets Player 2's character to die upon Training mode restart.");
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P5_KOACTIVECHARACTERP2D", DefaultLanguage)).c_str());
 
-		ImGui::SeparatorText("KO Toggles");
+		ImGui::SeparatorText((getLocalizedString(LocalMap, "P5_KOTOGGLES", DefaultLanguage)).c_str());
 
-		if (ImGui::Checkbox("Player 1 C1", &Player1Character1Dead))
+		if (ImGui::Checkbox((getLocalizedString(LocalMap, "P5_KOTOGGLEP1C1", DefaultLanguage)).c_str(), &Player1Character1Dead))
 		{
 			KOToggles();
 		}
 		ImGui::SameLine();
-		if (ImGui::Checkbox("Player 1 C2", &Player1Character2Dead))
+		if (ImGui::Checkbox((getLocalizedString(LocalMap, "P5_KOTOGGLEP1C2", DefaultLanguage)).c_str(), &Player1Character2Dead))
 		{
 			KOToggles();
 		}
 		ImGui::SameLine();
-		if (ImGui::Checkbox("Player 1 C3", &Player1Character3Dead))
+		if (ImGui::Checkbox((getLocalizedString(LocalMap, "P5_KOTOGGLEP1C3", DefaultLanguage)).c_str(), &Player1Character3Dead))
 		{
 			KOToggles();
 		}
-		if (ImGui::Checkbox("Player 2 C1", &Player2Character1Dead))
-		{
-			KOToggles();
-		}
-		ImGui::SameLine();
-		if (ImGui::Checkbox("Player 2 C2", &Player2Character2Dead))
+		if (ImGui::Checkbox((getLocalizedString(LocalMap, "P5_KOTOGGLEP2C1", DefaultLanguage)).c_str(), &Player2Character1Dead))
 		{
 			KOToggles();
 		}
 		ImGui::SameLine();
-		if (ImGui::Checkbox("Player 2 C3", &Player2Character3Dead))
+		if (ImGui::Checkbox((getLocalizedString(LocalMap, "P5_KOTOGGLEP2C2", DefaultLanguage)).c_str(), &Player2Character2Dead))
 		{
 			KOToggles();
 		}
-		ImGui::Text("More stuff coming soon!");
+		ImGui::SameLine();
+		if (ImGui::Checkbox((getLocalizedString(LocalMap, "P5_KOTOGGLEP2C3", DefaultLanguage)).c_str(), &Player2Character3Dead))
+		{
+			KOToggles();
+		}
+		ImGui::Text((getLocalizedString(LocalMap, "P1_MORESOON", DefaultLanguage)).c_str());
 
 		ImGui::EndTabItem();
 
@@ -2172,9 +2225,9 @@ static void TheDebugStuffTab()
 
 }
 
-static void TheExtratDataTab()
+static void TheExtraDataTab()
 {
-	if (ImGui::BeginTabItem("Data"))
+	if (ImGui::BeginTabItem((getLocalizedString(LocalMap, "P4_DATA", DefaultLanguage)).c_str()))
 	{
 		GetMainPointers();
 		GetPlayerData();
@@ -2182,9 +2235,9 @@ static void TheExtratDataTab()
 		GetHitboxDataPart1();
 		GetHitstunTimers();
 
-		ImGui::SeparatorText("Hitstun Timers");
+		ImGui::SeparatorText((getLocalizedString(LocalMap, "P4_HITSTUNTIMERS", DefaultLanguage)).c_str());
 
-		if (ImGui::TreeNode("Hitstun Stuff - Click to show/hide"))
+		if (ImGui::TreeNode((getLocalizedString(LocalMap, "P4_HITSTUNTIMERSSH", DefaultLanguage)).c_str()))
 		{
 #pragma region Hitstun Stuff
 
@@ -2203,14 +2256,14 @@ static void TheExtratDataTab()
 
 			if (ImGui::BeginTable("table1", 3, flags))
 			{
-				ImGui::TableSetupColumn("Player", ImGuiTableColumnFlags_WidthFixed);
-				ImGui::TableSetupColumn("Ground", ImGuiTableColumnFlags_WidthFixed);
-				ImGui::TableSetupColumn("Air", ImGuiTableColumnFlags_WidthStretch);
+				ImGui::TableSetupColumn((getLocalizedString(LocalMap, "P4_HITSTUNPLAYER", DefaultLanguage)).c_str(), ImGuiTableColumnFlags_WidthFixed);
+				ImGui::TableSetupColumn((getLocalizedString(LocalMap, "P4_HITSTUNGROUND", DefaultLanguage)).c_str(), ImGuiTableColumnFlags_WidthFixed);
+				ImGui::TableSetupColumn((getLocalizedString(LocalMap, "P4_HITSTUNAIR", DefaultLanguage)).c_str(), ImGuiTableColumnFlags_WidthStretch);
 				ImGui::TableHeadersRow();
 
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0);
-				ImGui::Text("Player 1 Character 1");
+				ImGui::Text((getLocalizedString(LocalMap, "P4_HITSTUNP1C1", DefaultLanguage)).c_str());
 				ImGui::TableSetColumnIndex(1);
 				ImGui::Text("%f", P1C1GroundHitstunTimer);
 				ImGui::TableSetColumnIndex(2);
@@ -2218,7 +2271,7 @@ static void TheExtratDataTab()
 
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0);
-				ImGui::Text("Player 1 Character 2");
+				ImGui::Text((getLocalizedString(LocalMap, "P4_HITSTUNP1C2", DefaultLanguage)).c_str());
 				ImGui::TableSetColumnIndex(1);
 				ImGui::Text("%f", P1C2GroundHitstunTimer);
 				ImGui::TableSetColumnIndex(2);
@@ -2226,7 +2279,7 @@ static void TheExtratDataTab()
 
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0);
-				ImGui::Text("Player 1 Character 3");
+				ImGui::Text((getLocalizedString(LocalMap, "P4_HITSTUNP1C3", DefaultLanguage)).c_str());
 				ImGui::TableSetColumnIndex(1);
 				ImGui::Text("%f", P1C3GroundHitstunTimer);
 				ImGui::TableSetColumnIndex(2);
@@ -2234,7 +2287,7 @@ static void TheExtratDataTab()
 
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0);
-				ImGui::Text("Player 2 Character 1");
+				ImGui::Text((getLocalizedString(LocalMap, "P4_HITSTUNP2C1", DefaultLanguage)).c_str());
 				ImGui::TableSetColumnIndex(1);
 				ImGui::Text("%f", P2C1GroundHitstunTimer);
 				ImGui::TableSetColumnIndex(2);
@@ -2242,7 +2295,7 @@ static void TheExtratDataTab()
 
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0);
-				ImGui::Text("Player 2 Character 2");
+				ImGui::Text((getLocalizedString(LocalMap, "P4_HITSTUNP2C2", DefaultLanguage)).c_str());
 				ImGui::TableSetColumnIndex(1);
 				ImGui::Text("%f", P2C2GroundHitstunTimer);
 				ImGui::TableSetColumnIndex(2);
@@ -2250,37 +2303,13 @@ static void TheExtratDataTab()
 
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0);
-				ImGui::Text("Player 2 Character 3");
+				ImGui::Text((getLocalizedString(LocalMap, "P4_HITSTUNP2C3", DefaultLanguage)).c_str());
 				ImGui::TableSetColumnIndex(1);
 				ImGui::Text("%f", P2C3GroundHitstunTimer);
 				ImGui::TableSetColumnIndex(2);
 				ImGui::Text("%f", P2C3AirHitstunTimer);
 				ImGui::EndTable();
 			}
-
-			//ImGui::Text("Player 1 Character 1");
-			//ImGui::Text("GroundHitstunTimer: %f", P1C1GroundHitstunTimer);
-			//ImGui::Text("AirHitstunTimer: %f", P1C1AirHitstunTimer);
-
-			//ImGui::Text("Player 1 Character 2");
-			//ImGui::Text("GroundHitstunTimer: %f", P1C2GroundHitstunTimer);
-			//ImGui::Text("AirHitstunTimer: %f", P1C2AirHitstunTimer);
-
-			//ImGui::Text("Player 1 Character 3");
-			//ImGui::Text("GroundHitstunTimer: %f", P1C3GroundHitstunTimer);
-			//ImGui::Text("AirHitstunTimer: %f", P1C3AirHitstunTimer);
-
-			//ImGui::Text("Player 2 Character 1");
-			//ImGui::Text("GroundHitstunTimer: %f", P2C1GroundHitstunTimer);
-			//ImGui::Text("AirHitstunTimer: %f", P2C1AirHitstunTimer);
-
-			//ImGui::Text("Player 2 Character 2");
-			//ImGui::Text("GroundHitstunTimer: %f", P2C2GroundHitstunTimer);
-			//ImGui::Text("AirHitstunTimer: %f", P2C2AirHitstunTimer);
-
-			//ImGui::Text("Player 2 Character 3");
-			//ImGui::Text("GroundHitstunTimer: %f", P2C3GroundHitstunTimer);
-			//ImGui::Text("AirHitstunTimer: %f", P2C3AirHitstunTimer);
 
 			ImGui::PopFont();
 
@@ -2296,218 +2325,234 @@ static void TheExtratDataTab()
 #pragma endregion
 
 static void frame(void) {
-    // Gets the current window size.
-    const int width = sapp_width();
-    const int height = sapp_height();
-    float ratio = width / (float)height;
+	// Gets the current window size.
+	const int width = sapp_width();
+	const int height = sapp_height();
+	float ratio = width / (float)height;
 
-    const float dpi_scale = sapp_dpi_scale();
-    const float delta_time = (float)stm_sec(stm_diff(stm_now(), state.last_time));
-    state.last_time = stm_now();
+	const float dpi_scale = sapp_dpi_scale();
+	const float delta_time = (float)stm_sec(stm_diff(stm_now(), state.last_time));
+	state.last_time = stm_now();
 
-    // New ImGui frame
-    simgui_frame_desc_t frame_desc = {};
-    frame_desc.width = width;
-    frame_desc.height = height;
-    frame_desc.delta_time = delta_time;
-    frame_desc.dpi_scale = dpi_scale;
-    simgui_new_frame(&frame_desc);
-
-
-    // === ImGui UI Starts Here ===
-
-    ImGui::SetNextWindowPos(ImVec2(0, 0));
-    ImGui::SetNextWindowSize(ImVec2((float)sapp_width(), (float)sapp_height()));
-    ImGuiWindowFlags flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove ;
-
-    ImGui::Begin("ImGui + Sokol",0, flags);
-    //ImGui::PushFont(font1, 17.0f);
-    //ImGui::Text("Window size: %d x %d", width, height);
-    //ImGui::Text("Delta time: %.3f ms", delta_time * 1000.0f);
-
-    //The Menu Bar.
-    TheMenuBar();
-
-    //Tries to hook.
-    CastTheHook();
-
-    if (Hooked)
-    {
-
-        ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(70, 255, 70, 255));
-        ImGui::Text("If you can read this then the tool recognizes Marvel 3 is open.");
-        ImGui::Text("The version open is valid too.");
-        ImGui::PopStyleColor();
-        WackyStuff();
-
-        if (CheckTheMode() == true)
-        {
-            GetMainPointers();
-            CheckIfInMatch();
-            if (InMatch)
-            {
-                TickUpdates();
-                GetActiveInstallData();
-
-                if (ImGui::BeginTabBar("##tabs"))
-                {
-                    ReadProcessMemory(hProcess, (LPVOID*)(sAction + 0x118), &val, sizeof(val), 0);
-
-                    if (val != 0)
-                    {
-                        restarted = true;
-                        restartTimer = 0;
-                    }
-                    else if (restarted)
-                    {
-                        restartTimer += 1;
-                        if (restartTimer > 5)//0.166667 sec wait
-                        {
-                            RestartWithChanges();
-
-                            {
-                                //auto ptr = (P1Character1Data + 0x50);
-                                //*((float*)ptr) = p1Pos;
-                                if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x50), &p1Pos, sizeof(float), NULL))
-                                {
-
-                                }
-                                if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x50), &p1Pos, sizeof(float), NULL))
-                                {
-
-                                }
-                                if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x50), &p1Pos, sizeof(float), NULL))
-                                {
-
-                                }
-                            }
-                            {
-                                //auto ptr = (P1Character1Data + 0x50);
-                                //*((float*)ptr) = p2Pos;
-                                if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x50), &p2Pos, sizeof(float), NULL))
-                                {
-
-                                }
-                                if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x50), &p2Pos, sizeof(float), NULL))
-                                {
-
-                                }
-                                if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x50), &p2Pos, sizeof(float), NULL))
-                                {
-
-                                }
-                            }
-                            restarted = false;
-                            SetIndividualCharacterHealth();
-                            SetMeters();
-                            GetDebugData();
-                            KOToggles();
-
-                            //std::thread t1(DeathDelay);
-                            DeathDelay();
+	// New ImGui frame
+	simgui_frame_desc_t frame_desc = {};
+	frame_desc.width = width;
+	frame_desc.height = height;
+	frame_desc.delta_time = delta_time;
+	frame_desc.dpi_scale = dpi_scale;
+	simgui_new_frame(&frame_desc);
 
 
-                        }
+	// === ImGui UI Starts Here ===
+
+	ImGui::SetNextWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowSize(ImVec2((float)sapp_width(), (float)sapp_height()));
+	ImGuiWindowFlags flags = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+
+	ImGui::Begin("ImGui + Sokol", 0, flags);
+	//ImGui::PushFont(font1, 17.0f);
+	//ImGui::Text("Window size: %d x %d", width, height);
+	//ImGui::Text("Delta time: %.3f ms", delta_time * 1000.0f);
+
+	//The Menu Bar.
+	TheMenuBar();
+
+	//Tries to hook.
+	CastTheHook();
+
+	if (Hooked)
+	{
+
+		ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(70, 255, 70, 255));
+
+		//ImGui::Text("If you can read this then the tool recognizes Marvel 3 is open.");
+		//ImGui::Text((localMan.get("ACTIVATED_TRUE")).c_str());
+		ImGui::Text((getLocalizedString(LocalMap, "ACTIVATED_TRUE", DefaultLanguage)).c_str());
+
+		//ImGui::Text("The version open is valid too.");
+		//ImGui::Text((localMan.get("ACTIVATED_TRUE2")).c_str());
+		ImGui::Text((getLocalizedString(LocalMap, "ACTIVATED_TRUE2", DefaultLanguage)).c_str());
+		
+		ImGui::PopStyleColor();
+		WackyStuff();
+
+		if (CheckTheMode() == true)
+		{
+			GetMainPointers();
+			CheckIfInMatch();
+			if (InMatch)
+			{
+				TickUpdates();
+				GetActiveInstallData();
+
+				if (ImGui::BeginTabBar("##tabs"))
+				{
+					ReadProcessMemory(hProcess, (LPVOID*)(sAction + 0x118), &val, sizeof(val), 0);
+
+					if (val != 0)
+					{
+						restarted = true;
+						restartTimer = 0;
+					}
+					else if (restarted)
+					{
+						restartTimer += 1;
+						if (restartTimer > 5)//0.166667 sec wait
+						{
+							RestartWithChanges();
+
+							{
+								//auto ptr = (P1Character1Data + 0x50);
+								//*((float*)ptr) = p1Pos;
+								if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x50), &p1Pos, sizeof(float), NULL))
+								{
+
+								}
+								if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x50), &p1Pos, sizeof(float), NULL))
+								{
+
+								}
+								if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x50), &p1Pos, sizeof(float), NULL))
+								{
+
+								}
+							}
+							{
+								//auto ptr = (P1Character1Data + 0x50);
+								//*((float*)ptr) = p2Pos;
+								if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x50), &p2Pos, sizeof(float), NULL))
+								{
+
+								}
+								if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x50), &p2Pos, sizeof(float), NULL))
+								{
+
+								}
+								if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x50), &p2Pos, sizeof(float), NULL))
+								{
+
+								}
+							}
+							restarted = false;
+							SetIndividualCharacterHealth();
+							SetMeters();
+							GetDebugData();
+							KOToggles();
+
+							//std::thread t1(DeathDelay);
+							DeathDelay();
 
 
-                    }
+						}
 
-                    //Trampoline* tramp = Trampoline::MakeTrampoline(GetModuleHandle(nullptr));
 
-                    char TempByte = 0;
-                    ReadProcessMemory(hProcess, (LPVOID*)(0x140289c5a), &TempByte, sizeof(TempByte), 0);
+					}
 
-                    //For the Record/Playback Tick Function that's important.
-                    //
-                    // 
-                    //  
-                    //Memory::InjectHookEx(_addr(0x140289c5a), tramp->Jump(FUN_1402b41b0), PATCH_CALL, hProcess);
-                    //TrampHookPart2( hProcess,(LPVOID*)0x140289c5a,tramp, PATCH_CALL);
+					//Trampoline* tramp = Trampoline::MakeTrampoline(GetModuleHandle(nullptr));
 
-                    TickUpdates();
-                    TheExtraOptionsTab();
-                    TheStatusOptionsTab();
-                    TheCharacterOptionsTab();
-                    TheExtratDataTab();
+					char TempByte = 0;
+					ReadProcessMemory(hProcess, (LPVOID*)(0x140289c5a), &TempByte, sizeof(TempByte), 0);
+
+					//For the Record/Playback Tick Function that's important.
+					//
+					// 
+					//  
+					//Memory::InjectHookEx(_addr(0x140289c5a), tramp->Jump(FUN_1402b41b0), PATCH_CALL, hProcess);
+					//TrampHookPart2( hProcess,(LPVOID*)0x140289c5a,tramp, PATCH_CALL);
+
+					TickUpdates();
+					TheExtraOptionsTab();
+					TheStatusOptionsTab();
+					TheCharacterOptionsTab();
+					TheExtraDataTab();
 					TheIncomingStuffTab();
 #ifdef _DEBUG
 
-                    TheRecordPlaybackTab();
-                    
-                    TheDebugStuffTab();
+					TheRecordPlaybackTab();
 
-                    if (ccheck != NULL)
-                    {
-                        typedef void(*TheRecordButton)();
-                        TheRecordButton TRCTake1 = (TheRecordButton)GetProcAddress((HMODULE)ccheck, "TheRecordButton");
-                        TRCTake1();
-                    }
+					TheDebugStuffTab();
+
+					if (ccheck != NULL)
+					{
+						typedef void(*TheRecordButton)();
+						TheRecordButton TRCTake1 = (TheRecordButton)GetProcAddress((HMODULE)ccheck, "TheRecordButton");
+						TRCTake1();
+					}
 
 #endif
 
-                    ImGui::EndTabBar();
-                }
+					ImGui::EndTabBar();
+				}
 
-            }
-            else
-            {
-                ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255));
-                ImGui::Text("Choose the characters and get into a match.");
-                ImGui::PopStyleColor();
+			}
+			else
+			{
+				ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255));
+				//ImGui::Text("Choose the characters and get into a match.");
+				ImGui::Text((getLocalizedString(LocalMap, "ACTIVATED_NOTINMATCH", DefaultLanguage)).c_str());
+				ImGui::PopStyleColor();
 
-            }
-        }
-        else
-        {
-            ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255));
-            ImGui::Text("Get to Training Mode so this tool can do its thing.");
-            ImGui::PopStyleColor();
-        }
-
-
-    }
-    else
-    {
-        ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 70, 70, 255));
-        ImGui::Text("Nothing Doing until you open the game.");
-        ImGui::Text("If the game is open and nothing is happening,\nthen it could be possible\nyou are using an invalid version.");
-        ImGui::PopStyleColor();
-
-    }
+			}
+		}
+		else
+		{
+			ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255));
+			//ImGui::Text("Get to Training Mode so this tool can do its thing.");
+			ImGui::Text((getLocalizedString(LocalMap, "ACTIVATED_INMAINMENU", DefaultLanguage)).c_str());
+			ImGui::PopStyleColor();
+		}
 
 
-    ImGui::End();
-    ImGui::Render();
-    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(100, 100, 100, 217));
+	}
+	else
+	{
+		ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 70, 70, 255));
 
-    ImGui::PopStyleColor();
+		//ImGui::Text("Nothing Doing until you open the game.");		
+		ImGui::Text((getLocalizedString(LocalMap, "NOT_ACTIVATED1", DefaultLanguage)).c_str());
+		//ImGui::Text((localMan.get("NOT_ACTIVATED1")).c_str());
 
-    sg_pass pass = { .swapchain = sglue_swapchain() };
+		//ImGui::Text("If the game is open and nothing is happening,\nthen it could be possible\nyou are using an invalid version.");
+		ImGui::Text((getLocalizedString(LocalMap, "NOT_ACTIVATED2", DefaultLanguage)).c_str());
+		//ImGui::Text((localMan.get("NOT_ACTIVATED2")).c_str());
 
-    sg_begin_pass(&pass);
+		ImGui::PopStyleColor();
 
-    simgui_render();
-    sg_end_pass();
-    sg_commit();
+	}
+
+
+	ImGui::End();
+	ImGui::Render();
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(100, 100, 100, 217));
+
+	ImGui::PopStyleColor();
+
+	sg_pass pass = { .swapchain = sglue_swapchain() };
+
+	sg_begin_pass(&pass);
+
+	simgui_render();
+	sg_end_pass();
+	sg_commit();
 }
 
 static void input(const sapp_event* event) {
-    simgui_handle_event(event);
+	simgui_handle_event(event);
 }
 
 static void cleanup(void) {
-    simgui_shutdown();
-    sg_shutdown();
+	simgui_shutdown();
+	sg_shutdown();
 }
 
 sapp_desc sokol_main(int argc, char* argv[]) {
-    return {
-        .init_cb = init,
-        .frame_cb = frame,
-        .cleanup_cb = cleanup,
-        .event_cb = input,
-        .width = 480,
-        .height = 720,
-        .window_title = "UMVC3 Training Tools V0.8 Beta",
-    };
+	return {
+		.init_cb = init,
+		.frame_cb = frame,
+		.cleanup_cb = cleanup,
+		.event_cb = input,
+		.width = 480,
+		.height = 720,
+		.window_title = "UMVC3 Training Tools V0.8 Beta",
+	};
 }

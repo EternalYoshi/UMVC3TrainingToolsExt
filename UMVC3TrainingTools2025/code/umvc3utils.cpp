@@ -1621,6 +1621,57 @@ static void SetDeadpoolTeleport()
 
 }
 
+static int CheckInstallSlotA(int InstallSlot, int CharID, FighterInstall install, uintptr_t PlayerDataPointer)
+{
+
+	int CheckedID;
+	int CheckedMType;
+
+	if (CharID == 22)
+	{
+		ReadProcessMemory(hProcess, (LPVOID*)(PlayerDataPointer + 0x15F8), &CheckedID, sizeof(int), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(PlayerDataPointer + 0x15FC), &CheckedMType, sizeof(int), 0);
+
+		if ((CheckedID == 0 && CheckedMType == 0) || (CheckedID == 0 && CheckedMType == 34))
+		{
+			return 1;
+		}
+
+		ReadProcessMemory(hProcess, (LPVOID*)(PlayerDataPointer + 0x1678), &CheckedID, sizeof(int), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(PlayerDataPointer + 0x167C), &CheckedMType, sizeof(int), 0);
+		if ((CheckedID == 0 && CheckedMType == 0) || (CheckedID == 0 && CheckedMType == 34))
+		{
+			return 2;
+		}
+
+		ReadProcessMemory(hProcess, (LPVOID*)(PlayerDataPointer + 0x16F8), &CheckedID, sizeof(int), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(PlayerDataPointer + 0x16FC), &CheckedMType, sizeof(int), 0);
+		if ((CheckedID == 0 && CheckedMType == 0) || (CheckedID == 0 && CheckedMType == 34))
+		{
+			return 3;
+		}
+
+		ReadProcessMemory(hProcess, (LPVOID*)(PlayerDataPointer + 0x1778), &CheckedID, sizeof(int), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(PlayerDataPointer + 0x177C), &CheckedMType, sizeof(int), 0);
+		if ((CheckedID == 0 && CheckedMType == 0) || (CheckedID == 0 && CheckedMType == 34))
+		{
+			return 4;
+		}
+
+
+		ReadProcessMemory(hProcess, (LPVOID*)(PlayerDataPointer + 0x17F8), &CheckedID, sizeof(int), 0);
+		ReadProcessMemory(hProcess, (LPVOID*)(PlayerDataPointer + 0x17FC), &CheckedMType, sizeof(int), 0);
+		if ((CheckedID == 0 && CheckedMType == 0) || (CheckedID == 0 && CheckedMType == 34))
+		{
+			return 5;
+		}
+	}
+
+	return -1;
+
+
+}
+
 static void VergilSpiralSwords()
 {
 	int8_t SSOn = 1;
@@ -1628,39 +1679,178 @@ static void VergilSpiralSwords()
 	GetPlayerData();
 	GetCharacterIDs();
 
+
+
 	if (P1Character1ID == 22)
 	{
 		if (VergilSpiralSwordsForever == true)
 		{
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x15F0), &VergilSwords, sizeof(FighterInstall), NULL))
-			{
+			//Check if Install slot has Swords already.
+			switch (CheckInstallSlotA(1, 22, VergilSwords, P1Character1Data))
 
-			}
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f0), &SSOn, sizeof(SSOn), NULL))
 			{
+			case 1:
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x15F0), &VergilSwords, sizeof(FighterInstall), NULL))
+				{
 
-			}
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f1), &SSOn, sizeof(SSOn), NULL))
-			{
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f0), &SSOn, sizeof(SSOn), NULL))
+				{
 
-			}
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f2), &SSOn, sizeof(SSOn), NULL))
-			{
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f1), &SSOn, sizeof(SSOn), NULL))
+				{
 
-			}
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f3), &SSOn, sizeof(SSOn), NULL))
-			{
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f2), &SSOn, sizeof(SSOn), NULL))
+				{
 
-			}
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f4), &SSOn, sizeof(SSOn), NULL))
-			{
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f3), &SSOn, sizeof(SSOn), NULL))
+				{
 
-			}
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f5), &SSOn, sizeof(SSOn), NULL))
-			{
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f4), &SSOn, sizeof(SSOn), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f5), &SSOn, sizeof(SSOn), NULL))
+				{
+
+				}
+				break;
+
+			case 2:
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1670), &VergilSwords, sizeof(FighterInstall), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f0), &SSOn, sizeof(SSOn), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f1), &SSOn, sizeof(SSOn), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f2), &SSOn, sizeof(SSOn), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f3), &SSOn, sizeof(SSOn), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f4), &SSOn, sizeof(SSOn), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f5), &SSOn, sizeof(SSOn), NULL))
+				{
+
+				}
+				break;
+
+			case 3:
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x16F0), &VergilSwords, sizeof(FighterInstall), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f0), &SSOn, sizeof(SSOn), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f1), &SSOn, sizeof(SSOn), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f2), &SSOn, sizeof(SSOn), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f3), &SSOn, sizeof(SSOn), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f4), &SSOn, sizeof(SSOn), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f5), &SSOn, sizeof(SSOn), NULL))
+				{
+
+				}
+				break;
+
+			case 4:
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1770), &VergilSwords, sizeof(FighterInstall), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f0), &SSOn, sizeof(SSOn), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f1), &SSOn, sizeof(SSOn), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f2), &SSOn, sizeof(SSOn), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f3), &SSOn, sizeof(SSOn), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f4), &SSOn, sizeof(SSOn), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f5), &SSOn, sizeof(SSOn), NULL))
+				{
+
+				}
+				break;
+
+			case 5:
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x17F0), &VergilSwords, sizeof(FighterInstall), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f0), &SSOn, sizeof(SSOn), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f1), &SSOn, sizeof(SSOn), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f2), &SSOn, sizeof(SSOn), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f3), &SSOn, sizeof(SSOn), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f4), &SSOn, sizeof(SSOn), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x68f5), &SSOn, sizeof(SSOn), NULL))
+				{
+
+				}
+				break;
+
+			default:
+				break;
 
 			}
 		}
+
+
 		else
 		{
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x15F0), &EmptyInstall, sizeof(FighterInstall), NULL))
@@ -1719,6 +1909,8 @@ static void VergilSpiralSwords()
 	{
 
 	}
+
+
 
 }
 

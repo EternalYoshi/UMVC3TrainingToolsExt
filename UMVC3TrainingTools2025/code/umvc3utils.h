@@ -719,7 +719,6 @@ struct Recording {
 
 };
 
-
 inline FighterInstall EmptyInstall =
 {
 	1084673544,//IdentifyingHashA
@@ -970,6 +969,21 @@ inline FighterInstall VeilOfMist =
 	0,
 	-1,
 	-0
+};
+
+inline FighterInstall RedChi = 
+{
+
+};
+
+inline FighterInstall RedBlue = 
+{
+
+};
+
+inline FighterInstall RedGreen = 
+{
+
 };
 
 inline std::vector<Hurtbox> P1C1Hurtboxes;

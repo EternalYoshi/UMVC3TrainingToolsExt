@@ -1,6 +1,6 @@
 ID,English
 NOT_ACTIVATED1,Nothing Doing until you open the game.
-NOT_ACTIVATED2,"If the game is open and nothing is happening,\nthen it could be possible\nyou are using an invalid version."
+NOT_ACTIVATED2,"If the game is open and nothing is happening,\nthen it could be possible you are\nusing an invalid version."
 ACTIVATED_TRUE,If you can read this then the tool recognizes Marvel 3 is open.
 ACTIVATED_TRUE2,The version open is valid too.
 ACTIVATED_NOTINMATCH,Choose the characters and get into a match.
@@ -9,3 +9,152 @@ MENU_FILE,File
 FILE_RESETSETTINGS,Reset Settings To Default
 MENU_MISC,Misc
 MISC_ABOUT,About
+P1_EXTRA,Extra
+P1_RESTARTINTRO,Restart to Intros
+P1_RESTARTINTROD,"""Note: Pressing the above button multiple times will result\n in the intro replaying after FIGHT!!!"""
+P1_RESTARTREADY,Restart to Ready
+P1_RESTARTREADYD,"Restarts training mode, but goes to the READY!!! state."
+P1_RESTARTTRAINING,Restart Training Mode
+P1_POSITIONING,Positioning
+P1_PLAYER1POSITION,Player 1 Position
+P1_PLAYER1XPOSITION,P1 X Position
+P1_PLAYER2POSITION,Player 2 Position
+P1_PLAYER2XPOSITION,P2 X Position
+P1_POSITIONPRESETS,Position Presets
+P1_POSDEFAULT,Default
+P1_POSDEFAULT2P,Default P2 Side
+P1_POSLEFT,Left Corner
+P1_POSLEFT2P,Left Corner P2 Side
+P1_POSRIGHT,Right Corner
+P1_POSRIGHT2P,Right Corner P2 Side
+P1_ETC,Etc
+P1_ENDLESSX1P,Endless X-Factor P1
+P1_ENDLESSX1PD,"""Sets and locks P1's X-Factor timer to a crazy high value\nto keep it going perpetually."""
+P1_ENDLESSX2P,Endless X-Factor P2
+P1_ENDLESSX2PD,"""Sets and locks P2's X-Factor timer to a crazy high value\nto keep it going perpetually."""
+P1_CHARACTERSPEEDP1,Character Speed P1
+P1_CHARACTERSPEEDP1D,"""Sets the speed of all of Player 1's characters.\nWill affect the pitch of the characters' sounds."""
+P1_CHARACTERSPEEDP2,Character Speed P2
+P1_CHARACTERSPEEDP2D,"""Sets the speed of all of Player 2's characters.\nWill affect the pitch of the characters' sounds."""
+P1_NORMALSPEEDP1,Normal Speed P1
+P1_NORMALSPEEDP2,Normal Speed P2
+P1_VJOESLOWSPEEDP1,Vjoe Slow Speed P1
+P1_VJOESLOWSPEEDP2,Vjoe Slow Speed P2
+P1_VALEOFMISTSPEEDP1,Vale of Mist Slow Speed P1
+P1_VALEOFMISTSPEEDP2,Vale of Mist Slow Speed P2
+P1_MOVEINPUTSTOLEFT,Move Inputs to Left Side of Game Screen
+P1_MOVEINPUTSTOLEFTD,"""Moves the input display to present inputson the left side\nof the screen. Also displays them vertically."""
+P1_MORESOON,More features coming soon!
+P2_STATUS,Status
+P2_CHARACTERHP,Character HP
+P2_SETINDIVIDUALHP,Set Individual Character Health(Applies during restarts).
+P2_SETINDIVIDUALHPD,"""Be sure to turn Life Recovery off in the pause menu options\nfor this to take effect properly."""
+P2_APPLYREDHPP1,Also Apply To P1's Red Health
+P2_APPLYREDHPP1D,Applies specified HP values to red health of Player 1's team.
+P2_APPLYREDHPP2,Also Apply To P2's Red Health
+P2_APPLYREDHPP2D,Applies specified HP values to red health of Player 2's team.
+P2_HEALTHP1C1,Player 1 Character 1 Health
+P2_HEALTHP1C2,Player 1 Character 2 Health
+P2_HEALTHP1C3,Player 1 Character 3 Health
+P2_HEALTHP2C1,Player 2 Character 1 Health
+P2_HEALTHP2C2,Player 2 Character 2 Health
+P2_HEALTHP2C3,Player 2 Character 3 Health
+P2_HYPERMETER,Hyper Meter
+P2_PLAYER1METER,Player 1 Meter
+P2_P1METER,P1 Meter
+P2_P1METERD,Sets player 1's meter. Every level of meter is 10000.
+P2_PLAYER2METER,Player 2 Meter
+P2_P2METER,P2 Meter
+P2_P2METERD,Sets player 2's meter. Every level of meter is 10000.
+P2_METERLOCKP1,Lock P1 Meter
+P2_METERLOCKP1D,Locks player 1's meter at the specified value.
+P2_METERLOCKP2,Lock P2 Meter
+P2_METERLOCKP2D,Locks player 2's meter at the specified value.
+P2_JAMMINGBOMB,Jamming Bomb/Reversed Controls
+P2_JAMP1C1,Player 1 Character 1
+P2_JAMP1C2,Player 1 Character 2
+P2_JAMP1C3,Player 1 Character 3
+P2_JAMP2C1,Player 2 Character 1
+P2_JAMP2C2,Player 2 Character 2
+P2_JAMP2C3,Player 2 Character 3
+P2_JAMD,"""Reverses controls for this character,\ngiving them the Jamming Bomb effect.\nNote that no VFX is present when using this."""
+P3_CHARACTER,Character
+P3_REMEMBER,"""Remember! These Parameters will only take\neffect in training mode."""
+P3_FRANK,Frank West
+P3_FRANKLEVEL,Frank West's Level
+P3_FRANKLEVELD,"""Sets Frank West's level. His Prestige Points will be\nset to the lowest amount required for that level."""
+P3_MRWRIGHT,Phoenix Wright
+P3_MRWRIGHTEVIDENCE,Mr. Wright's Evidence
+P3_MRWRIGHTEVIDENCE1,Evidence Slot 1
+P3_MRWRIGHTEVIDENCE2,Evidence Slot 2
+P3_MRWRIGHTEVIDENCE3,Evidence Slot 3
+P3_MRWRIGHTEVIDENCED,Sets Mr. Wright's Evidence for this slot.
+P3_MRWRIGHTLOCKEVIDENCE,Lock Evidence
+P3_MRWRIGHTLOCKEVIDENCED,"""Prevents the selected Evidence from being discarded when\nrestarting Training Mode, exiting Turnabout Mode, and discarding."""
+P3_MRWRIGHTTURNABOUTT,Turnabout Mode Toggle
+P3_MRWRIGHTTURNABOUTTD,"""Activates/Deactivates Turnabout Mode with no time limit, regardless\nof Evidence. Note that the glow isn't present but the\nmode still functions."""
+P3_JEAN,Phoenix/Jean
+P3_JEANDARKPHOENIX,Dark Phoenix Toggle
+P3_JEANDARKPHOENIXD,"Activates Dark Phoenix, regardless of meter and health state."
+P3_MODOK,MODOK
+P3_MODOKLOU,MODOK Level of Understanding
+P3_MODOKLOUD,"""Sets MODOK's level of understanding. The flame on his head\nwon't update until at least 1 LOU point is used."""
+P3_MODOKLOCKU,Lock Understanding
+P3_MODOKLOCKUD,Keeps MODOK's Level of Understanding at the specified value.
+P3_DORMAMMU,Dormammu
+P3_DORMAMMUSPELL,Dormammu's Spell Charges
+P3_DORMAMMUSPELLRED,Power Of The Destructor
+P3_DORMRED,Red
+P3_DORMAMMUSPELLREDD,"""Sets Dormammu's Red Charges and locks it.\nSet to 0 for unmodified behavior."""
+P3_DORMAMMUSPELLBLUE,Power Of The Creator
+P3_DORMBLUE,Blue
+P3_DORMAMMUSPELLBLUED,"""Sets Dormammu's Blue Charges and locks it.\nSet to 0 for unmodified behavior."""
+P3_DORMAMMUSPELLLOCK,
+P3_DEADPOOL,Deadpool
+P3_DEADPOOLTELEPORTCOUNT,Teleport Count
+P3_DEADPOOLTELEPORTCOUNTD,"""Sets Deadpool's teleport counter. It\nbackfires after 2 successful teleports."""
+P3_DEADPOOLTELEPORTLOCK,Lock Teleport Count
+P3_DEADPOOLTELEPORTLOCKD,Keeps Deadpool's teleport counter at the specified value.
+P3_ETC,Etc.
+P3_ENDLESSINSTALLS,Endless Install Toggle
+P3_ENDLESSINSTALLSD,"""Sets and locks the install timers to a\ncrazy high value to keep them going. Note: will only\nwork for default characters and not modded ones at the moment."""
+P4_DATA,Data
+P4_DATAD,
+P4_HITSTUNTIMERS,Hitstun Timers
+P4_HITSTUNTIMERSSH,Hitstun Stuff - Click to Show/hide
+P4_HITSTUNPLAYER,Character
+P4_HITSTUNGROUND,Ground
+P4_HITSTUNAIR,Air
+P4_HITSTUNP1C1,Player 1 Character 1
+P4_HITSTUNP1C2,Player 1 Character 2
+P4_HITSTUNP1C3,Player 1 Character 3
+P4_HITSTUNP2C1,Player 2 Character 1
+P4_HITSTUNP2C2,Player 2 Character 2
+P4_HITSTUNP2C3,Player 2 Character 3
+P5_INCOMING,Incoming
+P5_INCOMINGW,Experimental! Be Smart about using these.
+P5_INCOMINGD,"""Be sure to set Life Recovery to Off in the Pause Menu\nfor these to work properly."""
+P5_INCOMINGTD,Time Delay(Frames)
+P5_INCOMINGFRAMES,Frames Until Death
+P5_INCOMINGFRAMESD,"""Delays the death on training mode restart by the speciifed\nframes. 60 frames in a second. Try this\nif you want to have a charged action when doing incomings."""
+P5_INCOMINGKOPOSX,Position of KO: X
+P5_INCOMINGKOPOSXD,Sets horizotnal position of the character before they die.
+P5_INCOMINGKOPOSY,Position of KO: Y
+P5_INCOMINGKOPOSYD,Sets vertical position of the character before they die.
+P5_INCOMINGSYNCP1SPOS,Sync to P1 Start Position
+P5_INCOMINGSYNCP2SPOS,Sync to P2 Start Position
+P5_INCOMINGDEATHPOSPRESETS,Death Position Presets
+P5_INCOMINGPOSCENTER,Center
+P5_INCOMINGPOSLCORNER,Left Corner
+P5_INCOMINGPOSRCORNER,Right Corner
+P5_KOACTIVECHARACTERP1,KO Player 1's Active Character At Training Mode Restart
+P5_KOACTIVECHARACTERP1D,Sets Player 1's character to die upon Training Mode restart.
+P5_KOACTIVECHARACTERP2,KO Player 2's Active Character At Training Mode Restart
+P5_KOACTIVECHARACTERP2D,Sets Player 2's character to die upon Training Mode restart.
+P5_KOTOGGLES,KO Toggles
+P5_KOTOGGLEP1C1,Player 1 C1
+P5_KOTOGGLEP1C2,Player 1 C2
+P5_KOTOGGLEP1C3,Player 1 C3
+P5_KOTOGGLEP2C1,Player 2 C1
+P5_KOTOGGLEP2C2,Player 2 C2
+P5_KOTOGGLEP2C3,Player 2 C3
