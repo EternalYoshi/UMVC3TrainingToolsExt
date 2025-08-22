@@ -91,7 +91,7 @@ P3_MRWRIGHTEVIDENCE3,Evidence Slot 3
 P3_MRWRIGHTEVIDENCED,Sets Mr. Wright's Evidence for this slot.
 P3_MRWRIGHTLOCKEVIDENCE,Lock Evidence
 P3_MRWRIGHTLOCKEVIDENCED,"""Prevents the selected Evidence from being discarded when\nrestarting Training Mode, exiting Turnabout Mode, and discarding."""
-P3_MRWRIGHTTURNABOUTT,Turnabout Mode Toggle
+P3_MRWRIGHTTURNABOUTT,Turnabout Toggle
 P3_MRWRIGHTTURNABOUTTD,"""Activates/Deactivates Turnabout Mode with no time limit, regardless\nof Evidence. Note that the glow isn't present but the\nmode still functions."""
 P3_JEAN,Phoenix/Jean
 P3_JEANDARKPHOENIX,Dark Phoenix Toggle

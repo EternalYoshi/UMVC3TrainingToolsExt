@@ -5016,6 +5016,33 @@ static void TheKillingFloor()
 	{
 		if (KOActiveCharacterAtStart)
 		{
+			//Checks for Jean and activates Dark Phoenix before KOing.
+			GetCharacterIDs();
+			if (P1Character1ID == 36)
+			{
+
+				int DPOnA = 1;
+				int DPOnB = 0;
+
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x15F0), &DarkPhoenixInstall, sizeof(FighterInstall), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x6930), &DPOnA, sizeof(DPOnA), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1548), &DPOnA, sizeof(DPOnA), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1588), &DPOnB, sizeof(DPOnB), NULL))
+				{
+
+				}
+
+				Sleep(16.67);
+			}
 
 			//X Coordinate.
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x50), &DeathSiteX, sizeof(float), NULL))
@@ -5084,6 +5111,34 @@ static void TheKillingFloor()
 		}
 		if (KOActiveOpponentAtStart)
 		{
+			//Checks for Jean and activates Dark Phoenix before KOing.
+			GetCharacterIDs();
+			if (P2Character1ID == 36)
+			{
+
+				int DPOnA = 1;
+				int DPOnB = 0;
+
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x15F0), &DarkPhoenixInstall, sizeof(FighterInstall), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x6930), &DPOnA, sizeof(DPOnA), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1548), &DPOnA, sizeof(DPOnA), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1588), &DPOnB, sizeof(DPOnB), NULL))
+				{
+
+				}
+
+				Sleep(16.67);
+			}
+
 			//X Coordinate.
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x50), &DeathSiteX, sizeof(float), NULL))
 			{
@@ -5154,6 +5209,36 @@ static void TheKillingFloor()
 	{
 		if (KOActiveCharacterAtStart)
 		{
+
+			//Checks for Jean and activates Dark Phoenix before KOing.
+			GetCharacterIDs();
+			if (P1Character1ID == 36)
+			{
+
+				int DPOnA = 1;
+				int DPOnB = 0;
+
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x15F0), &DarkPhoenixInstall, sizeof(FighterInstall), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x6930), &DPOnA, sizeof(DPOnA), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1548), &DPOnA, sizeof(DPOnA), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1588), &DPOnB, sizeof(DPOnB), NULL))
+				{
+
+				}
+
+				Sleep(16.67);
+			}
+
+
 			//Sets Health and Red Health to 0.
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1550), &FlagB, sizeof(int), NULL))
 			{
@@ -5193,6 +5278,35 @@ static void TheKillingFloor()
 		}
 		if (KOActiveOpponentAtStart)
 		{
+
+			//Checks for Jean and activates Dark Phoenix before KOing.
+			GetCharacterIDs();
+			if (P2Character1ID == 36)
+			{
+
+				int DPOnA = 1;
+				int DPOnB = 0;
+
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x15F0), &DarkPhoenixInstall, sizeof(FighterInstall), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x6930), &DPOnA, sizeof(DPOnA), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1548), &DPOnA, sizeof(DPOnA), NULL))
+				{
+
+				}
+				if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1588), &DPOnB, sizeof(DPOnB), NULL))
+				{
+
+				}
+
+				Sleep(16.67);
+			}
+
 			//Sets Health and Red Health to 0.
 			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1550), &FlagB, sizeof(int), NULL))
 			{
