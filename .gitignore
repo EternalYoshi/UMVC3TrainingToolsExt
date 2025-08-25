@@ -72,3 +72,6 @@ x64/UMVC3TrainingToolsV6.zip
 /UMVC3TrainingTools2025/x64
 /.vs/UMVC3TrainingTools2025/v17
 /.vs/UMVC3TrainingTools2025/FileContentIndex
+x64/Release/Resources/3TTAppText.csv
+x64/Release/Resources/DroidSans-Bold.ttf
+x64/Release/Resources/DroidSans.ttf

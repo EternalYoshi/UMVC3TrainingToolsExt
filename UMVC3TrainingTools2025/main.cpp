@@ -458,6 +458,25 @@ static void TheCharacterOptionsTab()
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
 			ImGui::SetTooltip((getLocalizedString(LocalMap, "P3_DEADPOOLTELEPORTLOCKD", DefaultLanguage)).c_str());
 
+
+		ImGui::SeparatorText((getLocalizedString(LocalMap, "P3_WESKER", DefaultLanguage)).c_str());
+
+		if (ImGui::Button((getLocalizedString(LocalMap, "P3_WESKERBREAKGLASSES", DefaultLanguage)).c_str()))
+		{
+			if (CheckTheMode() == true)
+			{
+				BreakWeskerGlasses();
+			}
+		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P3_WESKERBREAKGLASSESD", DefaultLanguage)).c_str());
+
+		if (ImGui::Checkbox((getLocalizedString(LocalMap, "P3_WESKERBREAKATSTART", DefaultLanguage)).c_str(), &BreakGlassesAtRestart))
+		{
+
+		}
+
+
 		ImGui::SeparatorText((getLocalizedString(LocalMap, "P3_ETC", DefaultLanguage)).c_str());
 		//ImGui::Text("Endless Install Toggle");
 		if (ImGui::Checkbox((getLocalizedString(LocalMap, "P3_ENDLESSINSTALLS", DefaultLanguage)).c_str(), &EndlessInstalls))

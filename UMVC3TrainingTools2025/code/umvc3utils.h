@@ -114,6 +114,8 @@ inline float P2Char1Speed = 1.0;
 inline float P2Char2Speed = 1.0;
 inline float P2Char3Speed = 1.0;
 inline bool LockEvidence = false;
+inline float ZeroHP = 0;
+inline bool BreakGlassesAtRestart = false;
 
 inline bool ModifyGameSpeed = false;
 inline float GameSpeed = 1.0;

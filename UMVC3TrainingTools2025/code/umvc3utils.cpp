@@ -1916,6 +1916,69 @@ static void VergilSpiralSwords()
 
 static void TurnOnTheSwords() {}
 
+static void BreakWeskerGlasses()
+{
+	GetPlayerData();
+	GetCharacterIDs();
+
+	if (P1Character1ID == 5) 
+	{
+
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x6908), &ZeroHP, sizeof(ZeroHP), NULL))
+		{
+
+		}
+	
+	}
+	if (P1Character2ID == 5)
+	{
+
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x6908), &ZeroHP, sizeof(ZeroHP), NULL))
+		{
+
+		}
+
+	}
+	if (P1Character3ID == 5)
+	{
+
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x6908), &ZeroHP, sizeof(ZeroHP), NULL))
+		{
+
+		}
+
+	}
+
+	if (P2Character1ID == 5)
+	{
+
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x6908), &ZeroHP, sizeof(ZeroHP), NULL))
+		{
+
+		}
+
+	}
+	if (P2Character2ID == 5)
+	{
+
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x6908), &ZeroHP, sizeof(ZeroHP), NULL))
+		{
+
+		}
+
+	}
+	if (P2Character3ID == 5)
+	{
+
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x6908), &ZeroHP, sizeof(ZeroHP), NULL))
+		{
+
+		}
+
+	}
+
+}
+
 static void ErrorOccured(DWORD errorMessageID)
 {
 	//MessageBox(hWnd, errorMessageID, "An Error Occured", MB_OK | MB_ICONERROR);
@@ -5612,7 +5675,10 @@ static void RestartWithChanges()
 	EndlessInstallBoolUpdate();
 	SetDeadpoolTeleport();
 	JammingToggleRestart();
-
+	if (BreakGlassesAtRestart == true) 
+	{
+		BreakWeskerGlasses();
+	}
 }
 
 //Updates things every frame.

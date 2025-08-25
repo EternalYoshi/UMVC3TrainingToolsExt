@@ -115,6 +115,10 @@ P3_DEADPOOLTELEPORTCOUNT,Teleport Count
 P3_DEADPOOLTELEPORTCOUNTD,"""Sets Deadpool's teleport counter. It\nbackfires after 2 successful teleports."""
 P3_DEADPOOLTELEPORTLOCK,Lock Teleport Count
 P3_DEADPOOLTELEPORTLOCKD,Keeps Deadpool's teleport counter at the specified value.
+P3_WESKER,Wesker
+P3_WESKERBREAKGLASSES,Break Glasses
+P3_WESKERBREAKATSTART,Break Glasses At Training Mode Restart
+P3_WESKERBREAKGLASSESD,"""Break Wesker's Glasses if on, destroy Wesker's Glasses\nif they're already broken. This does not restore\nthem if Glasses are off."""
 P3_ETC,Etc.
 P3_ENDLESSINSTALLS,Endless Install Toggle
 P3_ENDLESSINSTALLSD,"""Sets and locks the install timers to a\ncrazy high value to keep them going. Note: will only\nwork for default characters and not modded ones at the moment."""
