@@ -1921,14 +1921,14 @@ static void BreakWeskerGlasses()
 	GetPlayerData();
 	GetCharacterIDs();
 
-	if (P1Character1ID == 5) 
+	if (P1Character1ID == 5)
 	{
 
 		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x6908), &ZeroHP, sizeof(ZeroHP), NULL))
 		{
 
 		}
-	
+
 	}
 	if (P1Character2ID == 5)
 	{
@@ -4161,7 +4161,8 @@ static std::string HashToTypeName(uintptr_t Hash)
 		return "uShotOptionShieldSlash";
 
 		//Wolverine does not have any shot files.
-		// 
+
+
 		//Magneto Shots.
 	case 0x140ac1b30:
 		return "uShotMissileGravitySqueeze";
@@ -5060,6 +5061,174 @@ static bool CheckIfDead(uintptr_t PlayerPtr)
 	else { return false; }
 }
 
+static void ForJean(uintptr_t PlayerPtr)
+{
+	int DPOnA = 1;
+	int DPOnB = 0;
+
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(PlayerPtr + 0x15F0), &DarkPhoenixInstall, sizeof(FighterInstall), NULL))
+	{
+
+	}
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(PlayerPtr + 0x6930), &DPOnA, sizeof(DPOnA), NULL))
+	{
+
+	}
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(PlayerPtr + 0x1548), &DPOnA, sizeof(DPOnA), NULL))
+	{
+
+	}
+	if (!WriteProcessMemory(hProcess, (LPVOID*)(PlayerPtr + 0x1588), &DPOnB, sizeof(DPOnB), NULL))
+	{
+
+	}
+
+	Sleep(16.67);
+}
+
+static void TheReapersScythe(uintptr_t PlayerPtr)
+{
+	int FlagA = 89;
+	int FlagB = 0;
+	int FlagC = 1050672;
+	int FlagD = 85;
+	int FlagDGr = 0x50;
+	int FlagE = 87;
+	int FlagEGr = 0x42;
+	int FlagF = 131104;//0x20020 AIR
+	int FlagFGr = 131073;//0x20020 Ground
+	int FlagG = 73728;
+	int FlagGGr = 65536;
+	int FlagH = 525313;
+	int FlagHGr = 81922;
+	int FlagI = 131104;
+	int FlagJ = 73404422;
+	int FlagJGr = 100663298;
+
+	char PrevAGState = 0;
+	char PrevTagState = 0;
+	//Air/Ground State.
+	ReadProcessMemory(hProcess, (LPVOID*)(PlayerPtr + 0x14F4), &PrevAGState, sizeof(char), 0);
+	ReadProcessMemory(hProcess, (LPVOID*)(PlayerPtr + 0x14F0), &PrevTagState, sizeof(char), 0);
+
+	if (PrevAGState == 20)
+	{
+
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(PlayerPtr + 0x14F4), &FlagF, sizeof(int), NULL))
+		{
+
+		}
+		//Something Part 1.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(PlayerPtr + 0x1504), &FlagG, sizeof(int), NULL))
+		{
+
+		}
+		//Something Part 2.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(PlayerPtr + 0x1508), &FlagH, sizeof(int), NULL))
+		{
+
+		}
+		Sleep(15);
+		//Sets Health and Red Health to 0.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(PlayerPtr + 0x1550), &FlagB, sizeof(int), NULL))
+		{
+
+		}
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(PlayerPtr + 0x1558), &FlagB, sizeof(int), NULL))
+		{
+
+		}
+		//Action/Anm thing.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(PlayerPtr + 0x1310), &FlagD, sizeof(int), NULL))
+		{
+
+		}
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(PlayerPtr + 0x1314), &FlagE, sizeof(int), NULL))
+		{
+
+		}
+		Sleep(15);
+		//TagState Flag Thing.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(PlayerPtr + 0x14F0), &FlagC, sizeof(int), NULL))
+		{
+
+		}
+
+		//I dunno what this is.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(PlayerPtr + 0x14F8), &FlagJ, sizeof(int), NULL))
+		{
+
+		}
+	}
+	else
+	{
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(PlayerPtr + 0x14F4), &FlagFGr, sizeof(int), NULL))
+		{
+
+		}
+		//Something Part 1.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(PlayerPtr + 0x1504), &FlagGGr, sizeof(int), NULL))
+		{
+
+		}
+		//Something Part 2.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(PlayerPtr + 0x1508), &FlagHGr, sizeof(int), NULL))
+		{
+
+		}
+		Sleep(15);
+		//Sets Health and Red Health to 0.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(PlayerPtr + 0x1550), &FlagB, sizeof(int), NULL))
+		{
+
+		}
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(PlayerPtr + 0x1558), &FlagB, sizeof(int), NULL))
+		{
+
+		}
+		//Action/Anm thing.
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(PlayerPtr + 0x1310), &FlagDGr, sizeof(int), NULL))
+		{
+
+		}
+		if (!WriteProcessMemory(hProcess, (LPVOID*)(PlayerPtr + 0x1314), &FlagEGr, sizeof(int), NULL))
+		{
+
+		}
+		Sleep(15);
+		if (PrevTagState == 01) {
+			//TagState Flag Thing.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(PlayerPtr + 0x14F0), &FlagC, sizeof(int), NULL))
+			{
+
+			}
+
+			//I dunno what this is.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(PlayerPtr + 0x14F8), &FlagJGr, sizeof(int), NULL))
+			{
+
+			}
+		}
+		else
+		{
+			//TagState Flag Thing.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(PlayerPtr + 0x14F0), &FlagC, sizeof(int), NULL))
+			{
+
+			}
+
+			//I dunno what this is.
+			if (!WriteProcessMemory(hProcess, (LPVOID*)(PlayerPtr + 0x14F8), &FlagJ, sizeof(int), NULL))
+			{
+
+			}
+
+
+		}
+	}
+
+}
+
 static void TheKillingFloor()
 {
 	GetPlayerData();
@@ -5434,8 +5603,15 @@ static void KOToggles()
 {
 	int FlagB = 0;
 	int FlagC = 1050672;
+	int FlagD = 85;
+	int FlagE = 87;
+	int FlagF = 131104;
+	int FlagG = 73728;
+	int FlagH = 525313;
+	int FlagJ = 73404422;
+
 	GetPlayerData();
-	//Sleep(160);
+
 	if (Player1Character1Dead == true)
 	{
 		//Checks if character is already dead.
@@ -5445,21 +5621,14 @@ static void KOToggles()
 		}
 		else
 		{
-			//Sets Health and Red Health to 0.
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1550), &FlagB, sizeof(int), NULL))
+			GetCharacterIDs();
+			if (P1Character1ID == 36)
 			{
-
+				ForJean(P1Character1Data);
 			}
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x1558), &FlagB, sizeof(int), NULL))
-			{
-
-			}
+			TheReapersScythe(P1Character1Data);
 		}
-		//TagState Flag Thing.
-		if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character1Data + 0x14F0), &FlagC, sizeof(int), NULL))
-		{
 
-		}
 
 	}
 	else {}
@@ -5472,21 +5641,12 @@ static void KOToggles()
 		}
 		else
 		{
-			//Sets Health and Red Health to 0.
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x1550), &FlagB, sizeof(int), NULL))
+			GetCharacterIDs();
+			if (P1Character2ID == 36)
 			{
-
+				ForJean(P1Character2Data);
 			}
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x1558), &FlagB, sizeof(int), NULL))
-			{
-
-			}
-
-			//TagState Flag Thing.
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character2Data + 0x14F0), &FlagC, sizeof(int), NULL))
-			{
-
-			}
+			TheReapersScythe(P1Character2Data);
 		}
 	}
 	else {}
@@ -5499,21 +5659,12 @@ static void KOToggles()
 		}
 		else
 		{
-			//Sets Health and Red Health to 0.
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x1550), &FlagB, sizeof(int), NULL))
+			GetCharacterIDs();
+			if (P1Character3ID == 36)
 			{
-
+				ForJean(P1Character3Data);
 			}
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x1558), &FlagB, sizeof(int), NULL))
-			{
-
-			}
-
-			//TagState Flag Thing.
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P1Character3Data + 0x14F0), &FlagC, sizeof(int), NULL))
-			{
-
-			}
+			TheReapersScythe(P1Character3Data);
 		}
 	}
 	else {}
@@ -5524,23 +5675,14 @@ static void KOToggles()
 		{
 
 		}
-		else {
-			//Sets Health and Red Health to 0.
-
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1550), &FlagB, sizeof(int), NULL))
+		else
+		{
+			GetCharacterIDs();
+			if (P2Character1ID == 36)
 			{
-
+				ForJean(P2Character1Data);
 			}
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x1558), &FlagB, sizeof(int), NULL))
-			{
-
-			}
-
-			//TagState Flag Thing.
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character1Data + 0x14F0), &FlagC, sizeof(int), NULL))
-			{
-
-			}
+			TheReapersScythe(P2Character1Data);
 		}
 	}
 	else {}
@@ -5552,21 +5694,12 @@ static void KOToggles()
 
 		}
 		else {
-			//Sets Health and Red Health to 0.
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x1550), &FlagB, sizeof(int), NULL))
+			GetCharacterIDs();
+			if (P2Character2ID == 36)
 			{
-
+				ForJean(P2Character2Data);
 			}
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x1558), &FlagB, sizeof(int), NULL))
-			{
-
-			}
-
-			//TagState Flag Thing.
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character2Data + 0x14F0), &FlagC, sizeof(int), NULL))
-			{
-
-			}
+			TheReapersScythe(P2Character2Data);
 		}
 	}
 	else {}
@@ -5578,21 +5711,12 @@ static void KOToggles()
 
 		}
 		else {
-			//Sets Health and Red Health to 0.
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x1550), &FlagB, sizeof(int), NULL))
+			GetCharacterIDs();
+			if (P2Character3ID == 36)
 			{
-
+				ForJean(P2Character3Data);
 			}
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x1558), &FlagB, sizeof(int), NULL))
-			{
-
-			}
-
-			//TagState Flag Thing.
-			if (!WriteProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x14F0), &FlagC, sizeof(int), NULL))
-			{
-
-			}
+			TheReapersScythe(P2Character3Data);
 		}
 	}
 	else {}
@@ -5675,7 +5799,7 @@ static void RestartWithChanges()
 	EndlessInstallBoolUpdate();
 	SetDeadpoolTeleport();
 	JammingToggleRestart();
-	if (BreakGlassesAtRestart == true) 
+	if (BreakGlassesAtRestart == true)
 	{
 		BreakWeskerGlasses();
 	}
