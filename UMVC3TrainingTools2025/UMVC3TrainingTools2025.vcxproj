@@ -55,7 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Font Include="Resources\DroidSans-Bold.ttf" />
-    <Font Include="Resources\DroidSans.ttf" />
+    <Font Include="Resources\FontToUse.ttf" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Resources\Apache License.txt" />

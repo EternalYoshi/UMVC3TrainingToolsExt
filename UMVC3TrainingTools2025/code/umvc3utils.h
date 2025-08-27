@@ -413,6 +413,19 @@ inline float P2C2AirHitstunTimer;
 inline float P2C3GroundHitstunTimer;
 inline float P2C3AirHitstunTimer;
 
+inline float P1C1GroundHitstunTimerMAX = 0.0;
+inline float P1C1AirHitstunTimerMAX = 0.0;
+inline float P1C2GroundHitstunTimerMAX = 0.0;
+inline float P1C2AirHitstunTimerMAX = 0.0;
+inline float P1C3GroundHitstunTimerMAX = 0.0;
+inline float P1C3AirHitstunTimerMAX = 0.0;
+inline float P2C1GroundHitstunTimerMAX = 0.0;
+inline float P2C1AirHitstunTimerMAX = 0.0;
+inline float P2C2GroundHitstunTimerMAX = 0.0;
+inline float P2C2AirHitstunTimerMAX = 0.0;
+inline float P2C3GroundHitstunTimerMAX = 0.0;
+inline float P2C3AirHitstunTimerMAX = 0.0;
+
 inline uintptr_t DebugPointerOfSorts;
 
 inline std::string ThreeHookPath = "E:\\ULTIMATE MARVEL VS. CAPCOM 3\\Scripts\\ThreeHook.asi";

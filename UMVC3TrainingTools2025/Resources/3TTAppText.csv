@@ -129,12 +129,14 @@ P4_HITSTUNTIMERSSH,Hitstun Stuff - Click to Show/hide
 P4_HITSTUNPLAYER,Character
 P4_HITSTUNGROUND,Ground
 P4_HITSTUNAIR,Air
-P4_HITSTUNP1C1,Player 1 Character 1
-P4_HITSTUNP1C2,Player 1 Character 2
-P4_HITSTUNP1C3,Player 1 Character 3
-P4_HITSTUNP2C1,Player 2 Character 1
-P4_HITSTUNP2C2,Player 2 Character 2
-P4_HITSTUNP2C3,Player 2 Character 3
+P4_HITSTUNMAXGROUND,Max Ground
+P4_HITSTUNMAXAIR,Max Air
+P4_HITSTUNP1C1,P1 Character 1
+P4_HITSTUNP1C2,P1 Character 2
+P4_HITSTUNP1C3,P1 Character 3
+P4_HITSTUNP2C1,P2 Character 1
+P4_HITSTUNP2C2,P2 Character 2
+P4_HITSTUNP2C3,P2 Character 3
 P5_INCOMING,Incoming
 P5_INCOMINGW,Experimental! Be Smart about using these.
 P5_INCOMINGD,"""Be sure to set Life Recovery to Off in the Pause Menu\nfor these to work properly."""
@@ -162,3 +164,17 @@ P5_KOTOGGLEP1C3,Player 1 C3
 P5_KOTOGGLEP2C1,Player 2 C1
 P5_KOTOGGLEP2C2,Player 2 C2
 P5_KOTOGGLEP2C3,Player 2 C3
+P3_EVIDENCE1,Nothing
+P3_EVIDENCE2,Photo
+P3_EVIDENCE3,Watch
+P3_EVIDENCE4,Vase
+P3_EVIDENCE5,Folder
+P3_EVIDENCE6,Phone
+P3_EVIDENCE7,Knife
+P3_EVIDENCE8,Sunglasses
+P3_EVIDENCE9,Beer
+P3_EVIDENCEA,Bonsai
+P3_EVIDENCEB,Doll
+P3_EVIDENCEC,Figurine
+P3_EVIDENCED,Plunger
+P3_EVIDENCEE,Chicken

@@ -83,7 +83,7 @@ static void init(void) {
 
 	//Gets the base project path, the adds the rest of the font path to load it properly. Thanks Remy Lebeau.
 	std::filesystem::path BaseProjectPath = std::filesystem::current_path();
-	std::string MainFontPath = BaseProjectPath.string() + "\\Resources\\DroidSans.ttf";
+	std::string MainFontPath = BaseProjectPath.string() + "\\Resources\\FontToUse.ttf";
 	ImFont* font1 = io.Fonts->AddFontFromFileTTF(MainFontPath.c_str(), 17.0f);
 
 	//For the.csv file.
@@ -2273,11 +2273,13 @@ static void TheExtraDataTab()
 
 			ImGui::PopStyleVar(2);
 
-			if (ImGui::BeginTable("table1", 3, flags))
+			if (ImGui::BeginTable("table1", 5, flags))
 			{
 				ImGui::TableSetupColumn((getLocalizedString(LocalMap, "P4_HITSTUNPLAYER", DefaultLanguage)).c_str(), ImGuiTableColumnFlags_WidthFixed);
 				ImGui::TableSetupColumn((getLocalizedString(LocalMap, "P4_HITSTUNGROUND", DefaultLanguage)).c_str(), ImGuiTableColumnFlags_WidthFixed);
 				ImGui::TableSetupColumn((getLocalizedString(LocalMap, "P4_HITSTUNAIR", DefaultLanguage)).c_str(), ImGuiTableColumnFlags_WidthStretch);
+				ImGui::TableSetupColumn((getLocalizedString(LocalMap, "P4_HITSTUNMAXGROUND", DefaultLanguage)).c_str(), ImGuiTableColumnFlags_WidthFixed);
+				ImGui::TableSetupColumn((getLocalizedString(LocalMap, "P4_HITSTUNMAXAIR", DefaultLanguage)).c_str(), ImGuiTableColumnFlags_WidthStretch);
 				ImGui::TableHeadersRow();
 
 				ImGui::TableNextRow();
@@ -2287,6 +2289,10 @@ static void TheExtraDataTab()
 				ImGui::Text("%f", P1C1GroundHitstunTimer);
 				ImGui::TableSetColumnIndex(2);
 				ImGui::Text("%f", P1C1AirHitstunTimer);
+				ImGui::TableSetColumnIndex(3);
+				ImGui::Text("%f", P1C1GroundHitstunTimerMAX);
+				ImGui::TableSetColumnIndex(4);
+				ImGui::Text("%f", P1C1AirHitstunTimerMAX);
 
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0);
@@ -2295,6 +2301,10 @@ static void TheExtraDataTab()
 				ImGui::Text("%f", P1C2GroundHitstunTimer);
 				ImGui::TableSetColumnIndex(2);
 				ImGui::Text("%f", P1C2AirHitstunTimer);
+				ImGui::TableSetColumnIndex(3);
+				ImGui::Text("%f", P1C2GroundHitstunTimerMAX);
+				ImGui::TableSetColumnIndex(4);
+				ImGui::Text("%f", P1C2AirHitstunTimerMAX);
 
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0);
@@ -2303,6 +2313,10 @@ static void TheExtraDataTab()
 				ImGui::Text("%f", P1C3GroundHitstunTimer);
 				ImGui::TableSetColumnIndex(2);
 				ImGui::Text("%f", P1C3AirHitstunTimer);
+				ImGui::TableSetColumnIndex(3);
+				ImGui::Text("%f", P1C3GroundHitstunTimerMAX);
+				ImGui::TableSetColumnIndex(4);
+				ImGui::Text("%f", P1C3AirHitstunTimerMAX);
 
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0);
@@ -2311,6 +2325,10 @@ static void TheExtraDataTab()
 				ImGui::Text("%f", P2C1GroundHitstunTimer);
 				ImGui::TableSetColumnIndex(2);
 				ImGui::Text("%f", P2C1AirHitstunTimer);
+				ImGui::TableSetColumnIndex(3);
+				ImGui::Text("%f", P2C1GroundHitstunTimerMAX);
+				ImGui::TableSetColumnIndex(4);
+				ImGui::Text("%f", P2C1AirHitstunTimerMAX);
 
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0);
@@ -2319,6 +2337,10 @@ static void TheExtraDataTab()
 				ImGui::Text("%f", P2C2GroundHitstunTimer);
 				ImGui::TableSetColumnIndex(2);
 				ImGui::Text("%f", P2C2AirHitstunTimer);
+				ImGui::TableSetColumnIndex(3);
+				ImGui::Text("%f", P2C2GroundHitstunTimerMAX);
+				ImGui::TableSetColumnIndex(4);
+				ImGui::Text("%f", P2C2AirHitstunTimerMAX);
 
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0);
@@ -2327,6 +2349,10 @@ static void TheExtraDataTab()
 				ImGui::Text("%f", P2C3GroundHitstunTimer);
 				ImGui::TableSetColumnIndex(2);
 				ImGui::Text("%f", P2C3AirHitstunTimer);
+				ImGui::TableSetColumnIndex(3);
+				ImGui::Text("%f", P2C3GroundHitstunTimerMAX);
+				ImGui::TableSetColumnIndex(4);
+				ImGui::Text("%f", P2C3AirHitstunTimerMAX);
 				ImGui::EndTable();
 			}
 

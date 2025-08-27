@@ -5742,18 +5742,25 @@ static void GetHitstunTimers()
 
 	ReadProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x63EC), &P2C3GroundHitstunTimer, sizeof(float), 0);
 	ReadProcessMemory(hProcess, (LPVOID*)(P2Character3Data + 0x63F0), &P2C3AirHitstunTimer, sizeof(float), 0);
-	//inline float P1C1GroundHitstunTimer;
-	//inline float P1C1AirHitstunTimer;
-	//inline float P1C2GroundHitstunTimer;
-	//inline float P1C2AirHitstunTimer;
-	//inline float P1C3GroundHitstunTimer;
-	//inline float P1C3AirHitstunTimer;
-	//inline float P2C1GroundHitstunTimer;
-	//inline float P2C1AirHitstunTimer;
-	//inline float P2C2GroundHitstunTimer;
-	//inline float P2C2AirHitstunTimer;
-	//inline float P2C3GroundHitstunTimer;
-	//inline float P2C3AirHitstunTimer;
+
+	if (P1C1GroundHitstunTimerMAX < P1C1GroundHitstunTimer)P1C1GroundHitstunTimerMAX = P1C1GroundHitstunTimer;
+	if (P1C1AirHitstunTimerMAX < P1C1AirHitstunTimer)P1C1AirHitstunTimerMAX = P1C1AirHitstunTimer;
+
+	if (P1C2GroundHitstunTimerMAX < P1C2GroundHitstunTimer)P1C2GroundHitstunTimerMAX = P1C2GroundHitstunTimer;
+	if (P1C2AirHitstunTimerMAX < P1C2AirHitstunTimer)P1C2AirHitstunTimerMAX = P1C2AirHitstunTimer;
+
+	if (P1C3GroundHitstunTimerMAX < P1C3GroundHitstunTimer)P1C3GroundHitstunTimerMAX = P1C3GroundHitstunTimer;
+	if (P1C3AirHitstunTimerMAX < P1C3AirHitstunTimer)P1C3AirHitstunTimerMAX = P1C3AirHitstunTimer;
+
+	if (P2C1GroundHitstunTimerMAX < P2C1GroundHitstunTimer)P2C1GroundHitstunTimerMAX = P2C1GroundHitstunTimer;
+	if (P2C1AirHitstunTimerMAX < P2C1AirHitstunTimer)P2C1AirHitstunTimerMAX = P2C1AirHitstunTimer;
+
+	if (P2C2GroundHitstunTimerMAX < P2C2GroundHitstunTimer)P2C2GroundHitstunTimerMAX = P2C2GroundHitstunTimer;
+	if (P2C2AirHitstunTimerMAX < P2C2AirHitstunTimer)P2C2AirHitstunTimerMAX = P2C2AirHitstunTimer;
+
+	if (P2C3GroundHitstunTimerMAX < P2C3GroundHitstunTimer)P2C3GroundHitstunTimerMAX = P2C3GroundHitstunTimer;
+	if (P2C3AirHitstunTimerMAX < P2C3AirHitstunTimer)P2C3AirHitstunTimerMAX = P2C3AirHitstunTimer;
+
 }
 
 static void WackyStuff()
@@ -5776,10 +5783,29 @@ static void WackyStuff()
 
 }
 
+//Reset Hitstun Max Timers.
+static void ResetMaxTimers()
+{
+	P1C1GroundHitstunTimerMAX = 0.0;
+	P1C1AirHitstunTimerMAX = 0.0;
+	P1C2GroundHitstunTimerMAX = 0.0;
+	P1C2AirHitstunTimerMAX = 0.0;
+	P1C3GroundHitstunTimerMAX = 0.0;
+	P1C3AirHitstunTimerMAX = 0.0;
+	P2C1GroundHitstunTimerMAX = 0.0;
+	P2C1AirHitstunTimerMAX = 0.0;
+	P2C2GroundHitstunTimerMAX = 0.0;
+	P2C2AirHitstunTimerMAX = 0.0;
+	P2C3GroundHitstunTimerMAX = 0.0;
+	P2C3AirHitstunTimerMAX = 0.0;
+}
+
+
 //Carries over changes To restart.
 static void RestartWithChanges()
 {
 	ChangeFrankLevel(FrankLevel);
+	ResetMaxTimers();
 	if (Turnabout == true)
 	{
 		Objection();
