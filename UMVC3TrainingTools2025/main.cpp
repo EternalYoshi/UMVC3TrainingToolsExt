@@ -137,7 +137,7 @@ void TheAboutWindow(bool* p_open)
 {
 	ImGui::SetNextWindowPos(ImVec2(0, 25));
 	ImGui::SetNextWindowSize(ImVec2((float)sapp_width(), ((float)sapp_height() - 100)));
-	if (!ImGui::Begin("UMVC3 Training Tools Mod V0.8 Beta", p_open, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
+	if (!ImGui::Begin("UMVC3 Training Tools Mod V0.8", p_open, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
 	{
 		ImGui::End();
 		return;
@@ -2598,6 +2598,6 @@ sapp_desc sokol_main(int argc, char* argv[]) {
 		.event_cb = input,
 		.width = 480,
 		.height = 720,
-		.window_title = "UMVC3 Training Tools V0.8 Beta",
+		.window_title = "UMVC3 Training Tools V0.8",
 	};
 }
