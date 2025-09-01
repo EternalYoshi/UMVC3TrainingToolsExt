@@ -1,7 +1,7 @@
 A tool designed to incrase and improve quality of life of Ultimate Marvel vs Capcom 3's training mode.
 This tool adds more options to practice and setup situations that weren't present before.
 The recent build uses Mid 2025 revisions Imgui & Sokol with a D3D11 backend.
-Soon there will be more than 3 pages.
+The public build has 5 pages.
 
 Explanations:
 ================================================================================================================================
