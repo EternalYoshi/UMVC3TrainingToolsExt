@@ -89,7 +89,7 @@ static void init(void) {
 	//For the.csv file.
 	CSVPath = BaseProjectPath.string() + "\\Resources\\3TTAppText.csv";
 	//Check if it exists.
-	if(std::filesystem::exists(CSVPath))
+	if (std::filesystem::exists(CSVPath))
 	{
 		LocalMap = loadLocalizationCSV(CSVPath);
 
@@ -103,7 +103,7 @@ static void init(void) {
 		//}
 
 	}
-	else{
+	else {
 		fprintf(stderr, "Unable to open 3TTAppText.csv!\n");
 		exit(-1);
 	}
@@ -133,7 +133,7 @@ static void CheckIfInMatch()
 	}
 }
 
-void TheAboutWindow(bool* p_open)
+static void TheAboutWindow(bool* p_open)
 {
 	ImGui::SetNextWindowPos(ImVec2(0, 25));
 	ImGui::SetNextWindowSize(ImVec2((float)sapp_width(), ((float)sapp_height() - 100)));
@@ -781,7 +781,7 @@ static void TheStatusOptionsTab()
 {
 	GetMainPointers();
 	//Player and Status Related  Settings such as Health.
-	if (ImGui::BeginTabItem((getLocalizedString(LocalMap,"P2_STATUS", DefaultLanguage)).c_str()))
+	if (ImGui::BeginTabItem((getLocalizedString(LocalMap, "P2_STATUS", DefaultLanguage)).c_str()))
 	{
 		ImGui::SeparatorText((getLocalizedString(LocalMap, "P2_CHARACTERHP", DefaultLanguage)).c_str());
 
@@ -1089,8 +1089,10 @@ static void TheIncomingStuffTab()
 		ImGui::Separator();
 
 		ImGui::Text((getLocalizedString(LocalMap, "P5_INCOMINGTD", DefaultLanguage)).c_str());
-		if (ImGui::SliderInt((getLocalizedString(LocalMap, "P5_INCOMINGFRAMES", DefaultLanguage)).c_str(), &FrameDelayofDeath, 0, 300))
+		if (ImGui::DragInt((getLocalizedString(LocalMap, "P5_INCOMINGFRAMES", DefaultLanguage)).c_str(), &FrameDelayofDeath, 1,0,300, 0, 300))
 		{
+			if (FrameDelayofDeath < 0) { FrameDelayofDeath = 0; }
+			if (FrameDelayofDeath > 300) { FrameDelayofDeath = 300; }
 		}
 		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
 			ImGui::SetTooltip((getLocalizedString(LocalMap, "P5_INCOMINGFRAMESD", DefaultLanguage)).c_str());
@@ -2244,6 +2246,14 @@ static void TheDebugStuffTab()
 
 }
 
+static void ChangeTextColor(float Timer, std::string string)
+{
+	if (Timer > 150) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255)); }
+	if (Timer > 300) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 70, 70, 255)); }
+
+
+}
+
 static void TheExtraDataTab()
 {
 	if (ImGui::BeginTabItem((getLocalizedString(LocalMap, "P4_DATA", DefaultLanguage)).c_str()))
@@ -2282,77 +2292,229 @@ static void TheExtraDataTab()
 				ImGui::TableSetupColumn((getLocalizedString(LocalMap, "P4_HITSTUNMAXAIR", DefaultLanguage)).c_str(), ImGuiTableColumnFlags_WidthStretch);
 				ImGui::TableHeadersRow();
 
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0);
-				ImGui::Text((getLocalizedString(LocalMap, "P4_HITSTUNP1C1", DefaultLanguage)).c_str());
-				ImGui::TableSetColumnIndex(1);
-				ImGui::Text("%f", P1C1GroundHitstunTimer);
-				ImGui::TableSetColumnIndex(2);
-				ImGui::Text("%f", P1C1AirHitstunTimer);
-				ImGui::TableSetColumnIndex(3);
-				ImGui::Text("%f", P1C1GroundHitstunTimerMAX);
-				ImGui::TableSetColumnIndex(4);
-				ImGui::Text("%f", P1C1AirHitstunTimerMAX);
+				if (ColorHitstunTimers) {
 
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0);
-				ImGui::Text((getLocalizedString(LocalMap, "P4_HITSTUNP1C2", DefaultLanguage)).c_str());
-				ImGui::TableSetColumnIndex(1);
-				ImGui::Text("%f", P1C2GroundHitstunTimer);
-				ImGui::TableSetColumnIndex(2);
-				ImGui::Text("%f", P1C2AirHitstunTimer);
-				ImGui::TableSetColumnIndex(3);
-				ImGui::Text("%f", P1C2GroundHitstunTimerMAX);
-				ImGui::TableSetColumnIndex(4);
-				ImGui::Text("%f", P1C2AirHitstunTimerMAX);
+					ImGui::TableNextRow();
+					ImGui::TableSetColumnIndex(0);
+					ImGui::Text((getLocalizedString(LocalMap, "P4_HITSTUNP1C1", DefaultLanguage)).c_str());
+					ImGui::TableSetColumnIndex(1);
+					if (P1C1GroundHitstunTimer > 300) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 150, 150, 255)); }
+					else if (P1C1GroundHitstunTimer > 175) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255)); }
+					ImGui::Text("%f", P1C1GroundHitstunTimer);
+					if (P1C1GroundHitstunTimer > 150) { ImGui::PopStyleColor(); }
+					ImGui::TableSetColumnIndex(2);
+					if (P1C1AirHitstunTimer > 300) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 150, 150, 255)); }
+					else if (P1C1AirHitstunTimer > 175) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255)); }
+					ImGui::Text("%f", P1C1AirHitstunTimer);
+					if (P1C1AirHitstunTimer > 175) { ImGui::PopStyleColor(); }
+					ImGui::TableSetColumnIndex(3);
+					if (P1C1GroundHitstunTimerMAX > 300) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 150, 150, 255)); }
+					else if (P1C1GroundHitstunTimerMAX > 175) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255)); }
+					ImGui::Text("%f", P1C1GroundHitstunTimerMAX);
+					if (P1C1GroundHitstunTimerMAX > 175) { ImGui::PopStyleColor(); }
+					ImGui::TableSetColumnIndex(4);
+					if (P1C1AirHitstunTimerMAX > 300) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 150, 150, 255)); }
+					else if (P1C1AirHitstunTimerMAX > 175) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255)); }
+					ImGui::Text("%f", P1C1AirHitstunTimerMAX);
+					if (P1C1AirHitstunTimerMAX > 175) { ImGui::PopStyleColor(); }
 
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0);
-				ImGui::Text((getLocalizedString(LocalMap, "P4_HITSTUNP1C3", DefaultLanguage)).c_str());
-				ImGui::TableSetColumnIndex(1);
-				ImGui::Text("%f", P1C3GroundHitstunTimer);
-				ImGui::TableSetColumnIndex(2);
-				ImGui::Text("%f", P1C3AirHitstunTimer);
-				ImGui::TableSetColumnIndex(3);
-				ImGui::Text("%f", P1C3GroundHitstunTimerMAX);
-				ImGui::TableSetColumnIndex(4);
-				ImGui::Text("%f", P1C3AirHitstunTimerMAX);
 
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0);
-				ImGui::Text((getLocalizedString(LocalMap, "P4_HITSTUNP2C1", DefaultLanguage)).c_str());
-				ImGui::TableSetColumnIndex(1);
-				ImGui::Text("%f", P2C1GroundHitstunTimer);
-				ImGui::TableSetColumnIndex(2);
-				ImGui::Text("%f", P2C1AirHitstunTimer);
-				ImGui::TableSetColumnIndex(3);
-				ImGui::Text("%f", P2C1GroundHitstunTimerMAX);
-				ImGui::TableSetColumnIndex(4);
-				ImGui::Text("%f", P2C1AirHitstunTimerMAX);
+					ImGui::TableNextRow();
+					ImGui::TableSetColumnIndex(0);
+					ImGui::Text((getLocalizedString(LocalMap, "P4_HITSTUNP1C2", DefaultLanguage)).c_str());
+					ImGui::TableSetColumnIndex(1);
+					if (P1C2GroundHitstunTimer > 300) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 150, 150, 255)); }
+					else if (P1C2GroundHitstunTimer > 175) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255)); }
+					ImGui::Text("%f", P1C2GroundHitstunTimer);
+					if (P1C2GroundHitstunTimer > 150) { ImGui::PopStyleColor(); }
+					ImGui::TableSetColumnIndex(2);
+					if (P1C2AirHitstunTimer > 300) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 150, 150, 255)); }
+					else if (P1C2AirHitstunTimer > 175) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255)); }
+					ImGui::Text("%f", P1C2AirHitstunTimer);
+					if (P1C2AirHitstunTimer > 175) { ImGui::PopStyleColor(); }
+					ImGui::TableSetColumnIndex(3);
+					if (P1C2GroundHitstunTimerMAX > 300) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 150, 150, 255)); }
+					else if (P1C2GroundHitstunTimerMAX > 175) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255)); }
+					ImGui::Text("%f", P1C2GroundHitstunTimerMAX);
+					if (P1C2GroundHitstunTimerMAX > 175) { ImGui::PopStyleColor(); }
+					ImGui::TableSetColumnIndex(4);
+					if (P1C2AirHitstunTimerMAX > 300) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 150, 150, 255)); }
+					else if (P1C2AirHitstunTimerMAX > 175) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255)); }
+					ImGui::Text("%f", P1C2AirHitstunTimerMAX);
+					if (P1C2AirHitstunTimerMAX > 175) { ImGui::PopStyleColor(); }
 
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0);
-				ImGui::Text((getLocalizedString(LocalMap, "P4_HITSTUNP2C2", DefaultLanguage)).c_str());
-				ImGui::TableSetColumnIndex(1);
-				ImGui::Text("%f", P2C2GroundHitstunTimer);
-				ImGui::TableSetColumnIndex(2);
-				ImGui::Text("%f", P2C2AirHitstunTimer);
-				ImGui::TableSetColumnIndex(3);
-				ImGui::Text("%f", P2C2GroundHitstunTimerMAX);
-				ImGui::TableSetColumnIndex(4);
-				ImGui::Text("%f", P2C2AirHitstunTimerMAX);
+					ImGui::TableNextRow();
+					ImGui::TableSetColumnIndex(0);
+					ImGui::Text((getLocalizedString(LocalMap, "P4_HITSTUNP1C3", DefaultLanguage)).c_str());
+					ImGui::TableSetColumnIndex(1);
+					if (P1C3GroundHitstunTimer > 300) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 150, 150, 255)); }
+					else if (P1C3GroundHitstunTimer > 175) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255)); }
+					ImGui::Text("%f", P1C3GroundHitstunTimer);
+					if (P1C3GroundHitstunTimer > 150) { ImGui::PopStyleColor(); }
+					ImGui::TableSetColumnIndex(2);
+					if (P1C3AirHitstunTimer > 300) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 150, 150, 255)); }
+					else if (P1C3AirHitstunTimer > 175) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255)); }
+					ImGui::Text("%f", P1C3AirHitstunTimer);
+					if (P1C3AirHitstunTimer > 175) { ImGui::PopStyleColor(); }
+					ImGui::TableSetColumnIndex(3);
+					if (P1C3GroundHitstunTimerMAX > 300) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 150, 150, 255)); }
+					else if (P1C3GroundHitstunTimerMAX > 175) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255)); }
+					ImGui::Text("%f", P1C3GroundHitstunTimerMAX);
+					if (P1C3GroundHitstunTimerMAX > 175) { ImGui::PopStyleColor(); }
+					ImGui::TableSetColumnIndex(4);
+					if (P1C3AirHitstunTimerMAX > 300) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 150, 150, 255)); }
+					else if (P1C3AirHitstunTimerMAX > 175) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255)); }
+					ImGui::Text("%f", P1C3AirHitstunTimerMAX);
+					if (P1C3AirHitstunTimerMAX > 175) { ImGui::PopStyleColor(); }
 
-				ImGui::TableNextRow();
-				ImGui::TableSetColumnIndex(0);
-				ImGui::Text((getLocalizedString(LocalMap, "P4_HITSTUNP2C3", DefaultLanguage)).c_str());
-				ImGui::TableSetColumnIndex(1);
-				ImGui::Text("%f", P2C3GroundHitstunTimer);
-				ImGui::TableSetColumnIndex(2);
-				ImGui::Text("%f", P2C3AirHitstunTimer);
-				ImGui::TableSetColumnIndex(3);
-				ImGui::Text("%f", P2C3GroundHitstunTimerMAX);
-				ImGui::TableSetColumnIndex(4);
-				ImGui::Text("%f", P2C3AirHitstunTimerMAX);
+					ImGui::TableNextRow();
+					ImGui::TableSetColumnIndex(0);
+					ImGui::Text((getLocalizedString(LocalMap, "P4_HITSTUNP2C1", DefaultLanguage)).c_str());
+					ImGui::TableSetColumnIndex(1);
+					if (P2C1GroundHitstunTimer > 300) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 150, 150, 255)); }
+					else if (P2C1GroundHitstunTimer > 175) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255)); }
+					ImGui::Text("%f", P2C1GroundHitstunTimer);
+					if (P2C1GroundHitstunTimer > 150) { ImGui::PopStyleColor(); }
+					ImGui::TableSetColumnIndex(2);
+					if (P2C1AirHitstunTimer > 300) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 150, 150, 255)); }
+					else if (P2C1AirHitstunTimer > 175) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255)); }
+					ImGui::Text("%f", P2C1AirHitstunTimer);
+					if (P2C1AirHitstunTimer > 175) { ImGui::PopStyleColor(); }
+					ImGui::TableSetColumnIndex(3);
+					if (P2C1GroundHitstunTimerMAX > 300) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 150, 150, 255)); }
+					else if (P2C1GroundHitstunTimerMAX > 175) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255)); }
+					ImGui::Text("%f", P2C1GroundHitstunTimerMAX);
+					if (P2C1GroundHitstunTimerMAX > 175) { ImGui::PopStyleColor(); }
+					ImGui::TableSetColumnIndex(4);
+					if (P2C1AirHitstunTimerMAX > 300) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 150, 150, 255)); }
+					else if (P2C1AirHitstunTimerMAX > 175) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255)); }
+					ImGui::Text("%f", P2C1AirHitstunTimerMAX);
+					if (P2C1AirHitstunTimerMAX > 175) { ImGui::PopStyleColor(); }
+
+					ImGui::TableNextRow();
+					ImGui::TableSetColumnIndex(0);
+					ImGui::Text((getLocalizedString(LocalMap, "P4_HITSTUNP2C2", DefaultLanguage)).c_str());
+					ImGui::TableSetColumnIndex(1);
+					if (P2C2GroundHitstunTimer > 300) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 150, 150, 255)); }
+					else if (P2C2GroundHitstunTimer > 175) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255)); }
+					ImGui::Text("%f", P2C2GroundHitstunTimer);
+					if (P2C2GroundHitstunTimer > 150) { ImGui::PopStyleColor(); }
+					ImGui::TableSetColumnIndex(2);
+					if (P2C2AirHitstunTimer > 300) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 150, 150, 255)); }
+					else if (P2C2AirHitstunTimer > 175) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255)); }
+					ImGui::Text("%f", P2C2AirHitstunTimer);
+					if (P2C2AirHitstunTimer > 175) { ImGui::PopStyleColor(); }
+					ImGui::TableSetColumnIndex(3);
+					if (P2C2GroundHitstunTimerMAX > 300) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 150, 150, 255)); }
+					else if (P2C2GroundHitstunTimerMAX > 175) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255)); }
+					ImGui::Text("%f", P2C2GroundHitstunTimerMAX);
+					if (P2C2GroundHitstunTimerMAX > 175) { ImGui::PopStyleColor(); }
+					ImGui::TableSetColumnIndex(4);
+					if (P2C2AirHitstunTimerMAX > 300) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 150, 150, 255)); }
+					else if (P2C2AirHitstunTimerMAX > 175) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255)); }
+					ImGui::Text("%f", P2C2AirHitstunTimerMAX);
+					if (P2C2AirHitstunTimerMAX > 175) { ImGui::PopStyleColor(); }
+
+					ImGui::TableNextRow();
+					ImGui::TableSetColumnIndex(0);
+					ImGui::Text((getLocalizedString(LocalMap, "P4_HITSTUNP2C3", DefaultLanguage)).c_str());
+					ImGui::TableSetColumnIndex(1);
+					if (P2C3GroundHitstunTimer > 300) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 150, 150, 255)); }
+					else if (P2C3GroundHitstunTimer > 175) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255)); }
+					ImGui::Text("%f", P2C3GroundHitstunTimer);
+					if (P2C3GroundHitstunTimer > 150) { ImGui::PopStyleColor(); }
+					ImGui::TableSetColumnIndex(2);
+					if (P2C3AirHitstunTimer > 300) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 150, 150, 255)); }
+					else if (P2C3AirHitstunTimer > 175) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255)); }
+					ImGui::Text("%f", P2C3AirHitstunTimer);
+					if (P2C3AirHitstunTimer > 175) { ImGui::PopStyleColor(); }
+					ImGui::TableSetColumnIndex(3);
+					if (P2C3GroundHitstunTimerMAX > 300) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 150, 150, 255)); }
+					else if (P2C3GroundHitstunTimerMAX > 175) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255)); }
+					ImGui::Text("%f", P2C3GroundHitstunTimerMAX);
+					if (P2C3GroundHitstunTimerMAX > 175) { ImGui::PopStyleColor(); }
+					ImGui::TableSetColumnIndex(4);
+					if (P2C3AirHitstunTimerMAX > 300) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 150, 150, 255)); }
+					else if (P2C3AirHitstunTimerMAX > 175) { ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(255, 255, 70, 255)); }
+					ImGui::Text("%f", P2C3AirHitstunTimerMAX);
+					if (P2C3AirHitstunTimerMAX > 175) { ImGui::PopStyleColor(); }
+					
+				}
+				else
+				{
+					ImGui::TableNextRow();
+					ImGui::TableSetColumnIndex(0);
+					ImGui::Text((getLocalizedString(LocalMap, "P4_HITSTUNP1C1", DefaultLanguage)).c_str());
+					ImGui::TableSetColumnIndex(1);
+					ImGui::Text("%f", P1C1GroundHitstunTimer);
+					ImGui::TableSetColumnIndex(2);
+					ImGui::Text("%f", P1C1AirHitstunTimer);
+					ImGui::TableSetColumnIndex(3);
+					ImGui::Text("%f", P1C1GroundHitstunTimerMAX);
+					ImGui::TableSetColumnIndex(4);
+					ImGui::Text("%f", P1C1AirHitstunTimerMAX);
+
+					ImGui::TableNextRow();
+					ImGui::TableSetColumnIndex(0);
+					ImGui::Text((getLocalizedString(LocalMap, "P4_HITSTUNP1C2", DefaultLanguage)).c_str());
+					ImGui::TableSetColumnIndex(1);
+					ImGui::Text("%f", P1C2GroundHitstunTimer);
+					ImGui::TableSetColumnIndex(2);
+					ImGui::Text("%f", P1C2AirHitstunTimer);
+					ImGui::TableSetColumnIndex(3);
+					ImGui::Text("%f", P1C2GroundHitstunTimerMAX);
+					ImGui::TableSetColumnIndex(4);
+					ImGui::Text("%f", P1C2AirHitstunTimerMAX);
+
+					ImGui::TableNextRow();
+					ImGui::TableSetColumnIndex(0);
+					ImGui::Text((getLocalizedString(LocalMap, "P4_HITSTUNP1C3", DefaultLanguage)).c_str());
+					ImGui::TableSetColumnIndex(1);
+					ImGui::Text("%f", P1C3GroundHitstunTimer);
+					ImGui::TableSetColumnIndex(2);
+					ImGui::Text("%f", P1C3AirHitstunTimer);
+					ImGui::TableSetColumnIndex(3);
+					ImGui::Text("%f", P1C3GroundHitstunTimerMAX);
+					ImGui::TableSetColumnIndex(4);
+					ImGui::Text("%f", P1C3AirHitstunTimerMAX);
+
+					ImGui::TableNextRow();
+					ImGui::TableSetColumnIndex(0);
+					ImGui::Text((getLocalizedString(LocalMap, "P4_HITSTUNP2C1", DefaultLanguage)).c_str());
+					ImGui::TableSetColumnIndex(1);
+					ImGui::Text("%f", P2C1GroundHitstunTimer);
+					ImGui::TableSetColumnIndex(2);
+					ImGui::Text("%f", P2C1AirHitstunTimer);
+					ImGui::TableSetColumnIndex(3);
+					ImGui::Text("%f", P2C1GroundHitstunTimerMAX);
+					ImGui::TableSetColumnIndex(4);
+					ImGui::Text("%f", P2C1AirHitstunTimerMAX);
+
+					ImGui::TableNextRow();
+					ImGui::TableSetColumnIndex(0);
+					ImGui::Text((getLocalizedString(LocalMap, "P4_HITSTUNP2C2", DefaultLanguage)).c_str());
+					ImGui::TableSetColumnIndex(1);
+					ImGui::Text("%f", P2C2GroundHitstunTimer);
+					ImGui::TableSetColumnIndex(2);
+					ImGui::Text("%f", P2C2AirHitstunTimer);
+					ImGui::TableSetColumnIndex(3);
+					ImGui::Text("%f", P2C2GroundHitstunTimerMAX);
+					ImGui::TableSetColumnIndex(4);
+					ImGui::Text("%f", P2C2AirHitstunTimerMAX);
+
+					ImGui::TableNextRow();
+					ImGui::TableSetColumnIndex(0);
+					ImGui::Text((getLocalizedString(LocalMap, "P4_HITSTUNP2C3", DefaultLanguage)).c_str());
+					ImGui::TableSetColumnIndex(1);
+					ImGui::Text("%f", P2C3GroundHitstunTimer);
+					ImGui::TableSetColumnIndex(2);
+					ImGui::Text("%f", P2C3AirHitstunTimer);
+					ImGui::TableSetColumnIndex(3);
+					ImGui::Text("%f", P2C3GroundHitstunTimerMAX);
+					ImGui::TableSetColumnIndex(4);
+					ImGui::Text("%f", P2C3AirHitstunTimerMAX);
+					
+				}
 				ImGui::EndTable();
 			}
 
@@ -2361,6 +2523,14 @@ static void TheExtraDataTab()
 #pragma endregion
 			ImGui::TreePop();
 		}
+#ifdef _DEBUG
+		if (ImGui::Checkbox((getLocalizedString(LocalMap, "P4_COLORHITSTUNTEXT", DefaultLanguage)).c_str(), &ColorHitstunTimers))
+		{
+
+		}
+		if (ImGui::IsItemHovered(ImGuiHoveredFlags_Stationary))
+			ImGui::SetTooltip((getLocalizedString(LocalMap, "P4_COLORHITSTUNTEXTD", DefaultLanguage)).c_str());
+#endif
 
 
 		ImGui::EndTabItem();
@@ -2417,7 +2587,7 @@ static void frame(void) {
 		//ImGui::Text("The version open is valid too.");
 		//ImGui::Text((localMan.get("ACTIVATED_TRUE2")).c_str());
 		ImGui::Text((getLocalizedString(LocalMap, "ACTIVATED_TRUE2", DefaultLanguage)).c_str());
-		
+
 		ImGui::PopStyleColor();
 		WackyStuff();
 

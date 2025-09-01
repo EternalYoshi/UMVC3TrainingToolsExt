@@ -426,6 +426,8 @@ inline float P2C2AirHitstunTimerMAX = 0.0;
 inline float P2C3GroundHitstunTimerMAX = 0.0;
 inline float P2C3AirHitstunTimerMAX = 0.0;
 
+inline bool ColorHitstunTimers;
+
 inline uintptr_t DebugPointerOfSorts;
 
 inline std::string ThreeHookPath = "E:\\ULTIMATE MARVEL VS. CAPCOM 3\\Scripts\\ThreeHook.asi";
